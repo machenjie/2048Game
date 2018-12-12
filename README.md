@@ -1,6 +1,7 @@
 # 2048Game
 
-usage:  
+usage:
+cd client;  
 npm install;  
 npm run build;  
 npm run dev;  
