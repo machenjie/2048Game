@@ -7,6 +7,7 @@
                 :number="number"
                 :duration="200">
         </tween-number>
+        <button @click="add">add</button>
     </div>
 </template>
 
@@ -14,20 +15,41 @@
     import tweenNumber from "./tween-number";
 
     const COLOR_LIST = [
-        "Sienna",
-        "GoldenRod",
-        "Salmon",
-        "Tomato",
-        "LightSalmon",
-        "SandyBrown",
-        "Wheat",
-        "PeachPuff",
-        "Moccasin",
-        "MistyRose",
-        "Khaki",
-        "LemonChiffon",
-        "PapayaWhip",
+        // "Sienna",
+        // "GoldenRod",
+        // "Salmon",
+        // "Tomato",
+        // "LightSalmon",
+        // "SandyBrown",
+        // "Wheat",
+        // "PeachPuff",
+        // "Moccasin",
+        // "MistyRose",
+        // "Khaki",
+        // "LemonChiffon",
+        // "PapayaWhip",
         //"SeaShell",
+        "saddlebrown",
+        "sienna",
+        "chocolate",
+        "indianred",
+        "orangered",
+        "tomato",
+        "coral",
+        "darkorange",
+        "sandybrown",
+        "peru",
+        "tan",
+        "burlywood ",
+        "rosybrown",
+        "lightcorol",
+        "salmon",
+        "lightsalmon",
+        "wheat",
+        "navajowhite",
+        "peachpuff",
+        "bisque",
+        "cornsilk",
     ];
 
     const FONT_PEC = 1.5;
@@ -50,7 +72,6 @@
             else{
                 fontSize = Number(width*FONT_PEC/String(number).length).toFixed() + "px";
             }
-            console.log(fontSize);
             lineHeight = width+"px";
         }
 
@@ -74,6 +95,11 @@
         data: function () {
             return {
                 numberStyle: calStyleFromNumber(this.number, 0)
+            }
+        },
+        methods: {
+            add: function () {
+                this.number =this.number*2;
             }
         },
         watch: {
