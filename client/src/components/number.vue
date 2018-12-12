@@ -7,7 +7,6 @@
                 :number="number"
                 :duration="200">
         </tween-number>
-        <button @click="add">add</button>
     </div>
 </template>
 
@@ -75,11 +74,6 @@
         data: function () {
             return {
                 numberStyle: calStyleFromNumber(this.number, 0)
-            }
-        },
-        methods: {
-            add: function () {
-                this.number = this.number*2;
             }
         },
         watch: {
