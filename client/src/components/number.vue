@@ -27,6 +27,8 @@
         "#FFBA98",
         "#FFCBA9",
         "#FFECBA",
+        "#EDE0C8",
+        "#EEE4DA",
     ];
 
     const FONT_PEC = 1.5;
@@ -37,7 +39,7 @@
         let fontSize = "4vw";
         let fontColorIndex = number===0?0:(Math.log2(number)-1)%COLOR_LIST.length;
         let fontColor = fontColorIndex<4?"#8f7a66":"#F8F8F8";
-        let backgroundColor = number===0?"cornsilk":COLOR_LIST[COLOR_LIST.length-fontColorIndex-1];
+        let backgroundColor = number===0?"#BBADA0":COLOR_LIST[COLOR_LIST.length-fontColorIndex-1];
 
         if (width != 0){
             if (String(number).length === 1){
