@@ -405,6 +405,7 @@
                     this.numbers = randomFill(this.numbers);
                 }
                 this.numbers = Object.assign({}, this.numbers);
+                this.storeDataToHistory();
             },
             storeDataToHistory: function () {
                 let store = {
@@ -439,7 +440,7 @@
                 else {
                     if (!this.gameOver){
                         this.gameOver = checkGameOver(numbers);
-                        _this.storeDataToHistory();
+                        this.storeDataToHistory();
                     }
                 }
             },
