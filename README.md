@@ -1,9 +1,6 @@
 # 2048Game
 
-useage:
-
-npm install;
-
-npm run build;
-
-npm run dev;
+useage:  
+npm install;  
+npm run build;  
+npm run dev;  
