@@ -7,6 +7,7 @@
                 :number="number"
                 :duration="200">
         </tween-number>
+        <button @click="add">add</button>
     </div>
 </template>
 
@@ -16,7 +17,6 @@
     const COLOR_LIST = [
         "Sienna",
         "GoldenRod",
-        "Khaki",
         "Salmon",
         "Tomato",
         "LightSalmon",
@@ -25,29 +25,34 @@
         "PeachPuff",
         "Moccasin",
         "MistyRose",
+        "Khaki",
         "LemonChiffon",
         "PapayaWhip",
         "SeaShell",
         "Snow"
     ];
 
-    const FONT_PEC = 1.4;
+    const FONT_PEC = 1.5;
 
     function calStyleFromNumber(number, width) {
         let display = number===0?"none":"block";
         let lineHeight = "8vw";
         let fontSize = "4vw";
-        let fontColorIndex = number===0?0:Math.log2(number)%COLOR_LIST.length;
-        let fontColor = fontColorIndex<COLOR_LIST.length/2?"#8f7a66":"#F8F8F8";
+        let fontColorIndex = number===0?0:(Math.log2(number)%(COLOR_LIST.length-1)+1);
+        let fontColor = fontColorIndex<(COLOR_LIST.length/2+1)?"#8f7a66":"#F8F8F8";
         let backgroundColor = COLOR_LIST[COLOR_LIST.length-fontColorIndex-1];
 
         if (width != 0){
             if (String(number).length === 1){
-                fontSize = Number(width*0.7/String(number).length).toFixed();
+                fontSize = Number(width*0.6/String(number).length).toFixed() + "px";
+            }
+            else if (String(number).length === 2){
+                fontSize = Number(width*1/String(number).length).toFixed() + "px";
             }
             else{
-                fontSize = Number(width*FONT_PEC/String(number).length).toFixed();
+                fontSize = Number(width*FONT_PEC/String(number).length).toFixed() + "px";
             }
+            console.log(fontSize);
             lineHeight = width+"px";
         }
 
@@ -71,6 +76,11 @@
         data: function () {
             return {
                 numberStyle: calStyleFromNumber(this.number, 0)
+            }
+        },
+        methods: {
+            add: function () {
+                this.number = this.number*2;
             }
         },
         watch: {
