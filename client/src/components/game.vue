@@ -3,13 +3,20 @@
          @touchmove="touchAction"
          @touchend="touchAction"
     >
-        <div class="score d-block d-sm-none d-md-block">
-            <div class="string">SCORE</div>
-            <tween-number class="number" :number="score" :duration="200"></tween-number>
+        <div class="heading d-block d-sm-none d-md-block">
+            <div class="title">2048</div>
+            <div class="score">
+                SCORE
+                <tween-number :number="score" :duration="200"></tween-number>
+            </div>
+            <div class="best-score">
+                BEST
+                <tween-number :number="bestScore" :duration="200"></tween-number>
+            </div>
         </div>
         <div class="row  no-gutters">
-            <div class="col-2 col-sm-1 col-md"></div>
-            <div class="col-8 col-sm-6 col-md">
+            <div class="col-0 col-sm-0 col-md-2 col-lg-3 col-xl"></div>
+            <div class="col-12 col-sm-8 col-md-8 col-lg-6 col-xl">
                 <div class="game-over" v-if="gameOver">
                     Game over!<br>
                     <a class="restart" @click="newGame">Try again</a>
@@ -20,13 +27,20 @@
                     </div>
                 </div>
             </div>
-            <div class="col-2 col-sm-5 col-md">
-                <div class="tip d-none d-sm-block d-md-none">
-                    Tips: use &larr; &uarr; &rarr; &darr; to play!
+            <div class="col-0 col-sm-4 col-md-2 col-lg-3 col-xl">
+                <div class="heading-sm d-none d-sm-block d-md-none">
+                    <div class="title-sm">2048</div>
+                    <div class="score-sm">
+                        SCORE
+                        <tween-number :number="score" :duration="200"></tween-number>
+                    </div>
+                    <div class="best-score-sm">
+                        BEST
+                        <tween-number :number="bestScore" :duration="200"></tween-number>
+                    </div>
                 </div>
-                <div class="score-sm d-none d-sm-block d-md-none">
-                    <div class="string">SCORE</div>
-                    <tween-number class="number" :number="score" :duration="200"></tween-number>
+                <div class="tip-sm d-none d-sm-block d-md-none">
+                    Tips: use &larr; &uarr; &rarr; &darr; to play!
                 </div>
                 <!--
                 <div class="arrow-keyboard-sm d-none d-sm-block d-md-none">
@@ -373,6 +387,7 @@
             return {
                 numbers: initData,
                 score: 0,
+                bestScore: 0,
                 gameOver: false,
                 viewWidth: document.body.clientWidth, //only just one element can receive resize event, so use viewWidth to notify others
             }
@@ -455,6 +470,11 @@
                 }
             }())
         },
+        watch: {
+            score: function (val) {
+                this.bestScore = val>this.bestScore?val:this.bestScore;
+            }
+        },
         created: function(){
             let _this = this;
             document.onkeyup = function (e) {
@@ -497,47 +517,42 @@
     padding-left: 0;
 }
 
-.score {
-    text-align: center;
-    padding: 0 0 0 0;
-    margin: 5px 0 5px 0;
-}
-
-.score .string {
-    padding: 0 0 0 0;
-    margin: 0 0 0 0;
-    font-size: 4vw;
-    font-weight: bold;
-    color: #776e65;
-}
-
-.score .number {
-    padding: 0 0 0 0;
-    margin: 0 0 0 0;
-    font-size: 4vw;
-    font-weight: bold;
-    color: Peru;
-}
-
-.score-sm {
-    padding: 0 0 0 0;
-    margin: 35% 0 0 0;
+.heading {
     text-align: center;
 }
-.score-sm .string {
-    padding: 0 0 0 0;
-    margin: 0 0 0 0;
-    font-size: 4vw;
-    font-weight: bold;
+
+.heading .title {
+    display: inline-block;
+    text-align: left;
+    padding-right: 3%;
     color: #776e65;
+    font-size: 40px;
+    font-weight: bold;
+    vertical-align: middle;
 }
 
-.score-sm .number {
-    padding: 0 0 0 0;
-    margin: 0 0 0 0;
-    font-size: 4vw;
+.heading .score {
+    display: inline-block;
+    width: 100px;
+    background: #bbada0;
     font-weight: bold;
-    color: Peru;
+    font-size: 10px;
+    border-radius: 5%;
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.heading .best-score {
+    display: inline-block;
+    width: 100px;
+    background: #bbada0;
+    font-weight: bold;
+    font-size: 10px;
+    border-radius: 5%;
+    color: white;
+    text-align: center;
+    vertical-align: middle;
 }
 
 .game-over {
@@ -583,7 +598,51 @@
     padding: 0 0 0 0;
     margin: 0 0 0 0;
     text-align: center;
-    font-size: 1.5vw;
+    font-size: 18px;
+    font-weight: bold;
+    color: #776e65;
+}
+
+.heading-sm {
+    text-align: center;
+}
+
+.heading-sm .title-sm {
+    text-align: center;
+    color: #776e65;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.heading-sm .score-sm {
+    display: inline-block;
+    width: 90px;
+    background: #bbada0;
+    font-weight: bold;
+    font-size: 10px;
+    border-radius: 5%;
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.heading-sm .best-score-sm {
+    display: inline-block;
+    width:  90px;
+    background: #bbada0;
+    font-weight: bold;
+    font-size: 10px;
+    border-radius: 5%;
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.tip-sm {
+    padding: 0 0 0 0;
+    margin: 100% 0 0 0;
+    text-align: center;
+    font-size: 14px;
     font-weight: bold;
     color: #776e65;
 }

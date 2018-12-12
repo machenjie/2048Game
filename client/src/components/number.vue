@@ -7,7 +7,7 @@
                 :number="number"
                 :duration="200">
         </tween-number>
-        <button @click="add">add</button>
+        <!--button @click="add">add</button-->
     </div>
 </template>
 
@@ -15,41 +15,18 @@
     import tweenNumber from "./tween-number";
 
     const COLOR_LIST = [
-        // "Sienna",
-        // "GoldenRod",
-        // "Salmon",
-        // "Tomato",
-        // "LightSalmon",
-        // "SandyBrown",
-        // "Wheat",
-        // "PeachPuff",
-        // "Moccasin",
-        // "MistyRose",
-        // "Khaki",
-        // "LemonChiffon",
-        // "PapayaWhip",
-        //"SeaShell",
-        "saddlebrown",
-        "sienna",
-        "chocolate",
-        "indianred",
-        "orangered",
-        "tomato",
-        "coral",
-        "darkorange",
-        "sandybrown",
-        "peru",
-        "tan",
-        "burlywood ",
-        "rosybrown",
-        "lightcorol",
-        "salmon",
-        "lightsalmon",
-        "wheat",
-        "navajowhite",
-        "peachpuff",
-        "bisque",
-        "cornsilk",
+        "#FFD700",
+        "#FF0000",
+        "#FF4321",
+        "#FF5432",
+        "#FF6543",
+        "#FF7654",
+        "#FF8765",
+        "#FF9876",
+        "#FFA987",
+        "#FFBA98",
+        "#FFCBA9",
+        "#FFECBA",
     ];
 
     const FONT_PEC = 1.5;
@@ -58,9 +35,9 @@
         let display = number===0?"none":"block";
         let lineHeight = "8vw";
         let fontSize = "4vw";
-        let fontColorIndex = number===0?0:Math.log2(number)%COLOR_LIST.length;
-        let fontColor = fontColorIndex<(COLOR_LIST.length/2)?"#8f7a66":"#F8F8F8";
-        let backgroundColor = number===0?"Snow":COLOR_LIST[COLOR_LIST.length-fontColorIndex-1];
+        let fontColorIndex = number===0?0:(Math.log2(number)-1)%COLOR_LIST.length;
+        let fontColor = fontColorIndex<4?"#8f7a66":"#F8F8F8";
+        let backgroundColor = number===0?"cornsilk":COLOR_LIST[COLOR_LIST.length-fontColorIndex-1];
 
         if (width != 0){
             if (String(number).length === 1){
@@ -97,11 +74,11 @@
                 numberStyle: calStyleFromNumber(this.number, 0)
             }
         },
-        methods: {
-            add: function () {
-                this.number =this.number*2;
-            }
-        },
+        // methods: {
+        //     add: function () {
+        //         this.number =this.number*2;
+        //     }
+        // },
         watch: {
             number: function (val) {
                 this.numberStyle = calStyleFromNumber(val, this.$refs.box.clientWidth);
