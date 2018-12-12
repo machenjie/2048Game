@@ -406,6 +406,25 @@
                 }
                 this.numbers = Object.assign({}, this.numbers);
             },
+            storeDataToHistory: function () {
+                let store = {
+                    numbers: this.numbers,
+                    score: this.score,
+                    bestScore: this.bestScore,
+                    gameOver: this.gameOver,
+                };
+                localStorage.setItem("_2048_game_data", JSON.stringify(store));
+            },
+            restoreDataFromHistory: function () {
+                let data = localStorage.getItem("_2048_game_data");
+                if (data) {
+                    let {numbers, score, bestScore, gameOver} = JSON.parse(data);
+                    this.score = score;
+                    this.bestScore = bestScore;
+                    this.gameOver = gameOver;
+                    this.numbers = Object.assign({}, numbers);
+                }
+            },
             keyboardOP: function (op) {
                 let {numbers, haveChanged, score} = op(this.numbers);
                 this.numbers = Object.assign({}, numbers);
@@ -414,11 +433,13 @@
                     let _this = this;
                     _.delay(function () {
                         _this.numbers = Object.assign({}, randomFill(_this.numbers));
+                        _this.storeDataToHistory();
                     }, 300);
                 }
                 else {
                     if (!this.gameOver){
                         this.gameOver = checkGameOver(numbers);
+                        _this.storeDataToHistory();
                     }
                 }
             },
@@ -492,6 +513,7 @@
                     _this.keyDown();
                 }
             }
+            _this.restoreDataFromHistory();
         },
         mounted: function(){
             let _this = this;
