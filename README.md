@@ -1,6 +1,6 @@
 # 2048Game
 
-useage:  
+usage:  
 npm install;  
 npm run build;  
 npm run dev;  
