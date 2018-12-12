@@ -7,6 +7,7 @@
                 :number="number"
                 :duration="200">
         </tween-number>
+        <button @click="add">add</button>
     </div>
 </template>
 
@@ -27,8 +28,7 @@
         "Khaki",
         "LemonChiffon",
         "PapayaWhip",
-        "SeaShell",
-        "Snow"
+        //"SeaShell",
     ];
 
     const FONT_PEC = 1.5;
@@ -37,9 +37,9 @@
         let display = number===0?"none":"block";
         let lineHeight = "8vw";
         let fontSize = "4vw";
-        let fontColorIndex = number===0?0:(Math.log2(number)%(COLOR_LIST.length-1)+1);
-        let fontColor = fontColorIndex<(COLOR_LIST.length/2+1)?"#8f7a66":"#F8F8F8";
-        let backgroundColor = COLOR_LIST[COLOR_LIST.length-fontColorIndex-1];
+        let fontColorIndex = number===0?0:Math.log2(number)%COLOR_LIST.length;
+        let fontColor = fontColorIndex<(COLOR_LIST.length/2)?"#8f7a66":"#F8F8F8";
+        let backgroundColor = number===0?"Snow":COLOR_LIST[COLOR_LIST.length-fontColorIndex-1];
 
         if (width != 0){
             if (String(number).length === 1){
@@ -75,6 +75,11 @@
         data: function () {
             return {
                 numberStyle: calStyleFromNumber(this.number, 0)
+            }
+        },
+        methods: {
+            add: function () {
+                this.number = this.number*2;
             }
         },
         watch: {
