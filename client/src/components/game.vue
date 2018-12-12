@@ -564,7 +564,7 @@
     margin: auto;
     text-align: center;
     font-weight: bold;
-    font-size: 5vw;
+    font-size: 50px;
     color: #776e65;
     padding-top: 50%;
     background-color: rgba(192,192,192,0.8);
@@ -575,7 +575,7 @@
 .game-over .restart {
     padding: 1%;
     font-weight: bold;
-    font-size: 1.5vw;
+    font-size: 18px;
     color: rgba(255,255,255,1);
     background-color: #8f7a66;
     border-radius: 5%;
