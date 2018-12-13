@@ -560,7 +560,7 @@
     background: #bbada0;
     font-weight: bold;
     font-size: 10px;
-    border-radius: 5%;
+    border-radius: 3px 3px 3px 3px;
     color: white;
     text-align: center;
     vertical-align: middle;
@@ -572,7 +572,7 @@
     background: #bbada0;
     font-weight: bold;
     font-size: 10px;
-    border-radius: 5%;
+    border-radius: 3px 3px 3px 3px;
     color: white;
     text-align: center;
     vertical-align: middle;
@@ -601,7 +601,7 @@
     font-size: 18px;
     color: rgba(255,255,255,1);
     background-color: #8f7a66;
-    border-radius: 5%;
+    border-radius: 3px 3px 3px 3px;
     cursor: pointer;
 }
 
@@ -643,7 +643,7 @@
     background: #bbada0;
     font-weight: bold;
     font-size: 10px;
-    border-radius: 5%;
+    border-radius: 3px 3px 3px 3px;
     color: white;
     text-align: center;
     vertical-align: middle;
@@ -655,7 +655,7 @@
     background: #bbada0;
     font-weight: bold;
     font-size: 10px;
-    border-radius: 5%;
+    border-radius: 3px 3px 3px 3px;
     color: white;
     text-align: center;
     vertical-align: middle;
