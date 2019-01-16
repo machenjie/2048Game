@@ -41,7 +41,7 @@
         let fontColor = fontColorIndex<4?"#8f7a66":"#F8F8F8";
         let backgroundColor = number===0?"#BBADA0":COLOR_LIST[COLOR_LIST.length-fontColorIndex-1];
 
-        if (width != 0){
+        if (width !== 0){
             if (String(number).length === 1){
                 fontSize = Number(width*0.6/String(number).length).toFixed() + "px";
             }
@@ -103,7 +103,6 @@
 
 <style scoped>
     .box {
-        weight: 100%;
         height: 0;
         padding-top: 90%;
         margin: 5%;
@@ -111,10 +110,10 @@
     }
     .number{
         position: absolute;
-        left:0px;
-        right: 0px;
-        top: 0px;
-        bottom: 0px;
+        left:0;
+        right: 0;
+        top: 0;
+        bottom: 0;
         margin: 5%;
         border-radius: 3%;
         text-align: center;

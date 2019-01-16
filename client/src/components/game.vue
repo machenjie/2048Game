@@ -1,8 +1,7 @@
 <template>
     <div @touchstart="touchAction"
          @touchmove="touchAction"
-         @touchend="touchAction"
-    >
+         @touchend="touchAction">
         <div class="heading d-block d-sm-none d-md-block">
             <div class="title">2048</div>
             <div class="score">
@@ -13,6 +12,12 @@
                 BEST
                 <tween-number :number="bestScore" :duration="200"></tween-number>
             </div>
+            <div class="order-action">
+                <a class="order-minus" @click="orderMinus">&#60;</a>
+                <span class="order-text">{{currentGameDim}}&#215;{{currentGameDim}} order</span>
+                <a class="order-add" @click="orderAdd">&#62;</a>
+            </div>
+            <a class="new-game-btn" @mouseover='newGameIcon="\u27F3"' @mouseout='newGameIcon="\u21BB"' @click="newGame">{{newGameIcon}}</a>
         </div>
         <div class="row  no-gutters">
             <div class="col-0 col-sm-0 col-md-2 col-lg-3 col-xl"></div>
@@ -30,13 +35,23 @@
             <div class="col-0 col-sm-4 col-md-2 col-lg-3 col-xl">
                 <div class="heading-sm d-none d-sm-block d-md-none">
                     <div class="title-sm">2048</div>
-                    <div class="score-sm">
-                        SCORE
-                        <tween-number :number="score" :duration="200"></tween-number>
+                    <div>
+                        <div class="score-sm">
+                            SCORE
+                            <tween-number :number="score" :duration="200"></tween-number>
+                        </div>
+                        <div class="best-score-sm">
+                            BEST
+                            <tween-number :number="bestScore" :duration="200"></tween-number>
+                        </div>
                     </div>
-                    <div class="best-score-sm">
-                        BEST
-                        <tween-number :number="bestScore" :duration="200"></tween-number>
+                    <div class="order-action-sm">
+                        <a class="order-minus-sm" @click="orderMinus">&#60;</a>
+                        <span class="order-text-sm">{{currentGameDim}}&#215;{{currentGameDim}} order</span>
+                        <a class="order-add-sm" @click="orderAdd">&#62;</a>
+                    </div>
+                    <div class="new-game-btn-sm-area">
+                        <a class="new-game-btn-sm" @mouseover='newGameIcon="\u27F3"' @mouseout='newGameIcon="\u21BB"' @click="newGame">{{newGameIcon}}</a>
                     </div>
                 </div>
                 <div class="tip-sm d-none d-sm-block d-md-none">
@@ -76,7 +91,7 @@
     import arrowKeyboard from "./arrow-keyboard";
     import _ from "lodash";
 
-    const GAME_DIM = 4;
+    let GAME_DIM = 4;
 
     function compactRight(numbers) {
         let haveChanged = false;
@@ -113,7 +128,7 @@
         for(let i=0; i<GAME_DIM; i++){
             for(let j=GAME_DIM-1; j>0; ){
                 if (numbers[i][j] !== 0){
-                    if (numbers[i][j] == numbers[i][j-1]){
+                    if (numbers[i][j] === numbers[i][j-1]){
                         numbers[i][j-1] = 2*numbers[i][j];
                         numbers[i][j] = 0;
                         score += numbers[i][j-1];
@@ -169,7 +184,7 @@
         for(let i=0; i<GAME_DIM; i++){
             for(let j=0; j<GAME_DIM&&j+1<GAME_DIM; ){
                 if (numbers[i][j] !== 0){
-                    if (numbers[i][j] == numbers[i][j+1]){
+                    if (numbers[i][j] === numbers[i][j+1]){
                         numbers[i][j+1] = 2*numbers[i][j];
                         numbers[i][j] = 0;
                         score+=numbers[i][j+1];
@@ -225,7 +240,7 @@
         for(let i=0; i<GAME_DIM; i++){
             for(let j=GAME_DIM-1; j>0; ){
                 if (numbers[j][i] !== 0){
-                    if (numbers[j][i] == numbers[j-1][i]){
+                    if (numbers[j][i] === numbers[j-1][i]){
                         numbers[j-1][i] = 2*numbers[j][i];
                         numbers[j][i] = 0;
                         score += numbers[j-1][i];
@@ -281,7 +296,7 @@
         for(let i=0; i<GAME_DIM; i++){
             for(let j=0; j<GAME_DIM&&j+1<GAME_DIM; ){
                 if (numbers[j][i] !== 0){
-                    if (numbers[j][i] == numbers[j+1][i]){
+                    if (numbers[j][i] === numbers[j+1][i]){
                         numbers[j+1][i] = 2*numbers[j][i];
                         numbers[j][i] = 0;
                         score+=numbers[j+1][i];
@@ -306,10 +321,10 @@
         let numbersZeroCount = arrZeroCount(numbers);
         let randomNumber = 2;
         if (numbersZeroCount>GAME_DIM * GAME_DIM){
-            randomNumber = _.random(1,2)*_.random(1,2)==1?4:2;
+            randomNumber = _.random(1,2)*_.random(1,2)===1?4:2;
         }
         else{
-            randomNumber = _.random(1,2)*_.random(1,2)*_.random(1,2)==1?4:2;
+            randomNumber = _.random(1,2)*_.random(1,2)*_.random(1,2)===1?4:2;
         }
 
         let randomIndex = _.random(0, GAME_DIM * GAME_DIM - 1);
@@ -385,6 +400,8 @@
                 initData = randomFill(initData);
             }
             return {
+                newGameIcon: "\u21BB",
+                currentGameDim: GAME_DIM,
                 numbers: initData,
                 score: 0,
                 bestScore: 0,
@@ -396,16 +413,30 @@
             newGame: function (){
                 this.gameOver = false;
                 this.score = 0;
+                let initData=new Array(GAME_DIM);
+                for(let i=0;i<GAME_DIM;i++){
+                    initData[i]=new Array(GAME_DIM);
+                }
                 for(let i=0; i<GAME_DIM; i++){
                     for(let j=0; j<GAME_DIM; j++){
-                        this.numbers[i][j]=0;
+                        initData[i][j] = 0;
                     }
                 }
                 for(let i=0; i<2; i++){
-                    this.numbers = randomFill(this.numbers);
+                    initData = randomFill(initData);
                 }
-                this.numbers = Object.assign({}, this.numbers);
+                this.numbers = Object.assign({}, initData);
                 this.storeDataToHistory();
+            },
+            orderMinus: function() {
+                if (this.currentGameDim > 4){
+                    this.currentGameDim = this.currentGameDim - 1;
+                }
+            },
+            orderAdd: function() {
+                if (this.currentGameDim < 9){
+                    this.currentGameDim = this.currentGameDim + 1;
+                }
             },
             storeDataToHistory: function () {
                 let store = {
@@ -413,17 +444,22 @@
                     score: this.score,
                     bestScore: this.bestScore,
                     gameOver: this.gameOver,
+                    currentGameDim: this.currentGameDim,
                 };
                 localStorage.setItem("_2048_game_data", JSON.stringify(store));
             },
             restoreDataFromHistory: function () {
                 let data = localStorage.getItem("_2048_game_data");
                 if (data) {
-                    let {numbers, score, bestScore, gameOver} = JSON.parse(data);
-                    this.score = score;
-                    this.bestScore = bestScore;
-                    this.gameOver = gameOver;
-                    this.numbers = Object.assign({}, numbers);
+                    let {numbers, score, bestScore, gameOver, currentGameDim} = JSON.parse(data);
+                    if (typeof(currentGameDim) !== "undefined") {
+                        this.score = score;
+                        this.bestScore = bestScore;
+                        this.gameOver = gameOver;
+                        this.currentGameDim = currentGameDim;
+                        GAME_DIM = currentGameDim;
+                        this.numbers = Object.assign({}, numbers);
+                    }
                 }
             },
             keyboardOP: function (op) {
@@ -495,25 +531,31 @@
         watch: {
             score: function (val) {
                 this.bestScore = val>this.bestScore?val:this.bestScore;
+            },
+            currentGameDim: function (val) {
+                if (GAME_DIM !== val) {
+                    GAME_DIM = val;
+                    this.newGame();
+                }
             }
         },
         created: function(){
             let _this = this;
             document.onkeyup = function (e) {
                 let keyCode = e.key;
-                if(keyCode == "ArrowLeft"){
+                if(keyCode === "ArrowLeft"){
                     _this.keyLeft();
                 }
-                else if (keyCode == "ArrowRight"){
+                else if (keyCode === "ArrowRight"){
                     _this.keyRight();
                 }
-                else if (keyCode == "ArrowUp"){
+                else if (keyCode === "ArrowUp"){
                     _this.keyUp();
                 }
-                else if (keyCode == "ArrowDown"){
+                else if (keyCode === "ArrowDown"){
                     _this.keyDown();
                 }
-            }
+            };
             _this.restoreDataFromHistory();
         },
         mounted: function(){
@@ -542,12 +584,13 @@
 
 .heading {
     text-align: center;
+    user-select: none;
 }
 
 .heading .title {
     display: inline-block;
     text-align: left;
-    padding-right: 3%;
+    padding-right: 1%;
     color: #776e65;
     font-size: 40px;
     font-weight: bold;
@@ -578,12 +621,57 @@
     vertical-align: middle;
 }
 
+.heading .order-action{
+    display: inline-block;
+    width: 130px;
+    height: 36px;
+    margin-left: 1%;
+    font-weight: bold;
+    font-size: 17px;
+    line-height: 36px;
+    color: #776e65;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.heading .order-text{
+    display: inline-block;
+    height: 36px;
+    line-height: 36px;
+}
+
+.heading .order-minus, .heading .order-add{
+    display: inline-block;
+    height: 36px;
+    line-height: 36px;
+    vertical-align: middle;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.heading .order-minus:hover, .heading .order-add:hover{
+    font-size: 40px;
+}
+
+.heading .new-game-btn{
+    display: inline-block;
+    width: 30px;
+    height: 36px;
+    font-weight: bold;
+    font-size: 25px;
+    line-height: 36px;
+    color: #776e65;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
 .game-over {
     position: absolute;
-    left:0px;
-    right: 0px;
-    top: 0px;
-    bottom: 0px;
+    left:0;
+    right: 0;
+    top: 0;
+    bottom: 0;
     margin: auto;
     text-align: center;
     font-weight: bold;
@@ -605,17 +693,17 @@
     cursor: pointer;
 }
 
-.arrow-keyboard {
-    text-align: center;
-    margin: 0 0 0 0;
-    padding: 0 0 0 0;
-}
+/*.arrow-keyboard {*/
+    /*text-align: center;*/
+    /*margin: 0 0 0 0;*/
+    /*padding: 0 0 0 0;*/
+/*}*/
 
-.arrow-keyboard-sm{
-    text-align: center;
-    margin: 0 0 0 0;
-    padding: 0 0 0 0;
-}
+/*.arrow-keyboard-sm{*/
+    /*text-align: center;*/
+    /*margin: 0 0 0 0;*/
+    /*padding: 0 0 0 0;*/
+/*}*/
 
 .tip {
     padding: 0 0 0 0;
@@ -628,6 +716,7 @@
 
 .heading-sm {
     text-align: center;
+    user-select: none;
 }
 
 .heading-sm .title-sm {
@@ -661,9 +750,57 @@
     vertical-align: middle;
 }
 
+.heading-sm .order-action-sm{
+    display: inline-block;
+    margin-top: 10px;
+    height: 36px;
+    margin-left: 1%;
+    font-weight: bold;
+    font-size: 17px;
+    line-height: 36px;
+    color: #776e65;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.heading-sm .order-text-sm{
+    display: inline-block;
+    height: 36px;
+    line-height: 36px;
+}
+
+.heading-sm .order-minus-sm, .heading-sm .order-add-sm{
+    display: inline-block;
+    margin: 0 15px 0 15px;
+    height: 36px;
+    line-height: 36px;
+    vertical-align: middle;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.heading-sm .order-minus-sm:hover, .heading-sm .order-add-sm:hover{
+    font-size: 40px;
+}
+
+.new-game-btn-sm-area{
+    margin-top: 60px;
+}
+
+.heading-sm .new-game-btn-sm{
+    height: 36px;
+    font-weight: bold;
+    font-size: 50px;
+    line-height: 36px;
+    color: #776e65;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
 .tip-sm {
     padding: 0 0 0 0;
-    margin: 100% 0 0 0;
+    margin: 65% 0 0 0;
     text-align: center;
     font-size: 14px;
     font-weight: bold;
