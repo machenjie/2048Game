@@ -13,11 +13,14 @@
                 <tween-number :number="bestScore" :duration="200"></tween-number>
             </div>
             <div class="order-action">
-                <a class="order-minus" @click="orderMinus">&#60;</a>
-                <span class="order-text">{{currentGameDim}}&#215;{{currentGameDim}} order</span>
-                <a class="order-add" @click="orderAdd">&#62;</a>
+                <div class="order-minus" @click="orderMinus" title="decrease order"></div>
+                <div class="order-text">{{currentGameDim}}&#215;{{currentGameDim}}</div>
+                <div class="order-add" @click="orderAdd" title="increase order"></div>
             </div>
-            <a class="new-game-btn" @mouseover='newGameIcon="\u27F3"' @mouseout='newGameIcon="\u21BB"' @click="newGame">{{newGameIcon}}</a>
+            <a class="new-game-btn" @mouseover='newGameIcon="\u27F3"' @mouseout='newGameIcon="\u21BB"'
+               title="new game"
+               @click="newGame">{{newGameIcon}}
+            </a>
         </div>
         <div class="row  no-gutters">
             <div class="col-0 col-sm-0 col-md-2 col-lg-3 col-xl"></div>
@@ -46,12 +49,15 @@
                         </div>
                     </div>
                     <div class="order-action-sm">
-                        <a class="order-minus-sm" @click="orderMinus">&#60;</a>
-                        <span class="order-text-sm">{{currentGameDim}}&#215;{{currentGameDim}} order</span>
-                        <a class="order-add-sm" @click="orderAdd">&#62;</a>
+                        <div class="order-minus-sm" @click="orderMinus" title="decrease order"></div>
+                        <div class="order-text-sm">{{currentGameDim}}&#215;{{currentGameDim}}</div>
+                        <div class="order-add-sm" @click="orderAdd" title="increase order"></div>
                     </div>
                     <div class="new-game-btn-sm-area">
-                        <a class="new-game-btn-sm" @mouseover='newGameIcon="\u27F3"' @mouseout='newGameIcon="\u21BB"' @click="newGame">{{newGameIcon}}</a>
+                        <a class="new-game-btn-sm" @mouseover='newGameIcon="\u27F3"' @mouseout='newGameIcon="\u21BB"'
+                           title="new game"
+                           @click="newGame">{{newGameIcon}}
+                        </a>
                     </div>
                 </div>
                 <div class="tip-sm d-none d-sm-block d-md-none">
@@ -599,7 +605,7 @@
 
 .heading .score {
     display: inline-block;
-    width: 100px;
+    width: 80px;
     background: #bbada0;
     font-weight: bold;
     font-size: 10px;
@@ -611,7 +617,7 @@
 
 .heading .best-score {
     display: inline-block;
-    width: 100px;
+    width: 80px;
     background: #bbada0;
     font-weight: bold;
     font-size: 10px;
@@ -623,11 +629,10 @@
 
 .heading .order-action{
     display: inline-block;
-    width: 130px;
+    width: 50px;
     height: 36px;
     margin-left: 1%;
     font-weight: bold;
-    font-size: 17px;
     line-height: 36px;
     color: #776e65;
     text-align: center;
@@ -635,22 +640,42 @@
 }
 
 .heading .order-text{
-    display: inline-block;
-    height: 36px;
-    line-height: 36px;
+    display: block;
+    font-size: 17px;
+    height: 20px;
+    line-height: 20px;
 }
 
-.heading .order-minus, .heading .order-add{
-    display: inline-block;
-    height: 36px;
-    line-height: 36px;
-    vertical-align: middle;
-    font-size: 30px;
+.heading .order-minus{
+    display: block;
+    margin: 0;
+    padding: 0;
+    width: 0;
+    height: 0;
+    border-bottom: 8px solid  #776e65;
+    border-left: 25px solid transparent ;
+    border-right: 25px solid transparent ;
     cursor: pointer;
 }
 
-.heading .order-minus:hover, .heading .order-add:hover{
-    font-size: 40px;
+.heading .order-add{
+    display: block;
+    margin: 0;
+    padding: 0;
+    width: 0;
+    height: 0;
+    border-top: 8px solid  #776e65;
+    border-left: 25px solid transparent ;
+    border-right: 25px solid transparent ;
+    cursor: pointer;
+}
+
+.heading .order-minus:hover{
+    border-bottom-color: #FF5432;
+}
+
+.heading .order-add:hover{
+    border-top-color: #FF5432;
 }
 
 .heading .new-game-btn{
@@ -751,14 +776,10 @@
 }
 
 .heading-sm .order-action-sm{
-    display: inline-block;
-    margin-top: 10px;
+    display: block;
+    margin-top: 20px;
     height: 36px;
-    margin-left: 1%;
-    font-weight: bold;
-    font-size: 17px;
-    line-height: 36px;
-    color: #776e65;
+    font-size: 20px;
     text-align: center;
     vertical-align: middle;
 }
@@ -766,21 +787,45 @@
 .heading-sm .order-text-sm{
     display: inline-block;
     height: 36px;
-    line-height: 36px;
-}
-
-.heading-sm .order-minus-sm, .heading-sm .order-add-sm{
-    display: inline-block;
-    margin: 0 15px 0 15px;
-    height: 36px;
+    font-size: 30px;
+    font-weight: bold;
+    color: #776e65;
     line-height: 36px;
     vertical-align: middle;
-    font-size: 30px;
-    cursor: pointer;
 }
 
-.heading-sm .order-minus-sm:hover, .heading-sm .order-add-sm:hover{
-    font-size: 40px;
+.heading-sm .order-minus-sm{
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    width: 0;
+    height: 0;
+    border-right: 9px solid  #776e65;
+    border-top: 18px solid transparent ;
+    border-bottom: 18px solid transparent ;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.heading-sm .order-add-sm{
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    width: 0;
+    height: 0;
+    border-left: 9px solid  #776e65;
+    border-top: 18px solid transparent ;
+    border-bottom: 18px solid transparent ;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.heading-sm .order-minus-sm:hover{
+    border-right-color: #FF5432;
+}
+
+.heading-sm .order-add-sm:hover{
+    border-left-color: #FF5432;
 }
 
 .new-game-btn-sm-area{
