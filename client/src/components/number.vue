@@ -1,5 +1,5 @@
 <template>
-    <div ref="box" class="box" :style="{backgroundColor: numberStyle.backgroundColor}" >
+    <div ref="box" class="box" >
         <tween-number
                 class="number"
                 v-bind="$attrs"
@@ -107,13 +107,14 @@
         padding-top: 90%;
         margin: 5%;
         border-radius: 3%;
+        background-color: #BBADA0;
     }
     .number{
         position: absolute;
         left:0;
         right: 0;
-        top: 0;
-        bottom: 0;
+        top: -10px;
+        bottom: 10px;
         margin: 5%;
         border-radius: 3%;
         text-align: center;
