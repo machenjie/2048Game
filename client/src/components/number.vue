@@ -5,7 +5,7 @@
                 v-bind="$attrs"
                 :style="numberStyle"
                 :number="number"
-                :duration="200">
+                :duration="1">
         </tween-number>
         <!--button @click="add">add</button-->
     </div>

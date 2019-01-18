@@ -99,37 +99,47 @@
 
     let GAME_DIM = 4;
 
+    function  initTwoDimArray(x, y){
+        let a=new Array(x);
+        for(let i=0;i<x;i++){
+            a[i]=new Array(y);
+        }
+        for(let i=0; i<x; i++){
+            for(let j=0; j<y; j++){
+                a[i][j] = 0;
+            }
+        }
+        return a;
+    }
+
+    function copyTwoDimArray(copyArray, x, y) {
+        let a = initTwoDimArray(x, y);
+        for(let i=0; i<x; i++){
+            for(let j=0; j<y; j++){
+                a[i][j]=copyArray[i][j];
+            }
+        }
+        return a;
+    }
+
     function compactRight(numbers) {
         let haveChanged = false;
-
-        for(let i=0; i<GAME_DIM; i++){
-            let haveSort = false;
-            do {
-                haveSort = false;
-                let latestZeroIndex = 0;
-                for (let j = GAME_DIM - 1; j >= 0; j--) {
-                    if (numbers[i][j] === 0 && j > latestZeroIndex) {
-                        latestZeroIndex = j;
-                    }
-                    else if (numbers[i][j] !== 0) {
-                        if (latestZeroIndex > j) {
-                            numbers[i][latestZeroIndex] = numbers[i][j];
-                            numbers[i][j] = 0;
-                            haveSort = true;
-                            haveChanged = true;
-                            break;
-                        }
-                    }
+        for(let i=0; i<GAME_DIM; i++) {
+            for (let j = GAME_DIM - 1; j >= 1; j--) {
+                if (numbers[i][j] === 0 && numbers[i][j-1] !== 0) {
+                    numbers[i][j] = numbers[i][j-1];
+                    numbers[i][j-1] = 0;
+                    haveChanged = true;
                 }
-            }while(haveSort);
+            }
         }
-
         return haveChanged;
     }
 
-    function right(numbers) {
+    function right(a) {
         let score = 0;
-        let haveChanged = compactRight(numbers);
+        let haveChanged = false;
+        let  numbers = copyTwoDimArray(a, GAME_DIM, GAME_DIM);
 
         for(let i=0; i<GAME_DIM; i++){
             for(let j=GAME_DIM-1; j>0; ){
@@ -150,42 +160,27 @@
                 }
             }
         }
-
-        compactRight(numbers);
         return {numbers, haveChanged, score};
     }
 
     function compactLeft(numbers) {
         let  haveChanged = false;
-
-        for(let i=0; i<GAME_DIM; i++){
-            let haveSort = false;
-            do {
-                haveSort = false;
-                let latestZeroIndex = GAME_DIM - 1;
-                for (let j = 0; j < GAME_DIM; j++) {
-                    if (numbers[i][j] === 0 && j < latestZeroIndex) {
-                        latestZeroIndex = j;
-                    }
-                    else if (numbers[i][j] !== 0) {
-                        if (latestZeroIndex < j) {
-                            numbers[i][latestZeroIndex] = numbers[i][j];
-                            numbers[i][j] = 0;
-                            haveSort = true;
-                            haveChanged = true;
-                            break;
-                        }
-                    }
+        for(let i=0; i<GAME_DIM; i++) {
+            for (let j = 0; j < GAME_DIM-1; j++) {
+                if (numbers[i][j] === 0 && numbers[i][j+1] !== 0) {
+                    numbers[i][j] = numbers[i][j+1];
+                    numbers[i][j+1] = 0;
+                    haveChanged = true;
                 }
-            }while(haveSort);
+            }
         }
-
         return haveChanged;
     }
 
-    function left(numbers) {
-        let  haveChanged = compactLeft(numbers);
+    function left(a) {
+        let  haveChanged = false;
         let  score = 0;
+        let  numbers = copyTwoDimArray(a, GAME_DIM, GAME_DIM);
 
         for(let i=0; i<GAME_DIM; i++){
             for(let j=0; j<GAME_DIM&&j+1<GAME_DIM; ){
@@ -206,42 +201,27 @@
                 }
             }
         }
-
-        compactLeft(numbers);
         return {numbers, haveChanged, score};
     }
 
     function compactDown(numbers) {
         let  haveChanged = false;
-
-        for(let i=0; i<GAME_DIM; i++){
-            let haveSort = false;
-            do {
-                haveSort = false;
-                let latestZeroIndex = 0;
-                for(let j=GAME_DIM-1; j>=0; j--){
-                    if (numbers[j][i] === 0 && j > latestZeroIndex){
-                        latestZeroIndex = j;
-                    }
-                    else if (numbers[j][i] !== 0){
-                        if (latestZeroIndex > j){
-                            numbers[latestZeroIndex][i] = numbers[j][i];
-                            numbers[j][i] = 0;
-                            haveSort = true;
-                            haveChanged = true;
-                            break;
-                        }
-                    }
+        for(let i=0; i<GAME_DIM; i++) {
+            for (let j = GAME_DIM - 1; j >= 1; j--) {
+                if ( numbers[j][i] === 0 && numbers[j-1][i] !== 0) {
+                    numbers[j][i] = numbers[j-1][i];
+                    numbers[j-1][i] = 0;
+                    haveChanged = true;
                 }
-            }while(haveSort);
+            }
         }
-
         return haveChanged;
     }
 
-    function down(numbers) {
-        let  haveChanged = compactDown(numbers);
+    function down(a) {
+        let  haveChanged = false;
         let  score = 0;
+        let  numbers = copyTwoDimArray(a, GAME_DIM, GAME_DIM);
 
         for(let i=0; i<GAME_DIM; i++){
             for(let j=GAME_DIM-1; j>0; ){
@@ -262,42 +242,27 @@
                 }
             }
         }
-
-        compactDown(numbers);
         return {numbers, haveChanged, score};
     }
 
     function compactUp(numbers) {
         let  haveChanged = false;
-
-        for(let i=0; i<GAME_DIM; i++){
-            let haveSort = false;
-            do {
-                haveSort = false;
-                let latestZeroIndex = GAME_DIM - 1;
-                for (let j = 0; j < GAME_DIM; j++) {
-                    if (numbers[j][i] === 0 && j < latestZeroIndex) {
-                        latestZeroIndex = j;
-                    }
-                    else if (numbers[j][i] !== 0) {
-                        if (latestZeroIndex < j) {
-                            numbers[latestZeroIndex][i] = numbers[j][i];
-                            numbers[j][i] = 0;
-                            haveSort = true;
-                            haveChanged = true;
-                            break;
-                        }
-                    }
+        for(let i=0; i<GAME_DIM; i++) {
+            for (let j = 0; j < GAME_DIM-1; j++) {
+                if (numbers[j][i] === 0 && numbers[j+1][i] !== 0) {
+                    numbers[j][i] = numbers[j+1][i];
+                    numbers[j+1][i] = 0;
+                    haveChanged = true;
                 }
-            }while(haveSort);
+            }
         }
-
         return haveChanged;
     }
 
-    function up(numbers) {
-        let  haveChanged = compactUp(numbers);
+    function up(a) {
+        let  haveChanged = false;
         let  score = 0;
+        let  numbers = copyTwoDimArray(a, GAME_DIM, GAME_DIM);
 
         for(let i=0; i<GAME_DIM; i++){
             for(let j=0; j<GAME_DIM&&j+1<GAME_DIM; ){
@@ -319,11 +284,11 @@
             }
         }
 
-        compactUp(numbers);
         return {numbers, haveChanged, score};
     }
 
-    function randomFill(numbers) {
+    function randomFill(a) {
+        let numbers = copyTwoDimArray(a, GAME_DIM, GAME_DIM);
         let numbersZeroCount = arrZeroCount(numbers);
         let randomNumber = 2;
         if (numbersZeroCount>GAME_DIM * GAME_DIM){
@@ -369,15 +334,7 @@
     }
 
     function changeCheck(f, numbers) {
-        let numbersCP=new Array(GAME_DIM);
-        for(let i=0;i<GAME_DIM;i++){
-            numbersCP[i]=new Array(GAME_DIM);
-        }
-        for(let i=0; i<GAME_DIM; i++){
-            for(let j=0; j<GAME_DIM; j++){
-                numbersCP[i][j]=numbers[i][j];
-            }
-        }
+        let numbersCP = copyTwoDimArray(numbers, GAME_DIM, GAME_DIM);
         let {haveChanged} = f(numbersCP);
         return haveChanged;
     }
@@ -393,15 +350,7 @@
     export default {
         name: "game",
         data: function (){
-            let initData=new Array(GAME_DIM);
-            for(let i=0;i<GAME_DIM;i++){
-                initData[i]=new Array(GAME_DIM);
-            }
-            for(let i=0; i<GAME_DIM; i++){
-                for(let j=0; j<GAME_DIM; j++){
-                    initData[i][j] = 0;
-                }
-            }
+            let initData= initTwoDimArray(GAME_DIM, GAME_DIM);
             for(let i=0; i<2; i++){
                 initData = randomFill(initData);
             }
@@ -419,19 +368,11 @@
             newGame: function (){
                 this.gameOver = false;
                 this.score = 0;
-                let initData=new Array(GAME_DIM);
-                for(let i=0;i<GAME_DIM;i++){
-                    initData[i]=new Array(GAME_DIM);
-                }
-                for(let i=0; i<GAME_DIM; i++){
-                    for(let j=0; j<GAME_DIM; j++){
-                        initData[i][j] = 0;
-                    }
-                }
+                let initData=initTwoDimArray(GAME_DIM, GAME_DIM);
                 for(let i=0; i<2; i++){
                     initData = randomFill(initData);
                 }
-                this.numbers = Object.assign({}, initData);
+                this.numbers = copyTwoDimArray(initData, GAME_DIM, GAME_DIM);
                 this.storeDataToHistory();
             },
             orderMinus: function() {
@@ -464,39 +405,68 @@
                         this.gameOver = gameOver;
                         this.currentGameDim = currentGameDim;
                         GAME_DIM = currentGameDim;
-                        this.numbers = Object.assign({}, numbers);
+                        this.numbers = copyTwoDimArray(numbers, GAME_DIM, GAME_DIM);
                     }
                 }
             },
-            keyboardOP: function (op) {
-                let {numbers, haveChanged, score} = op(this.numbers);
-                this.numbers = Object.assign({}, numbers);
-                this.score += score;
-                if (haveChanged){
-                    let _this = this;
-                    _.delay(function () {
-                        _this.numbers = Object.assign({}, randomFill(_this.numbers));
-                        _this.storeDataToHistory();
-                    }, 300);
-                }
-                else {
-                    if (!this.gameOver){
-                        this.gameOver = checkGameOver(numbers);
-                        this.storeDataToHistory();
+            keyboardOP: function (compactOP, calOP) {
+                let haveChanged = false;
+                let _this = this;
+                new Promise(function (resolve, reject) {
+                    let haveSort = false;
+                    if (typeof(_this.timer) !== "undefined"){
+                        reject();
+                        return;
                     }
-                }
+                     _this.timer = setInterval(function () {
+                        haveSort = compactOP(_this.numbers);
+                        haveChanged = haveChanged || haveSort;
+                        _this.numbers = copyTwoDimArray(_this.numbers, GAME_DIM, GAME_DIM);
+                        if (haveSort === false){
+                            clearInterval(_this.timer);
+                            delete _this.timer;
+                            resolve();
+                        }
+                    }, 80-GAME_DIM/3*10);
+                }).then(function () {
+                    let calResult = calOP(_this.numbers);
+                    haveChanged = haveChanged || calResult.haveChanged;
+                    _this.numbers = copyTwoDimArray(calResult.numbers, GAME_DIM, GAME_DIM);
+                    _this.score += calResult.score;
+
+                    let haveSort = false;
+                    do{
+                        haveSort = compactOP(_this.numbers);
+                        haveChanged = haveChanged || haveSort;
+                        _this.numbers = copyTwoDimArray(_this.numbers, GAME_DIM, GAME_DIM);
+                    }while(haveSort);
+
+                    if (haveChanged){
+                        _.delay(function () {
+                            _this.numbers = copyTwoDimArray(randomFill(_this.numbers),GAME_DIM, GAME_DIM);
+                            _this.storeDataToHistory();
+                        }, 200);
+                    }
+                    else {
+                        if (!_this.gameOver){
+                            _this.gameOver = checkGameOver(_this.numbers);
+                            _this.storeDataToHistory();
+                        }
+                    }
+                }).catch( function(){
+                })
             },
             keyDown: function () {
-                this.keyboardOP(down);
+                this.keyboardOP(compactDown, down);
             },
             keyUp: function () {
-                this.keyboardOP(up);
+                this.keyboardOP(compactUp,up);
             },
             keyLeft: function () {
-                this.keyboardOP(left);
+                this.keyboardOP(compactLeft, left);
             },
             keyRight: function () {
-                this.keyboardOP(right);
+                this.keyboardOP(compactRight, right);
             },
             touchAction: (function () {
                 let touchStartX = 0;
@@ -528,7 +498,6 @@
                             break;
                         case "touchmove":
                             event.preventDefault();
-
                             break;
                     }
                 }
