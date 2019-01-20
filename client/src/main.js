@@ -4,6 +4,6 @@ import game from "./components/game";
 new Vue({
     el:"#app",
     components:{
-        game
+        game,
     }
 })

@@ -43,7 +43,8 @@
         },
         watch: {
             number: function (val) {
-                this.tween(this.tweenNumber, val);
+                //this.tween(this.tweenNumber, val);
+                this.tweenNumber = val;
             }
         }
     };

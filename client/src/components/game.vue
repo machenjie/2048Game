@@ -13,9 +13,9 @@
                 <tween-number :number="bestScore" :duration="200"></tween-number>
             </div>
             <div class="order-action">
-                <div class="order-minus" @click="orderMinus" title="decrease order"></div>
+                <div class="order-minus" :class="{disabled: currentGameDim===4}" @click="orderMinus" title="decrease order"></div>
                 <div class="order-text">{{currentGameDim}}&#215;{{currentGameDim}}</div>
-                <div class="order-add" @click="orderAdd" title="increase order"></div>
+                <div class="order-add" :class="{disabled: currentGameDim===9}" @click="orderAdd" title="increase order"></div>
             </div>
             <a class="new-game-btn" @mouseover='newGameIcon="\u27F3"' @mouseout='newGameIcon="\u21BB"'
                title="new game"
@@ -24,16 +24,19 @@
         </div>
         <div class="row  no-gutters">
             <div class="col-0 col-sm-0 col-md-2 col-lg-3 col-xl"></div>
-            <div class="col-12 col-sm-8 col-md-8 col-lg-6 col-xl">
+            <div class="col-12 col-sm-8 col-md-8 col-lg-6 col-xl game">
                 <div class="game-over" v-if="gameOver">
                     Game over!<br>
                     <a class="restart" @click="newGame">Try again</a>
                 </div>
                 <div class="row  no-gutters" v-for="number1 in numbers">
                     <div class="col" v-for="number2 in number1">
-                        <number  ref="number" :number="number2" :view-width="viewWidth"></number>
+                        <number  ref="number" :number="number2" :view-width="viewWidth"
+                                 :action="action" :duration="duration">
+                        </number>
                     </div>
                 </div>
+                <rate-feedback id="rate-feedback" class="d-block d-sm-none d-md-block" dialogTag="normal"></rate-feedback>
             </div>
             <div class="col-0 col-sm-4 col-md-2 col-lg-3 col-xl">
                 <div class="heading-sm d-none d-sm-block d-md-none">
@@ -49,9 +52,9 @@
                         </div>
                     </div>
                     <div class="order-action-sm">
-                        <div class="order-minus-sm" @click="orderMinus" title="decrease order"></div>
+                        <div class="order-minus-sm" :class="{disabled: currentGameDim===4}" @click="orderMinus" title="decrease order"></div>
                         <div class="order-text-sm">{{currentGameDim}}&#215;{{currentGameDim}}</div>
-                        <div class="order-add-sm" @click="orderAdd" title="increase order"></div>
+                        <div class="order-add-sm" :class="{disabled: currentGameDim===9}" @click="orderAdd" title="increase order"></div>
                     </div>
                     <div class="new-game-btn-sm-area">
                         <a class="new-game-btn-sm" @mouseover='newGameIcon="\u27F3"' @mouseout='newGameIcon="\u21BB"'
@@ -63,31 +66,12 @@
                 <div class="tip-sm d-none d-sm-block d-md-none">
                     Tips: use &larr; &uarr; &rarr; &darr; to play!
                 </div>
-                <!--
-                <div class="arrow-keyboard-sm d-none d-sm-block d-md-none">
-                    <arrowKeyboard
-                            @down-click="keyDown"
-                            @up-click="keyUp"
-                            @left-click="keyLeft"
-                            @right-click="keyRight">
-                    </arrowKeyboard>
-                </div>
-                -->
+                <rate-feedback id="rate-feedback-sm" class="d-none d-sm-block d-md-none" dialogTag="small"></rate-feedback>
             </div>
         </div>
         <div class="tip d-block d-sm-none d-md-block">
             Tips: use &larr; &uarr; &rarr; &darr; to play!
         </div>
-        <!--
-        <div class="arrow-keyboard d-block d-sm-none">
-            <arrowKeyboard
-                    @down-click="keyDown"
-                    @up-click="keyUp"
-                    @left-click="keyLeft"
-                    @right-click="keyRight">
-            </arrowKeyboard>
-        </div>
-        -->
     </div>
 </template>
 
@@ -95,6 +79,7 @@
     import number from "./number";
     import tweenNumber from "./tween-number";
     import arrowKeyboard from "./arrow-keyboard";
+    import rateFeedback from "./rate-feedback";
     import _ from "lodash";
 
     let GAME_DIM = 4;
@@ -122,169 +107,263 @@
         return a;
     }
 
-    function compactRight(numbers) {
-        let haveChanged = false;
-        for(let i=0; i<GAME_DIM; i++) {
-            for (let j = GAME_DIM - 1; j >= 1; j--) {
-                if (numbers[i][j] === 0 && numbers[i][j-1] !== 0) {
-                    numbers[i][j] = numbers[i][j-1];
-                    numbers[i][j-1] = 0;
-                    haveChanged = true;
-                }
+    function fixCopyTwoDimArray(copyArray, x, y) {
+        let a = initTwoDimArray(x, y);
+        for(let i=0; i<x; i++){
+            for(let j=0; j<y; j++){
+                a[i][j]=Math.floor(copyArray[i][j]);
             }
         }
-        return haveChanged;
+        return a;
     }
 
-    function right(a) {
+    function initStone(direction) {
+        let stone = new Array(GAME_DIM);
+        switch (direction) {
+            case "down":
+            case "right":
+                for(let i=0; i<stone.length; i++){
+                    stone[i] = GAME_DIM-1;
+                }
+                break;
+            case "up":
+            case "left":
+                for(let i=0; i<stone.length; i++){
+                    stone[i] = 0;
+                }
+                break;
+        }
+        return stone;
+    }
+
+    function right(a, stone) {
         let score = 0;
+        let haveAdd = false;
         let haveChanged = false;
-        let  numbers = copyTwoDimArray(a, GAME_DIM, GAME_DIM);
+        let numbers = copyTwoDimArray(a, GAME_DIM, GAME_DIM);
+        let needAddMove = initTwoDimArray(GAME_DIM, GAME_DIM);
+        let needMove = initTwoDimArray(GAME_DIM, GAME_DIM);
 
-        for(let i=0; i<GAME_DIM; i++){
-            for(let j=GAME_DIM-1; j>0; ){
-                if (numbers[i][j] !== 0){
-                    if (numbers[i][j] === numbers[i][j-1]){
-                        numbers[i][j-1] = 2*numbers[i][j];
-                        numbers[i][j] = 0;
-                        score += numbers[i][j-1];
-                        j-=2;
+        for(let i=0; i<GAME_DIM; i++) {
+            for (let j = GAME_DIM - 1; j >= 1;) {
+                if (numbers[i][j] !== 0 && stone[i] === j){
+                    if (Math.floor(numbers[i][j]) === Math.floor(numbers[i][j-1])){
+                        needAddMove[i][j] = 1;
+                        score += Math.floor(numbers[i][j]);
+                        numbers[i][j] = 2*numbers[i][j];
+                        numbers[i][j-1] = 0;
                         haveChanged = true;
+                        haveAdd = true;
+                        stone[i] = j-1;
+                        j-=2;
                     }
-                    else{
+                    else if (Math.floor(numbers[i][j-1]) !== 0){
+                        stone[i] = j-1;
+                        j--;
+                    }
+                    else {
                         j--;
                     }
                 }
-                else{
+                else {
+                    if (numbers[i][j] === 0 && numbers[i][j-1] !== 0) {
+                        needMove[i][j] = 1;
+                        numbers[i][j] = numbers[i][j-1];
+                        numbers[i][j-1] = 0;
+                        haveChanged = true;
+                    }
                     j--;
                 }
             }
         }
-        return {numbers, haveChanged, score};
-    }
 
-    function compactLeft(numbers) {
-        let  haveChanged = false;
         for(let i=0; i<GAME_DIM; i++) {
-            for (let j = 0; j < GAME_DIM-1; j++) {
-                if (numbers[i][j] === 0 && numbers[i][j+1] !== 0) {
-                    numbers[i][j] = numbers[i][j+1];
-                    numbers[i][j+1] = 0;
-                    haveChanged = true;
+            for (let j = 0; j < GAME_DIM; j++) {
+                if (needMove[i][j] === 1 && numbers[i][j] !== 0) {
+                    if (numbers[i][j] === a[i][j]) {
+                        numbers[i][j] = numbers[i][j]+0.001;
+                    }
+                    else if (numbers[i][j] === 2*a[i][j] && needAddMove[i][j] !== 1) {
+                        numbers[i][j] = numbers[i][j]+0.001;
+                    }
+
                 }
             }
         }
-        return haveChanged;
+
+        return {numbers, haveChanged, haveAdd, score};
     }
 
-    function left(a) {
+    function left(a, stone) {
+        let  haveAdd = false;
         let  haveChanged = false;
         let  score = 0;
         let  numbers = copyTwoDimArray(a, GAME_DIM, GAME_DIM);
+        let  needAddMove = initTwoDimArray(GAME_DIM, GAME_DIM);
+        let  needMove = initTwoDimArray(GAME_DIM, GAME_DIM);
 
-        for(let i=0; i<GAME_DIM; i++){
-            for(let j=0; j<GAME_DIM&&j+1<GAME_DIM; ){
-                if (numbers[i][j] !== 0){
-                    if (numbers[i][j] === numbers[i][j+1]){
-                        numbers[i][j+1] = 2*numbers[i][j];
-                        numbers[i][j] = 0;
-                        score+=numbers[i][j+1];
-                        j+=2;
+
+        for(let i=0; i<GAME_DIM; i++) {
+            for (let j = 0; j < GAME_DIM-1;) {
+                if (numbers[i][j] !== 0 && stone[i] === j) {
+                    if (Math.floor(numbers[i][j]) === Math.floor(numbers[i][j+1])) {
+                        needAddMove[i][j] = 1;
+                        score+=Math.floor(numbers[i][j]);
+                        numbers[i][j] = 2*numbers[i][j];
+                        numbers[i][j+1] = 0;
                         haveChanged = true;
+                        haveAdd = true;
+                        stone[i] = j+1;
+                        j+=2;
                     }
-                    else{
+                    else if (Math.floor(numbers[i][j+1]) !== 0){
+                        stone[i] = j+1;
+                        j++;
+                    }
+                    else {
                         j++;
                     }
                 }
                 else{
-                    j++;
-                }
-            }
-        }
-        return {numbers, haveChanged, score};
-    }
-
-    function compactDown(numbers) {
-        let  haveChanged = false;
-        for(let i=0; i<GAME_DIM; i++) {
-            for (let j = GAME_DIM - 1; j >= 1; j--) {
-                if ( numbers[j][i] === 0 && numbers[j-1][i] !== 0) {
-                    numbers[j][i] = numbers[j-1][i];
-                    numbers[j-1][i] = 0;
-                    haveChanged = true;
-                }
-            }
-        }
-        return haveChanged;
-    }
-
-    function down(a) {
-        let  haveChanged = false;
-        let  score = 0;
-        let  numbers = copyTwoDimArray(a, GAME_DIM, GAME_DIM);
-
-        for(let i=0; i<GAME_DIM; i++){
-            for(let j=GAME_DIM-1; j>0; ){
-                if (numbers[j][i] !== 0){
-                    if (numbers[j][i] === numbers[j-1][i]){
-                        numbers[j-1][i] = 2*numbers[j][i];
-                        numbers[j][i] = 0;
-                        score += numbers[j-1][i];
-                        j-=2;
+                    if (numbers[i][j] === 0 && numbers[i][j+1] !== 0) {
+                        needMove[i][j] = 1;
+                        numbers[i][j] = numbers[i][j+1];
+                        numbers[i][j+1] = 0;
                         haveChanged = true;
                     }
-                    else{
-                        j--;
-                    }
-                }
-                else{
-                    j--;
-                }
-            }
-        }
-        return {numbers, haveChanged, score};
-    }
-
-    function compactUp(numbers) {
-        let  haveChanged = false;
-        for(let i=0; i<GAME_DIM; i++) {
-            for (let j = 0; j < GAME_DIM-1; j++) {
-                if (numbers[j][i] === 0 && numbers[j+1][i] !== 0) {
-                    numbers[j][i] = numbers[j+1][i];
-                    numbers[j+1][i] = 0;
-                    haveChanged = true;
-                }
-            }
-        }
-        return haveChanged;
-    }
-
-    function up(a) {
-        let  haveChanged = false;
-        let  score = 0;
-        let  numbers = copyTwoDimArray(a, GAME_DIM, GAME_DIM);
-
-        for(let i=0; i<GAME_DIM; i++){
-            for(let j=0; j<GAME_DIM&&j+1<GAME_DIM; ){
-                if (numbers[j][i] !== 0){
-                    if (numbers[j][i] === numbers[j+1][i]){
-                        numbers[j+1][i] = 2*numbers[j][i];
-                        numbers[j][i] = 0;
-                        score+=numbers[j+1][i];
-                        j+=2;
-                        haveChanged = true;
-                    }
-                    else{
-                        j++;
-                    }
-                }
-                else{
                     j++;
                 }
             }
         }
 
-        return {numbers, haveChanged, score};
+        for(let i=0; i<GAME_DIM; i++) {
+            for (let j = 0; j < GAME_DIM; j++) {
+                if (needMove[i][j] === 1 && numbers[i][j] !== 0) {
+                    if (numbers[i][j] === a[i][j]) {
+                        numbers[i][j] = numbers[i][j]+0.001;
+                    }
+                    else if (numbers[i][j] === 2*a[i][j] && needAddMove[i][j] !== 1) {
+                        numbers[i][j] = numbers[i][j]+0.001;
+                    }
+
+                }
+            }
+        }
+        return {numbers, haveChanged, haveAdd, score};
+    }
+
+    function down(a, stone) {
+        let  haveAdd = false;
+        let  haveChanged = false;
+        let  score = 0;
+        let  numbers = copyTwoDimArray(a, GAME_DIM, GAME_DIM);
+        let  needAddMove = initTwoDimArray(GAME_DIM, GAME_DIM);
+        let  needMove = initTwoDimArray(GAME_DIM, GAME_DIM);
+
+        for(let i=0; i<GAME_DIM; i++) {
+            for (let j = GAME_DIM - 1; j >= 1;) {
+                if (numbers[j][i] !== 0 && stone[i] === j) {
+                    if (Math.floor(numbers[j][i]) === Math.floor(numbers[j-1][i])) {
+                        needAddMove[j][i] = 1;
+                        score += Math.floor(numbers[j][i]);
+                        numbers[j][i] = 2*numbers[j][i];
+                        numbers[j-1][i] = 0;
+                        haveChanged = true;
+                        haveAdd = true;
+                        stone[i] = j-1;
+                        j-=2;
+                    }
+                    else if (Math.floor(numbers[j-1][i]) !== 0) {
+                        stone[i] = j-1;
+                        j--;
+                    }
+                    else {
+                        j--;
+                    }
+                }
+                else{
+                    if ( numbers[j][i] === 0 && numbers[j-1][i] !== 0) {
+                        needMove[j][i] = 1;
+                        numbers[j][i] = numbers[j-1][i];
+                        numbers[j-1][i] = 0;
+                        haveChanged = true;
+                    }
+                    j--;
+                }
+            }
+        }
+
+        for(let i=0; i<GAME_DIM; i++) {
+            for (let j = 0; j < GAME_DIM; j++) {
+                if (needMove[j][i] === 1 && numbers[j][i] !== 0) {
+                    if (numbers[j][i] === a[j][i]) {
+                        numbers[j][i] = numbers[j][i]+0.001;
+                    }
+                    else if (numbers[j][i] === 2*a[j][i] && needAddMove[j][i] !== 1) {
+                        numbers[j][i] = numbers[j][i]+0.001;
+                    }
+
+                }
+            }
+        }
+
+        return {numbers, haveChanged, haveAdd, score};
+    }
+
+    function up(a, stone) {
+        let  haveAdd = false;
+        let  haveChanged = false;
+        let  score = 0;
+        let  numbers = copyTwoDimArray(a, GAME_DIM, GAME_DIM);
+        let  needAddMove = initTwoDimArray(GAME_DIM, GAME_DIM);
+        let  needMove = initTwoDimArray(GAME_DIM, GAME_DIM);
+
+        for(let i=0; i<GAME_DIM; i++) {
+            for (let j = 0; j < GAME_DIM-1;) {
+                if (numbers[j][i] !== 0 && stone[i] === j) {
+                    if (Math.floor(numbers[j][i]) === Math.floor(numbers[j+1][i])) {
+                        needAddMove[j][i] = 1;
+                        score+=Math.floor(numbers[j][i]);
+                        numbers[j][i] = 2*numbers[j][i];
+                        numbers[j+1][i] = 0;
+                        haveChanged = true;
+                        haveAdd = true;
+                        stone[i] = j+1;
+                        j+=2;
+                    }
+                    else if (Math.floor(numbers[j+1][i]) !== 0) {
+                        stone[i] = j+1;
+                        j++;
+                    }
+                    else {
+                        j++;
+                    }
+                }
+                else{
+                    if (numbers[j][i] === 0 && numbers[j+1][i] !== 0) {
+                        needMove[j][i] = 1;
+                        numbers[j][i] = numbers[j+1][i];
+                        numbers[j+1][i] = 0;
+                        haveChanged = true;
+                    }
+                    j++;
+                }
+            }
+        }
+
+        for(let i=0; i<GAME_DIM; i++) {
+            for (let j = 0; j < GAME_DIM; j++) {
+                if (needMove[j][i] === 1 && numbers[j][i] !== 0) {
+                    if (numbers[j][i] === a[j][i]) {
+                        numbers[j][i] = numbers[j][i]+0.001;
+                    }
+                    else if (numbers[j][i] === 2*a[j][i] && needAddMove[j][i] !== 1) {
+                        numbers[j][i] = numbers[j][i]+0.001;
+                    }
+                }
+            }
+        }
+        return {numbers, haveChanged, haveAdd, score};
     }
 
     function randomFill(a) {
@@ -292,10 +371,10 @@
         let numbersZeroCount = arrZeroCount(numbers);
         let randomNumber = 2;
         if (numbersZeroCount>GAME_DIM * GAME_DIM){
-            randomNumber = _.random(1,2)*_.random(1,2)===1?4:2;
+            randomNumber = _.random(1,2)===1?4:2;
         }
         else{
-            randomNumber = _.random(1,2)*_.random(1,2)*_.random(1,2)===1?4:2;
+            randomNumber = _.random(1,2)*_.random(1,2)===1?4:2;
         }
 
         let randomIndex = _.random(0, GAME_DIM * GAME_DIM - 1);
@@ -333,9 +412,9 @@
         return zeroCount;
     }
 
-    function changeCheck(f, numbers) {
+    function changeCheck(f, numbers, stone) {
         let numbersCP = copyTwoDimArray(numbers, GAME_DIM, GAME_DIM);
-        let {haveChanged} = f(numbersCP);
+        let {haveChanged} = f(numbersCP, stone);
         return haveChanged;
     }
 
@@ -344,7 +423,8 @@
             return false;
         }
 
-        return !(changeCheck(up, numbers) || changeCheck(down, numbers) || changeCheck(right, numbers) || changeCheck(left, numbers));
+        return !(changeCheck(up, numbers, initStone("up")) || changeCheck(down, numbers, initStone("down"))
+            || changeCheck(right, numbers, initStone("right")) || changeCheck(left, numbers, initStone("left")));
     }
 
     export default {
@@ -356,6 +436,8 @@
             }
             return {
                 newGameIcon: "\u21BB",
+                action: "",
+                duration: 1,
                 currentGameDim: GAME_DIM,
                 numbers: initData,
                 score: 0,
@@ -409,64 +491,95 @@
                     }
                 }
             },
-            keyboardOP: function (compactOP, calOP) {
-                let haveChanged = false;
+            startAction: function(calOP, duration, haveChanged, haveAdd, score, stone, resolve){
+                let calResult = calOP(this.numbers, stone);
+                haveChanged = haveChanged || calResult.haveChanged;
+                haveAdd = haveAdd || calResult.haveAdd;
+                score += calResult.score;
+                this.score += calResult.score;
+                this.numbers = copyTwoDimArray(calResult.numbers, GAME_DIM, GAME_DIM);
                 let _this = this;
-                new Promise(function (resolve, reject) {
-                    let haveSort = false;
-                    if (typeof(_this.timer) !== "undefined"){
-                        reject();
+                if (calResult.haveChanged) {
+                    _.delay(function () {
+                        _this.startAction(calOP, duration, haveChanged, haveAdd, score, stone, resolve);
+                    }, duration);
+                }
+                else{
+                    resolve(haveChanged, haveAdd, score);
+                }
+            },
+            addNew: function(duration, resolve){
+                this.numbers = copyTwoDimArray(randomFill(this.numbers), GAME_DIM, GAME_DIM);
+                _.delay(function () {
+                    resolve();
+                }, duration);
+            },
+            playAddAudio: function(score) {
+                if (typeof(this.audioCtx) === "undefined") {
+                    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+                    if (typeof(window.AudioContext) === "undefined") {
                         return;
                     }
-                     _this.timer = setInterval(function () {
-                        haveSort = compactOP(_this.numbers);
-                        haveChanged = haveChanged || haveSort;
-                        _this.numbers = copyTwoDimArray(_this.numbers, GAME_DIM, GAME_DIM);
-                        if (haveSort === false){
-                            clearInterval(_this.timer);
-                            delete _this.timer;
-                            resolve();
+                    this.audioCtx = new AudioContext();
+                }
+                let oscillator = this.audioCtx.createOscillator();
+                let gainNode = this.audioCtx.createGain();
+                oscillator.connect(gainNode);
+                gainNode.connect(this.audioCtx.destination);
+                oscillator.type = 'sine';
+                oscillator.frequency.value = 300+Math.log2(score)*100;
+                gainNode.gain.setValueAtTime(0, this.audioCtx.currentTime);
+                gainNode.gain.linearRampToValueAtTime(1, this.audioCtx.currentTime + 0.01);
+                oscillator.start(this.audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + 1);
+                oscillator.stop(this.audioCtx.currentTime + 1);
+            },
+            keyboardOP: function (calOP, direction) {
+                let _this = this;
+                let baseTime = 100;
+                let stone = initStone(direction);
+
+                if (typeof(_this.inMoveing) !== "undefined"){
+                    return;
+                }
+                _this.inMoveing = true;
+                _this.action = direction;
+                _this.duration = baseTime-Number(GAME_DIM/1.5).toFixed()*10;
+                _this.startAction(calOP, _this.duration, false, false, 0, stone, function (c, a, s) {
+                    if (c) {
+                        if (a) {
+                            _this.playAddAudio(s);
                         }
-                    }, 80-GAME_DIM/3*10);
-                }).then(function () {
-                    let calResult = calOP(_this.numbers);
-                    haveChanged = haveChanged || calResult.haveChanged;
-                    _this.numbers = copyTwoDimArray(calResult.numbers, GAME_DIM, GAME_DIM);
-                    _this.score += calResult.score;
-
-                    let haveSort = false;
-                    do{
-                        haveSort = compactOP(_this.numbers);
-                        haveChanged = haveChanged || haveSort;
-                        _this.numbers = copyTwoDimArray(_this.numbers, GAME_DIM, GAME_DIM);
-                    }while(haveSort);
-
-                    if (haveChanged){
-                        _.delay(function () {
-                            _this.numbers = copyTwoDimArray(randomFill(_this.numbers),GAME_DIM, GAME_DIM);
+                        _this.action = "new";
+                        _this.duration = 200;
+                        _this.addNew(_this.duration, function () {
+                            _this.action = "";
+                            _this.numbers = fixCopyTwoDimArray(_this.numbers, GAME_DIM, GAME_DIM);
                             _this.storeDataToHistory();
-                        }, 200);
+                            delete _this.inMoveing;
+                        });
                     }
-                    else {
-                        if (!_this.gameOver){
+                    else{
+                        _this.action = "";
+                        delete _this.inMoveing;
+                        if (!_this.gameOver) {
                             _this.gameOver = checkGameOver(_this.numbers);
                             _this.storeDataToHistory();
                         }
                     }
-                }).catch( function(){
-                })
+                });
             },
             keyDown: function () {
-                this.keyboardOP(compactDown, down);
+                this.keyboardOP(down, "down");
             },
             keyUp: function () {
-                this.keyboardOP(compactUp,up);
+                this.keyboardOP(up, "up");
             },
             keyLeft: function () {
-                this.keyboardOP(compactLeft, left);
+                this.keyboardOP(left, "left");
             },
             keyRight: function () {
-                this.keyboardOP(compactRight, right);
+                this.keyboardOP(right, "right");
             },
             touchAction: (function () {
                 let touchStartX = 0;
@@ -501,7 +614,22 @@
                             break;
                     }
                 }
-            }())
+            }()),
+            keyboardAction: function (e) {
+                let keyCode = e.key;
+                if(keyCode === "ArrowLeft"){
+                    this.keyLeft();
+                }
+                else if (keyCode === "ArrowRight"){
+                    this.keyRight();
+                }
+                else if (keyCode === "ArrowUp"){
+                    this.keyUp();
+                }
+                else if (keyCode === "ArrowDown"){
+                    this.keyDown();
+                }
+            }
         },
         watch: {
             score: function (val) {
@@ -515,23 +643,8 @@
             }
         },
         created: function(){
-            let _this = this;
-            document.onkeyup = function (e) {
-                let keyCode = e.key;
-                if(keyCode === "ArrowLeft"){
-                    _this.keyLeft();
-                }
-                else if (keyCode === "ArrowRight"){
-                    _this.keyRight();
-                }
-                else if (keyCode === "ArrowUp"){
-                    _this.keyUp();
-                }
-                else if (keyCode === "ArrowDown"){
-                    _this.keyDown();
-                }
-            };
-            _this.restoreDataFromHistory();
+            document.onkeyup = this.keyboardAction;
+            this.restoreDataFromHistory();
         },
         mounted: function(){
             let _this = this;
@@ -543,6 +656,7 @@
             tweenNumber,
             number,
             arrowKeyboard,
+            rateFeedback,
         }
     }
 </script>
@@ -639,6 +753,17 @@
     cursor: pointer;
 }
 
+.heading .order-action .disabled{
+    border-bottom-color: #b0a597;
+    border-top-color: #b0a597;
+    cursor: default;
+}
+
+.heading .order-action .disabled:hover{
+    border-bottom-color: #b0a597;
+    border-top-color: #b0a597;
+}
+
 .heading .order-minus:hover{
     border-bottom-color: #FF5432;
 }
@@ -673,7 +798,7 @@
     color: #776e65;
     padding-top: 50%;
     background-color: rgba(192,192,192,0.8);
-    z-index: 1;
+    z-index: 2;
     border-radius: 1%;
 }
 
@@ -685,6 +810,18 @@
     background-color: #8f7a66;
     border-radius: 3px 3px 3px 3px;
     cursor: pointer;
+}
+
+#rate-feedback{
+    position: absolute;
+    right:0;
+    bottom: -30px;
+}
+
+.game{
+    background-color: #776e65;
+    padding: 0.5% !important;
+    border-radius: 1.5%;
 }
 
 /*.arrow-keyboard {*/
@@ -797,6 +934,17 @@
     border-left-color: #FF5432;
 }
 
+.heading-sm .order-action-sm  .disabled{
+    border-left-color: #b0a597;
+    border-right-color: #b0a597;
+    cursor: default;
+}
+
+.heading-sm  .order-action-sm  .disabled:hover{
+    border-left-color: #b0a597;
+    border-right-color: #b0a597;
+}
+
 .new-game-btn-sm-area{
     margin-top: 60px;
 }
@@ -813,11 +961,22 @@
 }
 
 .tip-sm {
+    position: absolute;
+    left:0;
+    right: 0;
+    bottom: 50px;
     padding: 0 0 0 0;
-    margin: 65% 0 0 0;
     text-align: center;
     font-size: 14px;
     font-weight: bold;
     color: #776e65;
+}
+
+#rate-feedback-sm{
+    position: absolute;
+    left:0;
+    right: 0;
+    bottom: 0;
+    text-align: center;
 }
 </style>
