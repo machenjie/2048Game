@@ -78,10 +78,7 @@
             lineHeight: lineHeight,
             color: fontColor,
             backgroundColor: backgroundColor,
-            left: "0px",
-            right: "0px",
-            top: "0px",
-            bottom: "0px",
+            transform: "",
             zIndex: 1,
             boxShadow: boxShadow,
         };
@@ -123,30 +120,14 @@
                     .start();
                 animate();
             },
-            addAnimation: function (width) {
+            addAnimation: function () {
                 let _this = this;
-                this.tween({left: 0, right: 0, top: 0, bottom: 0}, {
-                    left: -width / 16,
-                    right: -width / 16,
-                    top: -width / 16,
-                    bottom: -width / 16
-                }, function (object) {
-                    _this.numberStyle.left = Number(object.left).toFixed() + "px";
-                    _this.numberStyle.right = Number(object.right).toFixed() + "px";
-                    _this.numberStyle.top = Number(object.top).toFixed() + "px";
-                    _this.numberStyle.bottom = Number(object.bottom).toFixed() + "px";
+                this.tween({scale: 1}, {scale: 1.15}, function (object) {
+                    _this.numberStyle.transform = "scale("+Number(object.scale).toFixed(2)+","+Number(object.scale).toFixed(2)+")";
                 }, null, function () {
                     setTimeout(function () {
-                        _this.tween({
-                            left: -width / 16,
-                            right: -width / 16,
-                            top: -width / 16,
-                            bottom: -width / 16
-                        }, {left: 0, right: 0, top: 0, bottom: 0}, function (object) {
-                            _this.numberStyle.left = Number(object.left).toFixed() + "px";
-                            _this.numberStyle.right = Number(object.right).toFixed() + "px";
-                            _this.numberStyle.top = Number(object.top).toFixed() + "px";
-                            _this.numberStyle.bottom = Number(object.bottom).toFixed() + "px";
+                        _this.tween({scale: 1.15}, {scale: 1}, function (object) {
+                            _this.numberStyle.transform = "scale("+Number(object.scale).toFixed(2)+","+Number(object.scale).toFixed(2)+")";
                         }, null, null, 100, TWEEN.Easing.Exponential.In);
                     }, 50);
                 }, 100, TWEEN.Easing.Exponential.Out);
@@ -167,11 +148,8 @@
                                 val = Math.floor(val);
                                 this.currentNumber = val;
                                 this.numberStyle = calStyleFromNumber(val, width);
-                                this.numberStyle.bottom = -distance+"px";
-                                this.numberStyle.top = distance+"px";
-                                this.tween({bottom: -distance, top: distance},{bottom:0, top: 0}, function (object) {
-                                    _this.numberStyle.bottom = Number(object.bottom).toFixed()+"px";
-                                    _this.numberStyle.top =  Number(object.top).toFixed()+"px";
+                                this.tween({distance: distance},{distance: 0}, function (object) {
+                                    _this.numberStyle.transform = "translateY("+Number(object.distance).toFixed()+"px)";
                                 }, null, null, this.duration);
                             }
                             else if (val === 2*oldVal){
@@ -180,17 +158,14 @@
                                 this.shadow = true;
                                 this.shadowNumberStyle = calStyleFromNumber(oldVal, width);
                                 this.shadowNumberStyle.zIndex = 0;
-                                this.shadowNumberStyle.bottom = -distance + "px";
-                                this.shadowNumberStyle.top = distance + "px";
-                                this.tween({bottom: -distance, top: distance}, {bottom: 0, top: 0}, function (object) {
-                                    _this.shadowNumberStyle.bottom = Number(object.bottom).toFixed() + "px";
-                                    _this.shadowNumberStyle.top = Number(object.top).toFixed() + "px";
+                                this.tween({distance: distance}, {distance: 0}, function (object) {
+                                    _this.shadowNumberStyle.transform = "translateY("+Number(object.distance).toFixed()+"px)";
                                 }, null, function () {
                                     _this.shadow = false;
                                     _this.currentNumber = val;
                                     _this.numberStyle = calStyleFromNumber(val, width);
                                     setTimeout(function () {
-                                        _this.addAnimation(width);
+                                        _this.addAnimation();
                                     }, 10);
                                 }, this.duration);
                             }
@@ -200,11 +175,8 @@
                                 val = Math.floor(val);
                                 this.currentNumber = val;
                                 this.numberStyle = calStyleFromNumber(val, width);
-                                this.numberStyle.left = -distance + "px";
-                                this.numberStyle.right = distance + "px";
-                                this.tween({left: -distance, right: distance}, {left: 0, right: 0}, function (object) {
-                                    _this.numberStyle.left = Number(object.left).toFixed() + "px";
-                                    _this.numberStyle.right = Number(object.right).toFixed() + "px";
+                                this.tween({distance: -distance}, {distance: 0}, function (object) {
+                                    _this.numberStyle.transform = "translateX("+Number(object.distance).toFixed()+"px)";
                                 }, null, null, this.duration);
                             }
                             else if (val === 2*oldVal) {
@@ -213,17 +185,14 @@
                                 this.shadow = true;
                                 this.shadowNumberStyle = calStyleFromNumber(oldVal, width);
                                 this.shadowNumberStyle.zIndex = 0;
-                                this.shadowNumberStyle.left = -distance + "px";
-                                this.shadowNumberStyle.right = distance + "px";
-                                this.tween({left: -distance, right: distance}, {left: 0, right: 0}, function (object) {
-                                    _this.shadowNumberStyle.left = Number(object.left).toFixed() + "px";
-                                    _this.shadowNumberStyle.right = Number(object.right).toFixed() + "px";
+                                this.tween({distance: -distance}, {distance: 0}, function (object) {
+                                    _this.shadowNumberStyle.transform = "translateX("+Number(object.distance).toFixed()+"px)";
                                 }, null, function () {
                                     _this.shadow = false;
                                     _this.currentNumber = val;
                                     _this.numberStyle = calStyleFromNumber(val, width);
                                     setTimeout(function () {
-                                        _this.addAnimation(width);
+                                        _this.addAnimation();
                                     }, 10);
                                 }, this.duration);
                             }
@@ -233,11 +202,8 @@
                                 val = Math.floor(val);
                                 this.currentNumber = val;
                                 this.numberStyle = calStyleFromNumber(val, width);
-                                this.numberStyle.bottom = distance + "px";
-                                this.numberStyle.top = -distance + "px";
-                                this.tween({bottom: distance, top: -distance}, {bottom: 0, top: 0}, function (object) {
-                                    _this.numberStyle.bottom = Number(object.bottom).toFixed() + "px";
-                                    _this.numberStyle.top = Number(object.top).toFixed() + "px";
+                                this.tween({distance: -distance},{distance: 0}, function (object) {
+                                    _this.numberStyle.transform = "translateY("+Number(object.distance).toFixed()+"px)";
                                 }, null, null, this.duration);
                             }
                             else if (val === 2*oldVal) {
@@ -246,17 +212,14 @@
                                 this.shadow = true;
                                 this.shadowNumberStyle = calStyleFromNumber(oldVal, width);
                                 this.shadowNumberStyle.zIndex = 0;
-                                this.shadowNumberStyle.bottom = distance + "px";
-                                this.shadowNumberStyle.top = -distance + "px";
-                                this.tween({bottom: distance, top: -distance}, {bottom: 0, top: 0}, function (object) {
-                                    _this.shadowNumberStyle.bottom = Number(object.bottom).toFixed() + "px";
-                                    _this.shadowNumberStyle.top = Number(object.top).toFixed() + "px";
+                                this.tween({distance: -distance},{distance: 0}, function (object) {
+                                    _this.shadowNumberStyle.transform = "translateY("+Number(object.distance).toFixed()+"px)";
                                 }, null, function () {
                                     _this.shadow = false;
                                     _this.currentNumber = val;
                                     _this.numberStyle = calStyleFromNumber(val, width);
                                     setTimeout(function () {
-                                        _this.addAnimation(width);
+                                        _this.addAnimation();
                                     }, 10);
                                 }, this.duration);
                             }
@@ -266,11 +229,8 @@
                                 val = Math.floor(val);
                                 this.currentNumber = val;
                                 this.numberStyle = calStyleFromNumber(val, width);
-                                this.numberStyle.left = distance + "px";
-                                this.numberStyle.right = -distance + "px";
-                                this.tween({left: distance, right: -distance}, {left: 0, right: 0}, function (object) {
-                                    _this.numberStyle.left = Number(object.left).toFixed() + "px";
-                                    _this.numberStyle.right = Number(object.right).toFixed() + "px";
+                                this.tween({distance: distance}, {distance: 0}, function (object) {
+                                    _this.numberStyle.transform = "translateX("+Number(object.distance).toFixed()+"px)";
                                 }, null, null, this.duration);
                             }
                             else if (val === 2*oldVal) {
@@ -279,17 +239,14 @@
                                 this.shadow = true;
                                 this.shadowNumberStyle = calStyleFromNumber(oldVal, width);
                                 this.shadowNumberStyle.zIndex = 0;
-                                this.shadowNumberStyle.left = distance + "px";
-                                this.shadowNumberStyle.right = -distance + "px";
-                                this.tween({left: distance, right: -distance}, {left: 0, right: 0}, function (object) {
-                                    _this.shadowNumberStyle.left = Number(object.left).toFixed() + "px";
-                                    _this.shadowNumberStyle.right = Number(object.right).toFixed() + "px";
+                                this.tween({distance: distance}, {distance: 0}, function (object) {
+                                    _this.shadowNumberStyle.transform = "translateX("+Number(object.distance).toFixed()+"px)";
                                 }, null, function () {
                                     _this.shadow = false;
                                     _this.currentNumber = val;
                                     _this.numberStyle = calStyleFromNumber(val, width);
                                     setTimeout(function () {
-                                        _this.addAnimation(width);
+                                        _this.addAnimation();
                                     }, 10);
                                 }, this.duration);
                             }
@@ -297,11 +254,8 @@
                         case "new":
                             _this.currentNumber = val;
                             this.numberStyle = calStyleFromNumber(val, width);
-                            _this.tween({left: width/8, right: width/8, top: width/8, bottom: width/8},{left: 0, right: 0, top: 0, bottom: 0}, function (object) {
-                                _this.numberStyle.left = Number(object.left).toFixed()+"px";
-                                _this.numberStyle.right =  Number(object.right).toFixed()+"px";
-                                _this.numberStyle.top = Number(object.top).toFixed()+"px";
-                                _this.numberStyle.bottom =  Number(object.bottom).toFixed()+"px";
+                            _this.tween({scale: 0.5}, {scale: 1}, function (object) {
+                                _this.numberStyle.transform = "scale("+Number(object.scale).toFixed(2)+","+Number(object.scale).toFixed(2)+")";
                             }, null, null, this.duration);
                             break;
                         default:
@@ -346,6 +300,10 @@
         border-radius: 5%;
         text-align: center;
         font-weight: bold;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
     }
     .shadow-number{
         position: absolute;
@@ -353,5 +311,9 @@
         border-radius: 5%;
         text-align: center;
         font-weight: bold;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
     }
 </style>
