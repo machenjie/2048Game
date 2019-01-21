@@ -21,6 +21,7 @@
 
 <script>
     import tweenNumber from "./tween-number";
+    import _ from "lodash";
 
     const COLOR_LIST = [
         "#FFD700",
@@ -98,7 +99,7 @@
         },
         data: function () {
             return {
-                currentNumber: Math.floor(this.number),
+                currentNumber: 0|this.number,
                 numberStyle: calStyleFromNumber(this.currentNumber, 0),
                 shadow: false,
                 shadowNumberStyle: calStyleFromNumber(this.currentNumber, 0),
@@ -145,16 +146,17 @@
                     switch (this.action) {
                         case "up":
                             if (val !== 2*oldVal) {
-                                val = Math.floor(val);
+                                val = 0|val;
                                 this.currentNumber = val;
                                 this.numberStyle = calStyleFromNumber(val, width);
                                 this.tween({distance: distance},{distance: 0}, function (object) {
                                     _this.numberStyle.transform = "translateY("+Number(object.distance).toFixed()+"px)";
+                                    console.log(_this.numberStyle.transform);
                                 }, null, null, this.duration);
                             }
                             else if (val === 2*oldVal){
-                                val = Math.floor(val);
-                                oldVal = Math.floor(oldVal);
+                                val = 0|val;
+                                oldVal = 0|oldVal;
                                 this.shadow = true;
                                 this.shadowNumberStyle = calStyleFromNumber(oldVal, width);
                                 this.shadowNumberStyle.zIndex = 0;
@@ -172,16 +174,17 @@
                             break;
                         case "right":
                             if (val !== 2*oldVal) {
-                                val = Math.floor(val);
+                                val = 0|val;
                                 this.currentNumber = val;
                                 this.numberStyle = calStyleFromNumber(val, width);
                                 this.tween({distance: -distance}, {distance: 0}, function (object) {
                                     _this.numberStyle.transform = "translateX("+Number(object.distance).toFixed()+"px)";
+                                    console.log(_this.numberStyle.transform);
                                 }, null, null, this.duration);
                             }
                             else if (val === 2*oldVal) {
-                                val = Math.floor(val);
-                                oldVal = Math.floor(oldVal);
+                                val = 0|val;
+                                oldVal = 0|oldVal;
                                 this.shadow = true;
                                 this.shadowNumberStyle = calStyleFromNumber(oldVal, width);
                                 this.shadowNumberStyle.zIndex = 0;
@@ -199,16 +202,17 @@
                             break;
                         case "down":
                             if (val !== 2*oldVal) {
-                                val = Math.floor(val);
+                                val = 0|val;
                                 this.currentNumber = val;
                                 this.numberStyle = calStyleFromNumber(val, width);
                                 this.tween({distance: -distance},{distance: 0}, function (object) {
                                     _this.numberStyle.transform = "translateY("+Number(object.distance).toFixed()+"px)";
+                                    console.log(_this.numberStyle.transform);
                                 }, null, null, this.duration);
                             }
                             else if (val === 2*oldVal) {
-                                val = Math.floor(val);
-                                oldVal = Math.floor(oldVal);
+                                val = 0|val;
+                                oldVal = 0|oldVal;
                                 this.shadow = true;
                                 this.shadowNumberStyle = calStyleFromNumber(oldVal, width);
                                 this.shadowNumberStyle.zIndex = 0;
@@ -226,16 +230,17 @@
                             break;
                         case "left":
                             if (val !== 2*oldVal) {
-                                val = Math.floor(val);
+                                val = 0|val;
                                 this.currentNumber = val;
                                 this.numberStyle = calStyleFromNumber(val, width);
                                 this.tween({distance: distance}, {distance: 0}, function (object) {
                                     _this.numberStyle.transform = "translateX("+Number(object.distance).toFixed()+"px)";
+                                    console.log(_this.numberStyle.transform);
                                 }, null, null, this.duration);
                             }
                             else if (val === 2*oldVal) {
-                                val = Math.floor(val);
-                                oldVal = Math.floor(oldVal);
+                                val = 0|val;
+                                oldVal = 0|oldVal;
                                 this.shadow = true;
                                 this.shadowNumberStyle = calStyleFromNumber(oldVal, width);
                                 this.shadowNumberStyle.zIndex = 0;

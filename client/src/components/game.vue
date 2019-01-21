@@ -147,9 +147,9 @@
         for(let i=0; i<GAME_DIM; i++) {
             for (let j = GAME_DIM - 1; j >= 1;) {
                 if (numbers[i][j] !== 0 && stone[i] === j){
-                    if (Math.floor(numbers[i][j]) === Math.floor(numbers[i][j-1])){
+                    if ((0|numbers[i][j]) === (0|numbers[i][j-1])){
                         needAddMove[i][j] = 1;
-                        score += Math.floor(numbers[i][j]);
+                        score += (0|numbers[i][j]);
                         numbers[i][j] = 2*numbers[i][j];
                         numbers[i][j-1] = 0;
                         haveChanged = true;
@@ -157,7 +157,7 @@
                         stone[i] = j-1;
                         j-=2;
                     }
-                    else if (Math.floor(numbers[i][j-1]) !== 0){
+                    else if ((0|numbers[i][j-1]) !== 0){
                         stone[i] = j-1;
                         j--;
                     }
@@ -206,9 +206,9 @@
         for(let i=0; i<GAME_DIM; i++) {
             for (let j = 0; j < GAME_DIM-1;) {
                 if (numbers[i][j] !== 0 && stone[i] === j) {
-                    if (Math.floor(numbers[i][j]) === Math.floor(numbers[i][j+1])) {
+                    if ((0|numbers[i][j]) === (0|numbers[i][j+1])) {
                         needAddMove[i][j] = 1;
-                        score+=Math.floor(numbers[i][j]);
+                        score+=(0|numbers[i][j]);
                         numbers[i][j] = 2*numbers[i][j];
                         numbers[i][j+1] = 0;
                         haveChanged = true;
@@ -216,7 +216,7 @@
                         stone[i] = j+1;
                         j+=2;
                     }
-                    else if (Math.floor(numbers[i][j+1]) !== 0){
+                    else if ((0|numbers[i][j+1]) !== 0){
                         stone[i] = j+1;
                         j++;
                     }
@@ -263,9 +263,9 @@
         for(let i=0; i<GAME_DIM; i++) {
             for (let j = GAME_DIM - 1; j >= 1;) {
                 if (numbers[j][i] !== 0 && stone[i] === j) {
-                    if (Math.floor(numbers[j][i]) === Math.floor(numbers[j-1][i])) {
+                    if ((0|numbers[j][i]) === (0|numbers[j-1][i])) {
                         needAddMove[j][i] = 1;
-                        score += Math.floor(numbers[j][i]);
+                        score += (0|numbers[j][i]);
                         numbers[j][i] = 2*numbers[j][i];
                         numbers[j-1][i] = 0;
                         haveChanged = true;
@@ -273,7 +273,7 @@
                         stone[i] = j-1;
                         j-=2;
                     }
-                    else if (Math.floor(numbers[j-1][i]) !== 0) {
+                    else if ((0|numbers[j-1][i]) !== 0) {
                         stone[i] = j-1;
                         j--;
                     }
@@ -321,9 +321,9 @@
         for(let i=0; i<GAME_DIM; i++) {
             for (let j = 0; j < GAME_DIM-1;) {
                 if (numbers[j][i] !== 0 && stone[i] === j) {
-                    if (Math.floor(numbers[j][i]) === Math.floor(numbers[j+1][i])) {
+                    if ((0|numbers[j][i]) === (0|numbers[j+1][i])) {
                         needAddMove[j][i] = 1;
-                        score+=Math.floor(numbers[j][i]);
+                        score+=(0|numbers[j][i]);
                         numbers[j][i] = 2*numbers[j][i];
                         numbers[j+1][i] = 0;
                         haveChanged = true;
@@ -331,7 +331,7 @@
                         stone[i] = j+1;
                         j+=2;
                     }
-                    else if (Math.floor(numbers[j+1][i]) !== 0) {
+                    else if ((0|numbers[j+1][i]) !== 0) {
                         stone[i] = j+1;
                         j++;
                     }
@@ -366,8 +366,7 @@
         return {numbers, haveChanged, haveAdd, score};
     }
 
-    function randomFill(a) {
-        let numbers = copyTwoDimArray(a, GAME_DIM, GAME_DIM);
+    function randomFill(numbers){
         let numbersZeroCount = arrZeroCount(numbers);
         let randomNumber = 2;
         if (numbersZeroCount>GAME_DIM * GAME_DIM){
@@ -413,18 +412,18 @@
     }
 
     function changeCheck(f, numbers, stone) {
-        let numbersCP = copyTwoDimArray(numbers, GAME_DIM, GAME_DIM);
-        let {haveChanged} = f(numbersCP, stone);
+        let {haveChanged} = f(numbers, stone);
         return haveChanged;
     }
 
     function checkGameOver(numbers) {
+        let numbersCP = copyTwoDimArray(numbers, GAME_DIM, GAME_DIM);
         if (arrZeroCount(numbers) !== 0){
             return false;
         }
 
-        return !(changeCheck(up, numbers, initStone("up")) || changeCheck(down, numbers, initStone("down"))
-            || changeCheck(right, numbers, initStone("right")) || changeCheck(left, numbers, initStone("left")));
+        return !(changeCheck(up, numbersCP, initStone("up")) || changeCheck(down, numbersCP, initStone("down"))
+            || changeCheck(right, numbersCP, initStone("right")) || changeCheck(left, numbersCP, initStone("left")));
     }
 
     export default {
@@ -454,7 +453,7 @@
                 for(let i=0; i<2; i++){
                     initData = randomFill(initData);
                 }
-                this.numbers = copyTwoDimArray(initData, GAME_DIM, GAME_DIM);
+                this.numbers = initData;
                 this.storeDataToHistory();
             },
             orderMinus: function() {
@@ -487,7 +486,7 @@
                         this.gameOver = gameOver;
                         this.currentGameDim = currentGameDim;
                         GAME_DIM = currentGameDim;
-                        this.numbers = copyTwoDimArray(numbers, GAME_DIM, GAME_DIM);
+                        this.numbers = numbers;
                     }
                 }
             },
@@ -497,7 +496,7 @@
                 haveAdd = haveAdd || calResult.haveAdd;
                 score += calResult.score;
                 this.score += calResult.score;
-                this.numbers = copyTwoDimArray(calResult.numbers, GAME_DIM, GAME_DIM);
+                this.numbers = calResult.numbers;
                 let _this = this;
                 if (calResult.haveChanged) {
                     _.delay(function () {
@@ -536,7 +535,7 @@
             },
             keyboardOP: function (calOP, direction) {
                 let _this = this;
-                let baseTime = 100;
+                let baseTime = 70;
                 let stone = initStone(direction);
 
                 if (typeof(_this.inMoveing) !== "undefined"){
@@ -544,7 +543,7 @@
                 }
                 _this.inMoveing = true;
                 _this.action = direction;
-                _this.duration = baseTime-Number(GAME_DIM/1.5).toFixed()*10;
+                _this.duration = baseTime-GAME_DIM*5;
                 _this.startAction(calOP, _this.duration, false, false, 0, stone, function (c, a, s) {
                     if (c) {
                         if (a) {
