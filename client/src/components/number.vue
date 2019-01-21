@@ -126,11 +126,11 @@
                 this.tween({scale: 1}, {scale: 1.15}, function (object) {
                     _this.numberStyle.transform = "scale("+Number(object.scale).toFixed(2)+","+Number(object.scale).toFixed(2)+")";
                 }, null, function () {
-                    setTimeout(function () {
+                    _.delay(function () {
                         _this.tween({scale: 1.15}, {scale: 1}, function (object) {
                             _this.numberStyle.transform = "scale("+Number(object.scale).toFixed(2)+","+Number(object.scale).toFixed(2)+")";
                         }, null, null, 100, TWEEN.Easing.Exponential.In);
-                    }, 50);
+                    }, 20);
                 }, 100, TWEEN.Easing.Exponential.Out);
             },
             // add: function () {
