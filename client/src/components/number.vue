@@ -151,7 +151,6 @@
                                 this.numberStyle = calStyleFromNumber(val, width);
                                 this.tween({distance: distance},{distance: 0}, function (object) {
                                     _this.numberStyle.transform = "translateY("+Number(object.distance).toFixed()+"px)";
-                                    console.log(_this.numberStyle.transform);
                                 }, null, null, this.duration);
                             }
                             else if (val === 2*oldVal){
@@ -179,7 +178,6 @@
                                 this.numberStyle = calStyleFromNumber(val, width);
                                 this.tween({distance: -distance}, {distance: 0}, function (object) {
                                     _this.numberStyle.transform = "translateX("+Number(object.distance).toFixed()+"px)";
-                                    console.log(_this.numberStyle.transform);
                                 }, null, null, this.duration);
                             }
                             else if (val === 2*oldVal) {
@@ -207,7 +205,6 @@
                                 this.numberStyle = calStyleFromNumber(val, width);
                                 this.tween({distance: -distance},{distance: 0}, function (object) {
                                     _this.numberStyle.transform = "translateY("+Number(object.distance).toFixed()+"px)";
-                                    console.log(_this.numberStyle.transform);
                                 }, null, null, this.duration);
                             }
                             else if (val === 2*oldVal) {
@@ -235,7 +232,6 @@
                                 this.numberStyle = calStyleFromNumber(val, width);
                                 this.tween({distance: distance}, {distance: 0}, function (object) {
                                     _this.numberStyle.transform = "translateX("+Number(object.distance).toFixed()+"px)";
-                                    console.log(_this.numberStyle.transform);
                                 }, null, null, this.duration);
                             }
                             else if (val === 2*oldVal) {
