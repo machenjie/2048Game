@@ -1,20 +1,16 @@
 <template>
     <div ref="box" class="box" >
-        <tween-number
-                class="number"
-                v-bind="$attrs"
-                :style="numberStyle"
-                :number="currentNumber"
-                :duration="1">
-        </tween-number>
-        <tween-number
-                v-if="shadow"
-                class="shadow-number"
-                v-bind="$attrs"
-                :style="shadowNumberStyle"
-                :number="currentNumber"
-                :duration="1">
-        </tween-number>
+        <div class="number"
+             v-bind="$attrs"
+             :style="numberStyle">
+            {{currentNumber}}
+        </div>
+        <div v-if="shadow"
+             class="shadow-number"
+             v-bind="$attrs"
+             :style="shadowNumberStyle">
+            {{currentNumber}}
+        </div>
         <!--button @click="add">add</button-->
     </div>
 </template>

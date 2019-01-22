@@ -1,5 +1,5 @@
 <template>
-    <div v-bind="$attrs">
+    <div>
         {{tweenNumber}}
     </div>
 </template>
@@ -43,8 +43,7 @@
         },
         watch: {
             number: function (val) {
-                //this.tween(this.tweenNumber, val);
-                this.tweenNumber = val;
+                this.tween(this.tweenNumber, val);
             }
         }
     };
