@@ -82,6 +82,7 @@
     import rateFeedback from "./rate-feedback";
     import _ from "lodash";
     let GAME_DIM = 4;
+
     function  initTwoDimArray(x, y){
         let a=new Array(x);
         for(let i=0;i<x;i++){
