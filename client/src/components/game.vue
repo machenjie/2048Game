@@ -77,12 +77,12 @@
 
 <script>
     import number from "./number";
-    import tweenNumber from "./tween-number";
+    import tweenNumber from "../common/vuecomponet/tween-number";
     import arrowKeyboard from "./arrow-keyboard";
     import rateFeedback from "./rate-feedback";
     import _ from "lodash";
-    let GAME_DIM = 4;
 
+    let GAME_DIM = 4;
     function  initTwoDimArray(x, y){
         let a=new Array(x);
         for(let i=0;i<x;i++){
