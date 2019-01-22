@@ -21,7 +21,7 @@
 
 <script>
     import tweenNumber from "./tween-number";
-
+    import _ from "lodash";
     const COLOR_LIST = [
         "#FFD700",
         "#FF0000",
@@ -32,9 +32,7 @@
         "#EDE0C8",
         "#EEE4DA",
     ];
-
     const FONT_PEC = 1.5;
-
     function calStyleFromNumber(number, width) {
         let display = number===0?"none":"block";
         let lineHeight = "8vw";
@@ -71,7 +69,6 @@
             }
             lineHeight = width+"px";
         }
-
         return {
             display: display,
             fontSize: fontSize,
@@ -83,7 +80,6 @@
             boxShadow: boxShadow,
         };
     }
-
     export default {
         name: "number",
         props:{
@@ -98,39 +94,49 @@
         },
         data: function () {
             return {
-                currentNumber: Math.floor(this.number),
+                currentNumber: 0|this.number,
                 numberStyle: calStyleFromNumber(this.currentNumber, 0),
                 shadow: false,
                 shadowNumberStyle: calStyleFromNumber(this.currentNumber, 0),
             }
         },
         methods: {
-            tween: function (startValue, endValue, update, start = null, end = null, duration = 1000, mode = TWEEN.Easing.Linear.None) {
-                function animate () {
-                    if (TWEEN.update()) {
-                        requestAnimationFrame(animate)
+            tween: function (startValue, endValue, currentValue = null, space = null, update = null, end = null, interval = 1000) {
+                if (currentValue === null) {
+                    currentValue = startValue;
+                }
+                else{
+                    currentValue += space;
+                }
+                let isEnd = false;
+                if (space*currentValue >= space*endValue) {
+                    isEnd = true;
+                    currentValue = endValue;
+                }
+                update(currentValue);
+                if (isEnd){
+                    if (end !== null) {
+                        end(currentValue)
                     }
                 }
-                new TWEEN.Tween(startValue)
-                    .to(endValue, duration)
-                    .easing(mode)
-                    .onStart(start)
-                    .onUpdate(update)
-                    .onComplete(end)
-                    .start();
-                animate();
+                else{
+                    let _this = this;
+                    _.delay(function () {
+                        _this.tween(startValue, endValue, currentValue, space, update, end, interval);
+                    }, interval);
+                }
             },
             addAnimation: function () {
                 let _this = this;
-                this.tween({scale: 1}, {scale: 1.15}, function (object) {
-                    _this.numberStyle.transform = "scale("+Number(object.scale).toFixed(2)+","+Number(object.scale).toFixed(2)+")";
-                }, null, function () {
-                    setTimeout(function () {
-                        _this.tween({scale: 1.15}, {scale: 1}, function (object) {
-                            _this.numberStyle.transform = "scale("+Number(object.scale).toFixed(2)+","+Number(object.scale).toFixed(2)+")";
-                        }, null, null, 100, TWEEN.Easing.Exponential.In);
-                    }, 50);
-                }, 100, TWEEN.Easing.Exponential.Out);
+                this.tween(1, 1.15, null, (1.15-1)/8, function (object) {
+                    _this.numberStyle.transform = "scale("+Number(object).toFixed(2)+","+Number(object).toFixed(2)+")";
+                }, function () {
+                    _.delay(function () {
+                        _this.tween(1.15, 1, null, (1-1.15)/8, function (object) {
+                            _this.numberStyle.transform = "scale("+Number(object).toFixed(2)+","+Number(object).toFixed(2)+")";
+                        }, null, 100/8);
+                    }, 20);
+                }, 100/8);
             },
             // add: function () {
             //     this.number =this.number*2;
@@ -141,122 +147,133 @@
                 let _this = this;
                 let width = this.$refs.box.clientWidth;
                 let distance = 1.1*width;
+                let space = null;
+                let interval = null;
+                if (distance/8>5){
+                    space = distance/8;
+                    interval = this.duration/8;
+                }
+                else{
+                    space = 5;
+                    interval = this.duration/(Math.abs(distance)/5);
+                }
+
                 if (val !== 0){
                     switch (this.action) {
                         case "up":
                             if (val !== 2*oldVal) {
-                                val = Math.floor(val);
+                                val = 0|val;
                                 this.currentNumber = val;
                                 this.numberStyle = calStyleFromNumber(val, width);
-                                this.tween({distance: distance},{distance: 0}, function (object) {
-                                    _this.numberStyle.transform = "translateY("+Number(object.distance).toFixed()+"px)";
-                                }, null, null, this.duration);
+                                this.tween(distance, 0, null, -space, function (object) {
+                                    _this.numberStyle.transform = "translateY("+Number(object).toFixed()+"px)";
+                                }, null, interval);
                             }
                             else if (val === 2*oldVal){
-                                val = Math.floor(val);
-                                oldVal = Math.floor(oldVal);
+                                val = 0|val;
+                                oldVal = 0|oldVal;
                                 this.shadow = true;
                                 this.shadowNumberStyle = calStyleFromNumber(oldVal, width);
                                 this.shadowNumberStyle.zIndex = 0;
-                                this.tween({distance: distance}, {distance: 0}, function (object) {
-                                    _this.shadowNumberStyle.transform = "translateY("+Number(object.distance).toFixed()+"px)";
-                                }, null, function () {
+                                this.tween(distance, 0, null, -space, function (object) {
+                                    _this.shadowNumberStyle.transform = "translateY("+Number(object).toFixed()+"px)";
+                                }, function () {
                                     _this.shadow = false;
                                     _this.currentNumber = val;
                                     _this.numberStyle = calStyleFromNumber(val, width);
                                     setTimeout(function () {
                                         _this.addAnimation();
                                     }, 10);
-                                }, this.duration);
+                                }, interval);
                             }
                             break;
                         case "right":
                             if (val !== 2*oldVal) {
-                                val = Math.floor(val);
+                                val = 0|val;
                                 this.currentNumber = val;
                                 this.numberStyle = calStyleFromNumber(val, width);
-                                this.tween({distance: -distance}, {distance: 0}, function (object) {
-                                    _this.numberStyle.transform = "translateX("+Number(object.distance).toFixed()+"px)";
-                                }, null, null, this.duration);
+                                this.tween(-distance, 0, null, space, function (object) {
+                                    _this.numberStyle.transform = "translateX("+Number(object).toFixed()+"px)";
+                                }, null, interval);
                             }
                             else if (val === 2*oldVal) {
-                                val = Math.floor(val);
-                                oldVal = Math.floor(oldVal);
+                                val = 0|val;
+                                oldVal = 0|oldVal;
                                 this.shadow = true;
                                 this.shadowNumberStyle = calStyleFromNumber(oldVal, width);
                                 this.shadowNumberStyle.zIndex = 0;
-                                this.tween({distance: -distance}, {distance: 0}, function (object) {
-                                    _this.shadowNumberStyle.transform = "translateX("+Number(object.distance).toFixed()+"px)";
-                                }, null, function () {
+                                this.tween(-distance, 0, null, space, function (object) {
+                                    _this.shadowNumberStyle.transform = "translateX("+Number(object).toFixed()+"px)";
+                                }, function () {
                                     _this.shadow = false;
                                     _this.currentNumber = val;
                                     _this.numberStyle = calStyleFromNumber(val, width);
                                     setTimeout(function () {
                                         _this.addAnimation();
                                     }, 10);
-                                }, this.duration);
+                                }, interval);
                             }
                             break;
                         case "down":
                             if (val !== 2*oldVal) {
-                                val = Math.floor(val);
+                                val = 0|val;
                                 this.currentNumber = val;
                                 this.numberStyle = calStyleFromNumber(val, width);
-                                this.tween({distance: -distance},{distance: 0}, function (object) {
-                                    _this.numberStyle.transform = "translateY("+Number(object.distance).toFixed()+"px)";
-                                }, null, null, this.duration);
+                                this.tween(-distance, 0, null, space, function (object) {
+                                    _this.numberStyle.transform = "translateY("+Number(object).toFixed()+"px)";
+                                }, null, interval);
                             }
                             else if (val === 2*oldVal) {
-                                val = Math.floor(val);
-                                oldVal = Math.floor(oldVal);
+                                val = 0|val;
+                                oldVal = 0|oldVal;
                                 this.shadow = true;
                                 this.shadowNumberStyle = calStyleFromNumber(oldVal, width);
                                 this.shadowNumberStyle.zIndex = 0;
-                                this.tween({distance: -distance},{distance: 0}, function (object) {
-                                    _this.shadowNumberStyle.transform = "translateY("+Number(object.distance).toFixed()+"px)";
-                                }, null, function () {
+                                this.tween(-distance, 0, null, space, function (object) {
+                                    _this.shadowNumberStyle.transform = "translateY("+Number(object).toFixed()+"px)";
+                                }, function () {
                                     _this.shadow = false;
                                     _this.currentNumber = val;
                                     _this.numberStyle = calStyleFromNumber(val, width);
                                     setTimeout(function () {
                                         _this.addAnimation();
                                     }, 10);
-                                }, this.duration);
+                                }, interval);
                             }
                             break;
                         case "left":
                             if (val !== 2*oldVal) {
-                                val = Math.floor(val);
+                                val = 0|val;
                                 this.currentNumber = val;
                                 this.numberStyle = calStyleFromNumber(val, width);
-                                this.tween({distance: distance}, {distance: 0}, function (object) {
-                                    _this.numberStyle.transform = "translateX("+Number(object.distance).toFixed()+"px)";
-                                }, null, null, this.duration);
+                                this.tween(distance, 0, null, -space, function (object) {
+                                    _this.numberStyle.transform = "translateX("+Number(object).toFixed()+"px)";
+                                }, null, interval);
                             }
                             else if (val === 2*oldVal) {
-                                val = Math.floor(val);
-                                oldVal = Math.floor(oldVal);
+                                val = 0|val;
+                                oldVal = 0|oldVal;
                                 this.shadow = true;
                                 this.shadowNumberStyle = calStyleFromNumber(oldVal, width);
                                 this.shadowNumberStyle.zIndex = 0;
-                                this.tween({distance: distance}, {distance: 0}, function (object) {
-                                    _this.shadowNumberStyle.transform = "translateX("+Number(object.distance).toFixed()+"px)";
-                                }, null, function () {
+                                this.tween(distance, 0, null, -space, function (object) {
+                                    _this.shadowNumberStyle.transform = "translateX("+Number(object).toFixed()+"px)";
+                                }, function () {
                                     _this.shadow = false;
                                     _this.currentNumber = val;
                                     _this.numberStyle = calStyleFromNumber(val, width);
                                     setTimeout(function () {
                                         _this.addAnimation();
                                     }, 10);
-                                }, this.duration);
+                                }, interval);
                             }
                             break;
                         case "new":
                             _this.currentNumber = val;
                             this.numberStyle = calStyleFromNumber(val, width);
-                            _this.tween({scale: 0.5}, {scale: 1}, function (object) {
-                                _this.numberStyle.transform = "scale("+Number(object.scale).toFixed(2)+","+Number(object.scale).toFixed(2)+")";
-                            }, null, null, this.duration);
+                            _this.tween(0.5, 1, null, (1-0.5)/8, function (object) {
+                                _this.numberStyle.transform = "scale("+Number(object).toFixed(2)+","+Number(object).toFixed(2)+")";
+                            }, null, this.duration/8);
                             break;
                         default:
                             _this.currentNumber = val;

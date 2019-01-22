@@ -1,7 +1,7 @@
 <template>
     <div id="rate-feedback" @keyup.stop="" @keydown.stop="">
         <div id="rate-area" data-toggle="tooltip" data-placement="bottom" title="Good Job!">
-            <a href="ms-windows-store://review/?ProductId=9WZDNCRFHVJL">&#10084;</a>
+            <a href="ms-windows-store://review/?ProductId=9NN76P3B5D8G">&#10084;</a>
         </div>
         <div id="feedback-area" data-toggle="tooltip" data-placement="bottom" title="I Want Say!">
             <a data-toggle="modal" :data-target='"#feedback-dialog"+dialogTag'>&#9993;</a>
@@ -20,7 +20,7 @@
                     <div class="modal-body">
                         <label for="comment">Please input your feedback and suggestions:</label>
                         <textarea id="comment" v-model="comment"></textarea>
-                        <label for="email">Please leave your e-mail address:</label>
+                        <label for="email">Please input your e-mail address:</label>
                         <input id="email" type="email" v-model="email">
                     </div>
 
@@ -49,14 +49,14 @@
         },
         methods: {
             feedback: function () {
-                console.log("feedback", this.email, this.comment);
-                $.post('http://192.168.1.107:8080/feedback', {
+                //console.log("feedback", this.email, this.comment);
+                $.post('http://www.laoyoutiao.xin:7890/feedback', {
                     email: this.email,
                     comment: this.comment,
                 }).done(function () {
-                    console.log("success");
+                    //console.log("success");
                 }).fail(function (xhr, status) {
-                    console.log('失败: ' + xhr.status + ', 原因: ' + status)
+                    //console.log('失败: ' + xhr.status + ', 原因: ' + status)
                 });
                 this.comment = "";
                 this.email = "";

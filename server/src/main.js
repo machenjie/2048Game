@@ -16,8 +16,9 @@ router.post('/feedback', async (ctx, next) => {
         let email = ctx.request.body.email.replace(/"/g, "");
         let output = "\""+email+"\","
             +"\""+comment+"\","
-            +ctx.request.host
-            +",\""+new Date(Date.now()).toUTCString()+"\"\n";
+            +"\""+ctx.request.ip+"\","
+            +"\""+ctx.request.ips+"\","
+            +"\""+new Date(Date.now()).toUTCString()+"\"\n";
         fs.appendFile(fd, output, 'utf8', function () {
         });
     }
@@ -27,4 +28,4 @@ router.post('/feedback', async (ctx, next) => {
 
 app.use(KoaBodyParser());
 app.use(router.routes());
-app.listen(8080);
+app.listen(7890);

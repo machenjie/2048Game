@@ -81,9 +81,7 @@
     import arrowKeyboard from "./arrow-keyboard";
     import rateFeedback from "./rate-feedback";
     import _ from "lodash";
-
     let GAME_DIM = 4;
-
     function  initTwoDimArray(x, y){
         let a=new Array(x);
         for(let i=0;i<x;i++){
@@ -96,7 +94,6 @@
         }
         return a;
     }
-
     function copyTwoDimArray(copyArray, x, y) {
         let a = initTwoDimArray(x, y);
         for(let i=0; i<x; i++){
@@ -106,7 +103,6 @@
         }
         return a;
     }
-
     function fixCopyTwoDimArray(copyArray, x, y) {
         let a = initTwoDimArray(x, y);
         for(let i=0; i<x; i++){
@@ -116,7 +112,6 @@
         }
         return a;
     }
-
     function initStone(direction) {
         let stone = new Array(GAME_DIM);
         switch (direction) {
@@ -135,7 +130,6 @@
         }
         return stone;
     }
-
     function right(a, stone) {
         let score = 0;
         let haveAdd = false;
@@ -143,13 +137,12 @@
         let numbers = copyTwoDimArray(a, GAME_DIM, GAME_DIM);
         let needAddMove = initTwoDimArray(GAME_DIM, GAME_DIM);
         let needMove = initTwoDimArray(GAME_DIM, GAME_DIM);
-
         for(let i=0; i<GAME_DIM; i++) {
             for (let j = GAME_DIM - 1; j >= 1;) {
                 if (numbers[i][j] !== 0 && stone[i] === j){
-                    if (Math.floor(numbers[i][j]) === Math.floor(numbers[i][j-1])){
+                    if ((0|numbers[i][j]) === (0|numbers[i][j-1])){
                         needAddMove[i][j] = 1;
-                        score += Math.floor(numbers[i][j]);
+                        score += (0|numbers[i][j]);
                         numbers[i][j] = 2*numbers[i][j];
                         numbers[i][j-1] = 0;
                         haveChanged = true;
@@ -157,7 +150,7 @@
                         stone[i] = j-1;
                         j-=2;
                     }
-                    else if (Math.floor(numbers[i][j-1]) !== 0){
+                    else if ((0|numbers[i][j-1]) !== 0){
                         stone[i] = j-1;
                         j--;
                     }
@@ -176,7 +169,6 @@
                 }
             }
         }
-
         for(let i=0; i<GAME_DIM; i++) {
             for (let j = 0; j < GAME_DIM; j++) {
                 if (needMove[i][j] === 1 && numbers[i][j] !== 0) {
@@ -186,14 +178,11 @@
                     else if (numbers[i][j] === 2*a[i][j] && needAddMove[i][j] !== 1) {
                         numbers[i][j] = numbers[i][j]+0.001;
                     }
-
                 }
             }
         }
-
         return {numbers, haveChanged, haveAdd, score};
     }
-
     function left(a, stone) {
         let  haveAdd = false;
         let  haveChanged = false;
@@ -201,14 +190,12 @@
         let  numbers = copyTwoDimArray(a, GAME_DIM, GAME_DIM);
         let  needAddMove = initTwoDimArray(GAME_DIM, GAME_DIM);
         let  needMove = initTwoDimArray(GAME_DIM, GAME_DIM);
-
-
         for(let i=0; i<GAME_DIM; i++) {
             for (let j = 0; j < GAME_DIM-1;) {
                 if (numbers[i][j] !== 0 && stone[i] === j) {
-                    if (Math.floor(numbers[i][j]) === Math.floor(numbers[i][j+1])) {
+                    if ((0|numbers[i][j]) === (0|numbers[i][j+1])) {
                         needAddMove[i][j] = 1;
-                        score+=Math.floor(numbers[i][j]);
+                        score+=(0|numbers[i][j]);
                         numbers[i][j] = 2*numbers[i][j];
                         numbers[i][j+1] = 0;
                         haveChanged = true;
@@ -216,7 +203,7 @@
                         stone[i] = j+1;
                         j+=2;
                     }
-                    else if (Math.floor(numbers[i][j+1]) !== 0){
+                    else if ((0|numbers[i][j+1]) !== 0){
                         stone[i] = j+1;
                         j++;
                     }
@@ -235,7 +222,6 @@
                 }
             }
         }
-
         for(let i=0; i<GAME_DIM; i++) {
             for (let j = 0; j < GAME_DIM; j++) {
                 if (needMove[i][j] === 1 && numbers[i][j] !== 0) {
@@ -245,13 +231,11 @@
                     else if (numbers[i][j] === 2*a[i][j] && needAddMove[i][j] !== 1) {
                         numbers[i][j] = numbers[i][j]+0.001;
                     }
-
                 }
             }
         }
         return {numbers, haveChanged, haveAdd, score};
     }
-
     function down(a, stone) {
         let  haveAdd = false;
         let  haveChanged = false;
@@ -259,13 +243,12 @@
         let  numbers = copyTwoDimArray(a, GAME_DIM, GAME_DIM);
         let  needAddMove = initTwoDimArray(GAME_DIM, GAME_DIM);
         let  needMove = initTwoDimArray(GAME_DIM, GAME_DIM);
-
         for(let i=0; i<GAME_DIM; i++) {
             for (let j = GAME_DIM - 1; j >= 1;) {
                 if (numbers[j][i] !== 0 && stone[i] === j) {
-                    if (Math.floor(numbers[j][i]) === Math.floor(numbers[j-1][i])) {
+                    if ((0|numbers[j][i]) === (0|numbers[j-1][i])) {
                         needAddMove[j][i] = 1;
-                        score += Math.floor(numbers[j][i]);
+                        score += (0|numbers[j][i]);
                         numbers[j][i] = 2*numbers[j][i];
                         numbers[j-1][i] = 0;
                         haveChanged = true;
@@ -273,7 +256,7 @@
                         stone[i] = j-1;
                         j-=2;
                     }
-                    else if (Math.floor(numbers[j-1][i]) !== 0) {
+                    else if ((0|numbers[j-1][i]) !== 0) {
                         stone[i] = j-1;
                         j--;
                     }
@@ -292,7 +275,6 @@
                 }
             }
         }
-
         for(let i=0; i<GAME_DIM; i++) {
             for (let j = 0; j < GAME_DIM; j++) {
                 if (needMove[j][i] === 1 && numbers[j][i] !== 0) {
@@ -302,14 +284,11 @@
                     else if (numbers[j][i] === 2*a[j][i] && needAddMove[j][i] !== 1) {
                         numbers[j][i] = numbers[j][i]+0.001;
                     }
-
                 }
             }
         }
-
         return {numbers, haveChanged, haveAdd, score};
     }
-
     function up(a, stone) {
         let  haveAdd = false;
         let  haveChanged = false;
@@ -317,13 +296,12 @@
         let  numbers = copyTwoDimArray(a, GAME_DIM, GAME_DIM);
         let  needAddMove = initTwoDimArray(GAME_DIM, GAME_DIM);
         let  needMove = initTwoDimArray(GAME_DIM, GAME_DIM);
-
         for(let i=0; i<GAME_DIM; i++) {
             for (let j = 0; j < GAME_DIM-1;) {
                 if (numbers[j][i] !== 0 && stone[i] === j) {
-                    if (Math.floor(numbers[j][i]) === Math.floor(numbers[j+1][i])) {
+                    if ((0|numbers[j][i]) === (0|numbers[j+1][i])) {
                         needAddMove[j][i] = 1;
-                        score+=Math.floor(numbers[j][i]);
+                        score+=(0|numbers[j][i]);
                         numbers[j][i] = 2*numbers[j][i];
                         numbers[j+1][i] = 0;
                         haveChanged = true;
@@ -331,7 +309,7 @@
                         stone[i] = j+1;
                         j+=2;
                     }
-                    else if (Math.floor(numbers[j+1][i]) !== 0) {
+                    else if ((0|numbers[j+1][i]) !== 0) {
                         stone[i] = j+1;
                         j++;
                     }
@@ -350,7 +328,6 @@
                 }
             }
         }
-
         for(let i=0; i<GAME_DIM; i++) {
             for (let j = 0; j < GAME_DIM; j++) {
                 if (needMove[j][i] === 1 && numbers[j][i] !== 0) {
@@ -365,9 +342,7 @@
         }
         return {numbers, haveChanged, haveAdd, score};
     }
-
-    function randomFill(a) {
-        let numbers = copyTwoDimArray(a, GAME_DIM, GAME_DIM);
+    function randomFill(numbers){
         let numbersZeroCount = arrZeroCount(numbers);
         let randomNumber = 2;
         if (numbersZeroCount>GAME_DIM * GAME_DIM){
@@ -376,7 +351,6 @@
         else{
             randomNumber = _.random(1,2)*_.random(1,2)===1?4:2;
         }
-
         let randomIndex = _.random(0, GAME_DIM * GAME_DIM - 1);
         let yIndex = randomIndex%GAME_DIM;
         let xIndex = (randomIndex - yIndex)/GAME_DIM%GAME_DIM;
@@ -395,10 +369,8 @@
                 yIndex = tmp_y;
             }
         }
-
         return numbers;
     }
-
     function arrZeroCount(numbers) {
         let zeroCount = 0;
         for(let i=0; i<GAME_DIM; i++){
@@ -408,25 +380,20 @@
                 }
             }
         }
-
         return zeroCount;
     }
-
     function changeCheck(f, numbers, stone) {
-        let numbersCP = copyTwoDimArray(numbers, GAME_DIM, GAME_DIM);
-        let {haveChanged} = f(numbersCP, stone);
+        let {haveChanged} = f(numbers, stone);
         return haveChanged;
     }
-
     function checkGameOver(numbers) {
+        let numbersCP = copyTwoDimArray(numbers, GAME_DIM, GAME_DIM);
         if (arrZeroCount(numbers) !== 0){
             return false;
         }
-
-        return !(changeCheck(up, numbers, initStone("up")) || changeCheck(down, numbers, initStone("down"))
-            || changeCheck(right, numbers, initStone("right")) || changeCheck(left, numbers, initStone("left")));
+        return !(changeCheck(up, numbersCP, initStone("up")) || changeCheck(down, numbersCP, initStone("down"))
+            || changeCheck(right, numbersCP, initStone("right")) || changeCheck(left, numbersCP, initStone("left")));
     }
-
     export default {
         name: "game",
         data: function (){
@@ -454,7 +421,7 @@
                 for(let i=0; i<2; i++){
                     initData = randomFill(initData);
                 }
-                this.numbers = copyTwoDimArray(initData, GAME_DIM, GAME_DIM);
+                this.numbers = initData;
                 this.storeDataToHistory();
             },
             orderMinus: function() {
@@ -487,7 +454,7 @@
                         this.gameOver = gameOver;
                         this.currentGameDim = currentGameDim;
                         GAME_DIM = currentGameDim;
-                        this.numbers = copyTwoDimArray(numbers, GAME_DIM, GAME_DIM);
+                        this.numbers = numbers;
                     }
                 }
             },
@@ -497,7 +464,7 @@
                 haveAdd = haveAdd || calResult.haveAdd;
                 score += calResult.score;
                 this.score += calResult.score;
-                this.numbers = copyTwoDimArray(calResult.numbers, GAME_DIM, GAME_DIM);
+                this.numbers = calResult.numbers;
                 let _this = this;
                 if (calResult.haveChanged) {
                     _.delay(function () {
@@ -536,15 +503,14 @@
             },
             keyboardOP: function (calOP, direction) {
                 let _this = this;
-                let baseTime = 100;
+                let baseTime = 70;
                 let stone = initStone(direction);
-
                 if (typeof(_this.inMoveing) !== "undefined"){
                     return;
                 }
                 _this.inMoveing = true;
                 _this.action = direction;
-                _this.duration = baseTime-Number(GAME_DIM/1.5).toFixed()*10;
+                _this.duration = baseTime-GAME_DIM*5;
                 _this.startAction(calOP, _this.duration, false, false, 0, stone, function (c, a, s) {
                     if (c) {
                         if (a) {
@@ -593,7 +559,6 @@
                         case "touchend":
                             let spanX = event.changedTouches[0].pageX - touchStartX;
                             let spanY = event.changedTouches[0].pageY - touchStartY;
-
                             if (Math.abs(spanX) > Math.abs(spanY)) {
                                 if (spanX > 30) {
                                     this.keyRight();
@@ -607,7 +572,6 @@
                                     this.keyUp();
                                 }
                             }
-
                             break;
                         case "touchmove":
                             event.preventDefault();
@@ -662,321 +626,285 @@
 </script>
 
 <style scoped>
-.no-gutters {
-    margin-right: 0;
-    margin-left: 0;
-}
-.no-gutters .col, [class*="col-"]{
-    padding-right: 0;
-    padding-left: 0;
-}
-
-.heading {
-    text-align: center;
-    user-select: none;
-}
-
-.heading .title {
-    display: inline-block;
-    text-align: left;
-    padding-right: 1%;
-    color: #776e65;
-    font-size: 40px;
-    font-weight: bold;
-    vertical-align: middle;
-}
-
-.heading .score {
-    display: inline-block;
-    width: 80px;
-    background: #bbada0;
-    font-weight: bold;
-    font-size: 10px;
-    border-radius: 3px 3px 3px 3px;
-    color: white;
-    text-align: center;
-    vertical-align: middle;
-}
-
-.heading .best-score {
-    display: inline-block;
-    width: 80px;
-    background: #bbada0;
-    font-weight: bold;
-    font-size: 10px;
-    border-radius: 3px 3px 3px 3px;
-    color: white;
-    text-align: center;
-    vertical-align: middle;
-}
-
-.heading .order-action{
-    display: inline-block;
-    width: 50px;
-    height: 36px;
-    margin-left: 1%;
-    font-weight: bold;
-    line-height: 36px;
-    color: #776e65;
-    text-align: center;
-    vertical-align: middle;
-}
-
-.heading .order-text{
-    display: block;
-    font-size: 17px;
-    height: 20px;
-    line-height: 20px;
-}
-
-.heading .order-minus{
-    display: block;
-    margin: 0;
-    padding: 0;
-    width: 0;
-    height: 0;
-    border-bottom: 8px solid  #776e65;
-    border-left: 25px solid transparent ;
-    border-right: 25px solid transparent ;
-    cursor: pointer;
-}
-
-.heading .order-add{
-    display: block;
-    margin: 0;
-    padding: 0;
-    width: 0;
-    height: 0;
-    border-top: 8px solid  #776e65;
-    border-left: 25px solid transparent ;
-    border-right: 25px solid transparent ;
-    cursor: pointer;
-}
-
-.heading .order-action .disabled{
-    border-bottom-color: #b0a597;
-    border-top-color: #b0a597;
-    cursor: default;
-}
-
-.heading .order-action .disabled:hover{
-    border-bottom-color: #b0a597;
-    border-top-color: #b0a597;
-}
-
-.heading .order-minus:hover{
-    border-bottom-color: #FF5432;
-}
-
-.heading .order-add:hover{
-    border-top-color: #FF5432;
-}
-
-.heading .new-game-btn{
-    display: inline-block;
-    width: 30px;
-    height: 36px;
-    font-weight: bold;
-    font-size: 25px;
-    line-height: 36px;
-    color: #776e65;
-    text-align: center;
-    vertical-align: middle;
-    cursor: pointer;
-}
-
-.game-over {
-    position: absolute;
-    left:0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    margin: auto;
-    text-align: center;
-    font-weight: bold;
-    font-size: 50px;
-    color: #776e65;
-    padding-top: 50%;
-    background-color: rgba(192,192,192,0.8);
-    z-index: 2;
-    border-radius: 1%;
-}
-
-.game-over .restart {
-    padding: 1%;
-    font-weight: bold;
-    font-size: 18px;
-    color: rgba(255,255,255,1);
-    background-color: #8f7a66;
-    border-radius: 3px 3px 3px 3px;
-    cursor: pointer;
-}
-
-#rate-feedback{
-    position: absolute;
-    right:0;
-    bottom: -30px;
-}
-
-.game{
-    background-color: #776e65;
-    padding: 0.5% !important;
-    border-radius: 1.5%;
-}
-
-/*.arrow-keyboard {*/
+    .no-gutters {
+        margin-right: 0;
+        margin-left: 0;
+    }
+    .no-gutters .col, [class*="col-"]{
+        padding-right: 0;
+        padding-left: 0;
+    }
+    .heading {
+        text-align: center;
+        user-select: none;
+    }
+    .heading .title {
+        display: inline-block;
+        text-align: left;
+        padding-right: 1%;
+        color: #776e65;
+        font-size: 40px;
+        font-weight: bold;
+        vertical-align: middle;
+    }
+    .heading .score {
+        display: inline-block;
+        width: 80px;
+        background: #bbada0;
+        font-weight: bold;
+        font-size: 10px;
+        border-radius: 3px 3px 3px 3px;
+        color: white;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .heading .best-score {
+        display: inline-block;
+        width: 80px;
+        background: #bbada0;
+        font-weight: bold;
+        font-size: 10px;
+        border-radius: 3px 3px 3px 3px;
+        color: white;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .heading .order-action{
+        display: inline-block;
+        width: 50px;
+        height: 36px;
+        margin-left: 1%;
+        font-weight: bold;
+        line-height: 36px;
+        color: #776e65;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .heading .order-text{
+        display: block;
+        font-size: 17px;
+        height: 20px;
+        line-height: 20px;
+    }
+    .heading .order-minus{
+        display: block;
+        margin: 0;
+        padding: 0;
+        width: 0;
+        height: 0;
+        border-bottom: 8px solid  #776e65;
+        border-left: 25px solid transparent ;
+        border-right: 25px solid transparent ;
+        cursor: pointer;
+    }
+    .heading .order-add{
+        display: block;
+        margin: 0;
+        padding: 0;
+        width: 0;
+        height: 0;
+        border-top: 8px solid  #776e65;
+        border-left: 25px solid transparent ;
+        border-right: 25px solid transparent ;
+        cursor: pointer;
+    }
+    .heading .order-action .disabled{
+        border-bottom-color: #b0a597;
+        border-top-color: #b0a597;
+        cursor: default;
+    }
+    .heading .order-action .disabled:hover{
+        border-bottom-color: #b0a597;
+        border-top-color: #b0a597;
+    }
+    .heading .order-minus:hover{
+        border-bottom-color: #FF5432;
+    }
+    .heading .order-add:hover{
+        border-top-color: #FF5432;
+    }
+    .heading .new-game-btn{
+        display: inline-block;
+        width: 30px;
+        height: 36px;
+        font-weight: bold;
+        font-size: 25px;
+        line-height: 36px;
+        color: #776e65;
+        text-align: center;
+        vertical-align: middle;
+        cursor: pointer;
+    }
+    .game-over {
+        position: absolute;
+        left:0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        text-align: center;
+        font-weight: bold;
+        font-size: 50px;
+        color: #776e65;
+        padding-top: 50%;
+        background-color: rgba(192,192,192,0.8);
+        z-index: 2;
+        border-radius: 1%;
+    }
+    .game-over .restart {
+        padding: 1%;
+        font-weight: bold;
+        font-size: 18px;
+        color: rgba(255,255,255,1);
+        background-color: #8f7a66;
+        border-radius: 3px 3px 3px 3px;
+        cursor: pointer;
+    }
+    #rate-feedback{
+        position: absolute;
+        right:0;
+        bottom: -30px;
+    }
+    .game{
+        background-color: #776e65;
+        padding: 0.5% !important;
+        border-radius: 1.5%;
+    }
+    /*.arrow-keyboard {*/
     /*text-align: center;*/
     /*margin: 0 0 0 0;*/
     /*padding: 0 0 0 0;*/
-/*}*/
-
-/*.arrow-keyboard-sm{*/
+    /*}*/
+    /*.arrow-keyboard-sm{*/
     /*text-align: center;*/
     /*margin: 0 0 0 0;*/
     /*padding: 0 0 0 0;*/
-/*}*/
-
-.tip {
-    padding: 0 0 0 0;
-    margin: 0 0 0 0;
-    text-align: center;
-    font-size: 18px;
-    font-weight: bold;
-    color: #776e65;
-}
-
-.heading-sm {
-    text-align: center;
-    user-select: none;
-}
-
-.heading-sm .title-sm {
-    text-align: center;
-    color: #776e65;
-    font-size: 40px;
-    font-weight: bold;
-}
-
-.heading-sm .score-sm {
-    display: inline-block;
-    width: 90px;
-    background: #bbada0;
-    font-weight: bold;
-    font-size: 10px;
-    border-radius: 3px 3px 3px 3px;
-    color: white;
-    text-align: center;
-    vertical-align: middle;
-}
-
-.heading-sm .best-score-sm {
-    display: inline-block;
-    width:  90px;
-    background: #bbada0;
-    font-weight: bold;
-    font-size: 10px;
-    border-radius: 3px 3px 3px 3px;
-    color: white;
-    text-align: center;
-    vertical-align: middle;
-}
-
-.heading-sm .order-action-sm{
-    display: block;
-    margin-top: 20px;
-    height: 36px;
-    font-size: 20px;
-    text-align: center;
-    vertical-align: middle;
-}
-
-.heading-sm .order-text-sm{
-    display: inline-block;
-    height: 36px;
-    font-size: 30px;
-    font-weight: bold;
-    color: #776e65;
-    line-height: 36px;
-    vertical-align: middle;
-}
-
-.heading-sm .order-minus-sm{
-    display: inline-block;
-    margin: 0;
-    padding: 0;
-    width: 0;
-    height: 0;
-    border-right: 9px solid  #776e65;
-    border-top: 18px solid transparent ;
-    border-bottom: 18px solid transparent ;
-    cursor: pointer;
-    vertical-align: middle;
-}
-
-.heading-sm .order-add-sm{
-    display: inline-block;
-    margin: 0;
-    padding: 0;
-    width: 0;
-    height: 0;
-    border-left: 9px solid  #776e65;
-    border-top: 18px solid transparent ;
-    border-bottom: 18px solid transparent ;
-    cursor: pointer;
-    vertical-align: middle;
-}
-
-.heading-sm .order-minus-sm:hover{
-    border-right-color: #FF5432;
-}
-
-.heading-sm .order-add-sm:hover{
-    border-left-color: #FF5432;
-}
-
-.heading-sm .order-action-sm  .disabled{
-    border-left-color: #b0a597;
-    border-right-color: #b0a597;
-    cursor: default;
-}
-
-.heading-sm  .order-action-sm  .disabled:hover{
-    border-left-color: #b0a597;
-    border-right-color: #b0a597;
-}
-
-.new-game-btn-sm-area{
-    margin-top: 60px;
-}
-
-.heading-sm .new-game-btn-sm{
-    height: 36px;
-    font-weight: bold;
-    font-size: 50px;
-    line-height: 36px;
-    color: #776e65;
-    text-align: center;
-    vertical-align: middle;
-    cursor: pointer;
-}
-
-.tip-sm {
-    position: absolute;
-    left:0;
-    right: 0;
-    bottom: 50px;
-    padding: 0 0 0 0;
-    text-align: center;
-    font-size: 14px;
-    font-weight: bold;
-    color: #776e65;
-}
-
-#rate-feedback-sm{
-    position: absolute;
-    left:0;
-    right: 0;
-    bottom: 0;
-    text-align: center;
-}
+    /*}*/
+    .tip {
+        padding: 0 0 0 0;
+        margin: 0 0 0 0;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        color: #776e65;
+    }
+    .heading-sm {
+        text-align: center;
+        user-select: none;
+    }
+    .heading-sm .title-sm {
+        text-align: center;
+        color: #776e65;
+        font-size: 40px;
+        font-weight: bold;
+    }
+    .heading-sm .score-sm {
+        display: inline-block;
+        width: 90px;
+        background: #bbada0;
+        font-weight: bold;
+        font-size: 10px;
+        border-radius: 3px 3px 3px 3px;
+        color: white;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .heading-sm .best-score-sm {
+        display: inline-block;
+        width:  90px;
+        background: #bbada0;
+        font-weight: bold;
+        font-size: 10px;
+        border-radius: 3px 3px 3px 3px;
+        color: white;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .heading-sm .order-action-sm{
+        display: block;
+        margin-top: 20px;
+        height: 36px;
+        font-size: 20px;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .heading-sm .order-text-sm{
+        display: inline-block;
+        height: 36px;
+        font-size: 30px;
+        font-weight: bold;
+        color: #776e65;
+        line-height: 36px;
+        vertical-align: middle;
+    }
+    .heading-sm .order-minus-sm{
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+        width: 0;
+        height: 0;
+        border-right: 9px solid  #776e65;
+        border-top: 18px solid transparent ;
+        border-bottom: 18px solid transparent ;
+        cursor: pointer;
+        vertical-align: middle;
+    }
+    .heading-sm .order-add-sm{
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+        width: 0;
+        height: 0;
+        border-left: 9px solid  #776e65;
+        border-top: 18px solid transparent ;
+        border-bottom: 18px solid transparent ;
+        cursor: pointer;
+        vertical-align: middle;
+    }
+    .heading-sm .order-minus-sm:hover{
+        border-right-color: #FF5432;
+    }
+    .heading-sm .order-add-sm:hover{
+        border-left-color: #FF5432;
+    }
+    .heading-sm .order-action-sm  .disabled{
+        border-left-color: #b0a597;
+        border-right-color: #b0a597;
+        cursor: default;
+    }
+    .heading-sm  .order-action-sm  .disabled:hover{
+        border-left-color: #b0a597;
+        border-right-color: #b0a597;
+    }
+    .new-game-btn-sm-area{
+        margin-top: 60px;
+    }
+    .heading-sm .new-game-btn-sm{
+        height: 36px;
+        font-weight: bold;
+        font-size: 50px;
+        line-height: 36px;
+        color: #776e65;
+        text-align: center;
+        vertical-align: middle;
+        cursor: pointer;
+    }
+    .tip-sm {
+        position: absolute;
+        left:0;
+        right: 0;
+        bottom: 50px;
+        padding: 0 0 0 0;
+        text-align: center;
+        font-size: 14px;
+        font-weight: bold;
+        color: #776e65;
+    }
+    #rate-feedback-sm{
+        position: absolute;
+        left:0;
+        right: 0;
+        bottom: 0;
+        text-align: center;
+    }
 </style>
