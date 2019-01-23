@@ -143,13 +143,13 @@
                 if (numbers[i][j] !== 0 && stone[i] === j){
                     if ((0|numbers[i][j]) === (0|numbers[i][j-1])){
                         needAddMove[i][j] = 1;
-                        score += (0|numbers[i][j]);
+                        score += 2*(0|numbers[i][j]);
                         numbers[i][j] = 2*numbers[i][j];
                         numbers[i][j-1] = 0;
                         haveChanged = true;
                         haveAdd = true;
                         stone[i] = j-1;
-                        j-=2;
+                        j--;
                     }
                     else if ((0|numbers[i][j-1]) !== 0){
                         stone[i] = j-1;
@@ -196,13 +196,13 @@
                 if (numbers[i][j] !== 0 && stone[i] === j) {
                     if ((0|numbers[i][j]) === (0|numbers[i][j+1])) {
                         needAddMove[i][j] = 1;
-                        score+=(0|numbers[i][j]);
+                        score+=2*(0|numbers[i][j]);
                         numbers[i][j] = 2*numbers[i][j];
                         numbers[i][j+1] = 0;
                         haveChanged = true;
                         haveAdd = true;
                         stone[i] = j+1;
-                        j+=2;
+                        j++;
                     }
                     else if ((0|numbers[i][j+1]) !== 0){
                         stone[i] = j+1;
@@ -249,13 +249,13 @@
                 if (numbers[j][i] !== 0 && stone[i] === j) {
                     if ((0|numbers[j][i]) === (0|numbers[j-1][i])) {
                         needAddMove[j][i] = 1;
-                        score += (0|numbers[j][i]);
+                        score += 2*(0|numbers[j][i]);
                         numbers[j][i] = 2*numbers[j][i];
                         numbers[j-1][i] = 0;
                         haveChanged = true;
                         haveAdd = true;
                         stone[i] = j-1;
-                        j-=2;
+                        j--;
                     }
                     else if ((0|numbers[j-1][i]) !== 0) {
                         stone[i] = j-1;
@@ -302,13 +302,13 @@
                 if (numbers[j][i] !== 0 && stone[i] === j) {
                     if ((0|numbers[j][i]) === (0|numbers[j+1][i])) {
                         needAddMove[j][i] = 1;
-                        score+=(0|numbers[j][i]);
+                        score+=2*(0|numbers[j][i]);
                         numbers[j][i] = 2*numbers[j][i];
                         numbers[j+1][i] = 0;
                         haveChanged = true;
                         haveAdd = true;
                         stone[i] = j+1;
-                        j+=2;
+                        j++;
                     }
                     else if ((0|numbers[j+1][i]) !== 0) {
                         stone[i] = j+1;
@@ -495,7 +495,7 @@
                 oscillator.connect(gainNode);
                 gainNode.connect(this.audioCtx.destination);
                 oscillator.type = 'sine';
-                oscillator.frequency.value = 300+Math.log2(score)*100;
+                oscillator.frequency.value = 300+(Math.log2(score)-1)*100;
                 gainNode.gain.setValueAtTime(0, this.audioCtx.currentTime);
                 gainNode.gain.linearRampToValueAtTime(1, this.audioCtx.currentTime + 0.01);
                 oscillator.start(this.audioCtx.currentTime);
@@ -644,16 +644,16 @@
         text-align: left;
         padding-right: 1%;
         color: #776e65;
-        font-size: 40px;
+        font-size: 48px;
         font-weight: bold;
         vertical-align: middle;
     }
     .heading .score {
         display: inline-block;
-        width: 80px;
+        width: 90px;
         background: #bbada0;
         font-weight: bold;
-        font-size: 10px;
+        font-size: 12px;
         border-radius: 3px 3px 3px 3px;
         color: white;
         text-align: center;
@@ -661,10 +661,10 @@
     }
     .heading .best-score {
         display: inline-block;
-        width: 80px;
+        width: 90px;
         background: #bbada0;
         font-weight: bold;
-        font-size: 10px;
+        font-size: 12px;
         border-radius: 3px 3px 3px 3px;
         color: white;
         text-align: center;
@@ -749,7 +749,7 @@
         color: #776e65;
         padding-top: 50%;
         background-color: rgba(192,192,192,0.8);
-        z-index: 2;
+        z-index: 3;
         border-radius: 1%;
     }
     .game-over .restart {
@@ -796,7 +796,7 @@
     .heading-sm .title-sm {
         text-align: center;
         color: #776e65;
-        font-size: 40px;
+        font-size: 48px;
         font-weight: bold;
     }
     .heading-sm .score-sm {
@@ -804,7 +804,7 @@
         width: 90px;
         background: #bbada0;
         font-weight: bold;
-        font-size: 10px;
+        font-size: 12px;
         border-radius: 3px 3px 3px 3px;
         color: white;
         text-align: center;
@@ -815,7 +815,7 @@
         width:  90px;
         background: #bbada0;
         font-weight: bold;
-        font-size: 10px;
+        font-size: 12px;
         border-radius: 3px 3px 3px 3px;
         color: white;
         text-align: center;
