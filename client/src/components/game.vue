@@ -83,18 +83,20 @@
     import _ from "lodash";
 
     let GAME_DIM = 4;
-    function  initTwoDimArray(x, y){
+
+    function  initTwoDimArray(x, y, init = 0){
         let a=new Array(x);
         for(let i=0;i<x;i++){
             a[i]=new Array(y);
         }
         for(let i=0; i<x; i++){
             for(let j=0; j<y; j++){
-                a[i][j] = 0;
+                a[i][j] = init;
             }
         }
         return a;
     }
+
     function copyTwoDimArray(copyArray, x, y) {
         let a = initTwoDimArray(x, y);
         for(let i=0; i<x; i++){
@@ -104,6 +106,7 @@
         }
         return a;
     }
+
     function fixCopyTwoDimArray(copyArray, x, y) {
         let a = initTwoDimArray(x, y);
         for(let i=0; i<x; i++){
@@ -113,6 +116,7 @@
         }
         return a;
     }
+
     function initStone(direction) {
         let stone = new Array(GAME_DIM);
         switch (direction) {
@@ -131,6 +135,7 @@
         }
         return stone;
     }
+
     function right(a, stone) {
         let score = 0;
         let haveAdd = false;
@@ -184,6 +189,7 @@
         }
         return {numbers, haveChanged, haveAdd, score};
     }
+
     function left(a, stone) {
         let  haveAdd = false;
         let  haveChanged = false;
@@ -237,6 +243,7 @@
         }
         return {numbers, haveChanged, haveAdd, score};
     }
+
     function down(a, stone) {
         let  haveAdd = false;
         let  haveChanged = false;
@@ -290,6 +297,7 @@
         }
         return {numbers, haveChanged, haveAdd, score};
     }
+
     function up(a, stone) {
         let  haveAdd = false;
         let  haveChanged = false;
@@ -343,6 +351,7 @@
         }
         return {numbers, haveChanged, haveAdd, score};
     }
+
     function randomFill(numbers){
         let numbersZeroCount = arrZeroCount(numbers);
         let randomNumber = 2;
@@ -372,6 +381,7 @@
         }
         return numbers;
     }
+
     function arrZeroCount(numbers) {
         let zeroCount = 0;
         for(let i=0; i<GAME_DIM; i++){
@@ -383,10 +393,12 @@
         }
         return zeroCount;
     }
+
     function changeCheck(f, numbers, stone) {
         let {haveChanged} = f(numbers, stone);
         return haveChanged;
     }
+
     function checkGameOver(numbers) {
         let numbersCP = copyTwoDimArray(numbers, GAME_DIM, GAME_DIM);
         if (arrZeroCount(numbers) !== 0){
@@ -395,6 +407,7 @@
         return !(changeCheck(up, numbersCP, initStone("up")) || changeCheck(down, numbersCP, initStone("down"))
             || changeCheck(right, numbersCP, initStone("right")) || changeCheck(left, numbersCP, initStone("left")));
     }
+
     export default {
         name: "game",
         data: function (){
