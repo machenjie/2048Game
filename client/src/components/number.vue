@@ -83,15 +83,17 @@
             number:{
                 type: Number
             },
+            action: {
+                type: String
+            },
             duration: {
                 type: Number
             },
-            action: "",
             viewWidth: ""
         },
         data: function () {
             return {
-                currentNumber: 0|this.number,
+                currentNumber: this.number,
                 numberStyle: calStyleFromNumber(this.currentNumber, 0),
                 shadow: false,
                 shadowNumberStyle: calStyleFromNumber(this.currentNumber, 0),
@@ -115,83 +117,77 @@
             // }
         },
         watch: {
-            number: function (val, oldVal) {
+            action: function (val) {
+                if (typeof(val) !== "string"){
+                    return;
+                }
+
                 let _this = this;
                 let width = this.$refs.box.clientWidth;
                 let distance = 1.1*width;
-
-                if (val !== 0){
-                    switch (this.action) {
-                        case "up":
-                        case "right":
-                        case "down":
-                        case "left":
-                            let orgOffset = 0;
-                            let direction = "";
-                            switch (this.action){
-                                case "up":
-                                    orgOffset = distance;
-                                    direction = "translateY";
-                                    break;
-                                case "right":
-                                    orgOffset = -distance;
-                                    direction = "translateX";
-                                    break;
-                                case "down":
-                                    orgOffset = -distance;
-                                    direction = "translateY";
-                                    break;
-                                case "left":
-                                    orgOffset = distance;
-                                    direction = "translateX";
-                                    break;
-                            }
-                            if (val !== 2*oldVal) {
-                                val = 0|val;
-                                _this.currentNumber = val;
-                                _this.numberStyle = calStyleFromNumber(val, width);
-                                _this.numberStyle.transform = direction+"("+orgOffset+"px)";
-                                StartTween({num: orgOffset}, {num: 0}, function (object) {
-                                    _this.numberStyle.transform = direction+"("+Number(object.num).toFixed()+"px)";
-                                }, _this.duration);
-                            }
-                            else if (val === 2*oldVal){
-                                val = 0|val;
-                                oldVal = 0|oldVal;
-                                _this.shadow = true;
-                                _this.shadowNumberStyle = calStyleFromNumber(oldVal, width);
-                                _this.shadowNumberStyle.transform = direction+"("+orgOffset+"px)";
-                                _this.shadowNumberStyle.zIndex = 1;
-                                StartTween({num: orgOffset}, {num: 0}, function (object) {
-                                    _this.shadowNumberStyle.transform = direction+"("+Number(object.num).toFixed()+"px)";
-                                }, _this.duration, function () {
-                                    _this.shadow = false;
-                                    _this.currentNumber = val;
-                                    _this.numberStyle = calStyleFromNumber(val, width);
-                                    _.delay(function () {
-                                        _this.addAnimation();
-                                    }, 0);
-                                });
-                            }
-                            break;
-                        case "new":
-                            _this.currentNumber = val;
-                            _this.numberStyle = calStyleFromNumber(val, width);
-                            _this.numberStyle.transform = "scale(0.5)";
-                            StartTween({num: 0.5}, {num: 1}, function (object) {
-                                _this.numberStyle.transform = "scale("+Number(object.num).toFixed(2)+","+Number(object.num).toFixed(2)+")";
-                            }, _this.duration);
-                            break;
-                        default:
-                            _this.currentNumber = val;
-                            this.numberStyle = calStyleFromNumber(val, width);
-                    }
+                let orgOffset = 0;
+                let direction = "";
+                if (this.action.indexOf("up") !== -1){
+                    orgOffset = distance;
+                    direction = "translateY";
                 }
-                else{
-                    if (oldVal !== 0) {
-                        this.currentNumber = val;
-                        this.numberStyle = calStyleFromNumber(val, width);
-                    }
+                else if (this.action.indexOf("right") !== -1){
+                    orgOffset = -distance;
+                    direction = "translateX";
+                }
+                else if (this.action.indexOf("down") !== -1){
+                    orgOffset = -distance;
+                    direction = "translateY";
+                }
+                else if (this.action.indexOf("left") !== -1){
+                    orgOffset = distance;
+                    direction = "translateX";
+                }
+
+                switch (this.action) {
+                    case "up":
+                    case "right":
+                    case "down":
+                    case "left":
+                        _this.currentNumber = _this.number;
+                        _this.numberStyle = calStyleFromNumber(_this.currentNumber, width);
+                        _this.numberStyle.transform = direction+"("+orgOffset+"px)";
+                        StartTween({num: orgOffset}, {num: 0}, function (object) {
+                            _this.numberStyle.transform = direction+"("+Number(object.num).toFixed()+"px)";
+                        }, _this.duration);
+                        break;
+                    case "up-double":
+                    case "right-double":
+                    case "down-double":
+                    case "left-double":
+                        _this.shadow = true;
+                        _this.shadowNumberStyle = calStyleFromNumber(_this.currentNumber, width);
+                        _this.shadowNumberStyle.transform = direction+"("+orgOffset+"px)";
+                        _this.shadowNumberStyle.zIndex = 1;
+                        StartTween({num: orgOffset}, {num: 0}, function (object) {
+                            _this.shadowNumberStyle.transform = direction+"("+Number(object.num).toFixed()+"px)";
+                        }, _this.duration, function () {
+                            _this.shadow = false;
+                            _this.currentNumber = _this.number;
+                            _this.numberStyle = calStyleFromNumber(_this.currentNumber, width);
+                            _.delay(function () {
+                                _this.addAnimation();
+                            }, 0);
+                        });
+                        break;
+                    case "new":
+                        _this.currentNumber = _this.number;
+                        _this.numberStyle = calStyleFromNumber(_this.currentNumber, width);
+                        _this.numberStyle.transform = "scale(0.5)";
+                        StartTween({num: 0.5}, {num: 1}, function (object) {
+                            _this.numberStyle.transform = "scale("+Number(object.num).toFixed(2)+","+Number(object.num).toFixed(2)+")";
+                        }, _this.duration);
+                        break;
+                    case "hidden":
+                    case "change":
+                    default:
+                        _this.currentNumber = _this.number;
+                        _this.numberStyle = calStyleFromNumber(_this.currentNumber, width);
                 }
             },
             viewWidth: function () {
