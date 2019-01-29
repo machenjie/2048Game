@@ -4,18 +4,10 @@
          @touchend="touchAction">
         <div class="heading d-block d-sm-none d-md-block">
             <div class="title">2048</div>
+            <level-choose id="level-choose" dialogTag="normal"></level-choose>
             <div class="score">
                 SCORE
                 <tween-number :number="score" :duration="200"></tween-number>
-            </div>
-            <div class="best-score">
-                BEST
-                <tween-number :number="bestScore" :duration="200"></tween-number>
-            </div>
-            <div class="order-action">
-                <div class="order-minus" :class="{disabled: currentGameDim===4}" @click="orderMinus" title="decrease order"></div>
-                <div class="order-text">{{currentGameDim}}&#215;{{currentGameDim}}</div>
-                <div class="order-add" :class="{disabled: currentGameDim===9}" @click="orderAdd" title="increase order"></div>
             </div>
             <a class="new-game-btn" title="new game" @click="newGame">
                 &#10227;
@@ -41,30 +33,24 @@
                      data-toggle="tooltip"
                      data-placement="bottom"
                      trigger="manual"
-                     title="Challenge Mode"
-                     @mouseover="challengeModeNavMouseOver"
-                     @mouseout="challengeModeNavMouseOut"
-                     @click="challengeModeNavMouseClick">
+                     title="Classic Mode"
+                     @mouseover="classicModeNavMouseOver"
+                     @mouseout="classicModeNavMouseOut"
+                     @click="classicModeNavMouseClick">
                     &#10152;
                 </div>
             </div>
             <div class="col-0 col-sm-4 col-md-2 col-lg-3 col-xl">
                 <div class="heading-sm d-none d-sm-block d-md-none">
                     <div class="title-sm">2048</div>
+                    <div class="level-choose-sm-area">
+                        <level-choose id="level-choose-sm" dialogTag="small"></level-choose>
+                    </div>
                     <div>
                         <div class="score-sm">
                             SCORE
                             <tween-number :number="score" :duration="200"></tween-number>
                         </div>
-                        <div class="best-score-sm">
-                            BEST
-                            <tween-number :number="bestScore" :duration="200"></tween-number>
-                        </div>
-                    </div>
-                    <div class="order-action-sm">
-                        <div class="order-minus-sm" :class="{disabled: currentGameDim===4}" @click="orderMinus" title="decrease order"></div>
-                        <div class="order-text-sm">{{currentGameDim}}&#215;{{currentGameDim}}</div>
-                        <div class="order-add-sm" :class="{disabled: currentGameDim===9}" @click="orderAdd" title="increase order"></div>
                     </div>
                     <div class="new-game-btn-sm-area">
                         <a class="new-game-btn-sm" title="new game" @click="newGame">
@@ -82,10 +68,10 @@
                              data-toggle="tooltip"
                              data-placement="bottom"
                              trigger="manual"
-                             title="Challenge Mode"
-                             @mouseover="challengeModeNavMouseOverSM"
-                             @mouseout="challengeModeNavMouseOutSM"
-                             @click="challengeModeNavMouseClickSM">
+                             title="Classic Mode"
+                             @mouseover="classicModeNavMouseOverSM"
+                             @mouseout="classicModeNavMouseOutSM"
+                             @click="classicModeNavMouseClickSM">
                             &#10152;
                         </div>
                     </div>
@@ -103,6 +89,7 @@
     import tweenNumber from "../common/vuecomponet/tween-number";
     import arrowKeyboard from "./arrow-keyboard";
     import rateFeedback from "./rate-feedback";
+    import levelChoose from "./level-choose";
     import _ from "lodash";
 
     let GAME_DIM = 4;
@@ -406,7 +393,7 @@
     }
 
     export default {
-        name: "game",
+        name: "challenge-game",
         data: function (){
             return {
                 duration: 1,
@@ -421,24 +408,24 @@
             }
         },
         methods: {
-            challengeModeNavMouseOver: function(){
+            classicModeNavMouseOver: function(){
                 $('.challenge-mode-navigate').tooltip("show");
             },
-            challengeModeNavMouseOut: function(){
+            classicModeNavMouseOut: function(){
                 $('.challenge-mode-navigate').tooltip("hide");
             },
-            challengeModeNavMouseClick: function(){
-                this.$router.replace("/challenge-game");
+            classicModeNavMouseClick: function(){
+                this.$router.replace("/");
                 $('.challenge-mode-navigate').tooltip("hide");
             },
-            challengeModeNavMouseOverSM: function(){
+            classicModeNavMouseOverSM: function(){
                 $('.challenge-mode-navigate-sm').tooltip("show");
             },
-            challengeModeNavMouseOutSM: function(){
+            classicModeNavMouseOutSM: function(){
                 $('.challenge-mode-navigate-sm').tooltip("hide");
             },
-            challengeModeNavMouseClickSM: function(){
-                this.$router.replace("/challenge-game");
+            classicModeNavMouseClickSM: function(){
+                this.$router.replace("/");
                 $('.challenge-mode-navigate-sm').tooltip("hide");
             },
             newGame: function (){
@@ -464,10 +451,10 @@
                     gameOver: this.gameOver,
                     currentGameDim: this.currentGameDim,
                 };
-                localStorage.setItem("_2048_game_data", JSON.stringify(store));
+                localStorage.setItem("_2048_challenge_game_data", JSON.stringify(store));
             },
             restoreDataFromHistory: function () {
-                let data = localStorage.getItem("_2048_game_data");
+                let data = localStorage.getItem("_2048_challenge_game_data");
                 if (data) {
                     let {numbers, score, bestScore, gameOver, currentGameDim} = JSON.parse(data);
                     if (typeof(currentGameDim) !== "undefined") {
@@ -680,6 +667,7 @@
             number,
             arrowKeyboard,
             rateFeedback,
+            levelChoose,
         }
     }
 </script>
@@ -719,71 +707,10 @@
         text-align: center;
         vertical-align: middle;
     }
-    .heading .best-score {
+    #level-choose{
         display: inline-block;
-        width: 90px;
         margin-right: 5px;
-        background: #bbada0;
-        font-weight: bold;
-        font-size: 12px;
-        border-radius: 3px 3px 3px 3px;
-        color: white;
-        text-align: center;
         vertical-align: middle;
-    }
-    .heading .order-action{
-        display: inline-block;
-        width: 65px;
-        height: 36px;
-        margin-right: 5px;
-        font-weight: bold;
-        line-height: 36px;
-        color: #776e65;
-        text-align: center;
-        vertical-align: middle;
-    }
-    .heading .order-text{
-        display: block;
-        font-size: 17px;
-        height: 20px;
-        line-height: 20px;
-    }
-    .heading .order-minus{
-        display: block;
-        margin: 0;
-        padding: 0;
-        width: 0;
-        height: 0;
-        border-bottom: 8px solid  #776e65;
-        border-left: 32px solid transparent ;
-        border-right: 32px solid transparent ;
-        cursor: pointer;
-    }
-    .heading .order-add{
-        display: block;
-        margin: 0;
-        padding: 0;
-        width: 0;
-        height: 0;
-        border-top: 8px solid  #776e65;
-        border-left: 32px solid transparent ;
-        border-right: 32px solid transparent ;
-        cursor: pointer;
-    }
-    .heading .order-action .disabled{
-        border-bottom-color: #b0a597;
-        border-top-color: #b0a597;
-        cursor: default;
-    }
-    .heading .order-action .disabled:hover{
-        border-bottom-color: #b0a597;
-        border-top-color: #b0a597;
-    }
-    .heading .order-minus:hover{
-        border-bottom-color: #FF5432;
-    }
-    .heading .order-add:hover{
-        border-top-color: #FF5432;
     }
     .heading .new-game-btn{
         display: inline-block;
@@ -879,6 +806,7 @@
     }
     .heading-sm .score-sm {
         display: inline-block;
+        margin-top: 10px;
         width: 90px;
         background: #bbada0;
         font-weight: bold;
@@ -888,72 +816,11 @@
         text-align: center;
         vertical-align: middle;
     }
-    .heading-sm .best-score-sm {
-        display: inline-block;
-        width:  90px;
-        background: #bbada0;
-        font-weight: bold;
-        font-size: 12px;
-        border-radius: 3px 3px 3px 3px;
-        color: white;
+    .level-choose-sm-area{
         text-align: center;
-        vertical-align: middle;
     }
-    .heading-sm .order-action-sm{
-        display: block;
-        margin-top: 20px;
-        height: 36px;
-        font-size: 20px;
-        text-align: center;
-        vertical-align: middle;
-    }
-    .heading-sm .order-text-sm{
+    #level-choose-sm{
         display: inline-block;
-        height: 36px;
-        font-size: 30px;
-        font-weight: bold;
-        color: #776e65;
-        line-height: 36px;
-        vertical-align: middle;
-    }
-    .heading-sm .order-minus-sm{
-        display: inline-block;
-        margin: 0;
-        padding: 0;
-        width: 0;
-        height: 0;
-        border-right: 9px solid  #776e65;
-        border-top: 18px solid transparent ;
-        border-bottom: 18px solid transparent ;
-        cursor: pointer;
-        vertical-align: middle;
-    }
-    .heading-sm .order-add-sm{
-        display: inline-block;
-        margin: 0;
-        padding: 0;
-        width: 0;
-        height: 0;
-        border-left: 9px solid  #776e65;
-        border-top: 18px solid transparent ;
-        border-bottom: 18px solid transparent ;
-        cursor: pointer;
-        vertical-align: middle;
-    }
-    .heading-sm .order-minus-sm:hover{
-        border-right-color: #FF5432;
-    }
-    .heading-sm .order-add-sm:hover{
-        border-left-color: #FF5432;
-    }
-    .heading-sm .order-action-sm  .disabled{
-        border-left-color: #b0a597;
-        border-right-color: #b0a597;
-        cursor: default;
-    }
-    .heading-sm  .order-action-sm  .disabled:hover{
-        border-left-color: #b0a597;
-        border-right-color: #b0a597;
     }
     .new-game-btn-sm-area{
         margin-top: 60px;
