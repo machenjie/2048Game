@@ -9,7 +9,9 @@
 </head>
 <body>
     <div id="app" class="container-fluid">
-        <game ></game>
+        <transition name="fade" mode="out-in">
+            <router-view></router-view>
+        </transition>
     </div>
 </body>
 <style>
@@ -22,6 +24,12 @@
     }
     .container-fluid {
         padding: 0 0 0 0;
+    }
+    .fade-enter-active, .fade-leave-active {
+        transition: all .5s;
+    }
+    .fade-enter, .fade-leave-to {
+        opacity: 0;
     }
 </style>
 </html>
