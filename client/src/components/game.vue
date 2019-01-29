@@ -51,7 +51,7 @@
             <div class="col-0 col-sm-4 col-md-2 col-lg-3 col-xl">
                 <div class="heading-sm d-none d-sm-block d-md-none">
                     <div class="title-sm">2048</div>
-                    <div>
+                    <div class="score-area">
                         <div class="score-sm">
                             SCORE
                             <tween-number :number="score" :duration="200"></tween-number>
@@ -695,21 +695,26 @@
     }
     .heading {
         text-align: center;
+        margin: 18px 0 18px 0;
         user-select: none;
         font-size: 0;
     }
     .heading .title {
         display: inline-block;
+        width: 100px;
+        height: 36px;
         text-align: left;
         margin-right: 5px;
         color: #776e65;
         font-size: 45px;
         font-weight: bold;
+        line-height: 36px;
         vertical-align: middle;
     }
     .heading .score {
         display: inline-block;
         width: 90px;
+        height: 36px;
         margin-right: 5px;
         background: #bbada0;
         font-weight: bold;
@@ -722,6 +727,7 @@
     .heading .best-score {
         display: inline-block;
         width: 90px;
+        height: 36px;
         margin-right: 5px;
         background: #bbada0;
         font-weight: bold;
@@ -868,18 +874,26 @@
         color: #776e65;
     }
     .heading-sm {
+        margin: 18px 0 0 0;
         text-align: center;
         user-select: none;
     }
     .heading-sm .title-sm {
         text-align: center;
+        height: 36px;
         color: #776e65;
-        font-size: 48px;
+        font-size: 45px;
         font-weight: bold;
+        line-height: 36px;
+    }
+    .heading-sm .score-area{
+        padding: 0;
+        margin: 18px 0 0 0;
     }
     .heading-sm .score-sm {
         display: inline-block;
         width: 90px;
+        height: 36px;
         background: #bbada0;
         font-weight: bold;
         font-size: 12px;
@@ -891,6 +905,7 @@
     .heading-sm .best-score-sm {
         display: inline-block;
         width:  90px;
+        height: 36px;
         background: #bbada0;
         font-weight: bold;
         font-size: 12px;
@@ -901,7 +916,7 @@
     }
     .heading-sm .order-action-sm{
         display: block;
-        margin-top: 20px;
+        margin: 18px 0 0 0;
         height: 36px;
         font-size: 20px;
         text-align: center;

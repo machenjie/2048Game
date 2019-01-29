@@ -3,8 +3,7 @@
          @touchmove="touchAction"
          @touchend="touchAction">
         <div class="heading d-block d-sm-none d-md-block">
-            <div class="title">2048</div>
-            <level-choose id="level-choose" dialogTag="normal"></level-choose>
+            <level-choose class="level-choose" dialogTag="normal" :chooseList="chooseList"></level-choose>
             <div class="score">
                 SCORE
                 <tween-number :number="score" :duration="200"></tween-number>
@@ -42,9 +41,8 @@
             </div>
             <div class="col-0 col-sm-4 col-md-2 col-lg-3 col-xl">
                 <div class="heading-sm d-none d-sm-block d-md-none">
-                    <div class="title-sm">2048</div>
                     <div class="level-choose-sm-area">
-                        <level-choose id="level-choose-sm" dialogTag="small"></level-choose>
+                        <level-choose class="level-choose-sm" dialogTag="small" :chooseList="chooseList"></level-choose>
                     </div>
                     <div>
                         <div class="score-sm">
@@ -395,6 +393,30 @@
     export default {
         name: "challenge-game",
         data: function (){
+            let chooseList = [
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: false},
+                {done: false},
+                {done: false},
+                {done: false},
+                {done: false},
+                {done: false},
+                {done: false},
+                {done: false},
+                {done: false},
+                {done: false},
+                {done: false},
+                {done: false},
+                {done: false},
+                {done: false},
+                {done: false},
+                {done: false},
+            ];
             return {
                 duration: 1,
                 currentGameDim: GAME_DIM,
@@ -405,6 +427,7 @@
                 bestScore: 0,
                 gameOver: false,
                 viewWidth: document.body.clientWidth, //only just one element can receive resize event, so use viewWidth to notify others
+                chooseList,
             }
         },
         methods: {
@@ -682,22 +705,32 @@
         padding-left: 0;
     }
     .heading {
+        margin: 18px 0 18px 0;
         text-align: center;
         user-select: none;
         font-size: 0;
     }
-    .heading .title {
+    .heading .level-choose{
         display: inline-block;
-        text-align: left;
+        max-width: 120px;
+        height: 36px;
+        text-align: right;
         margin-right: 5px;
         color: #776e65;
-        font-size: 45px;
+        font-size: 24px;
         font-weight: bold;
+        line-height: 36px;
+        cursor: pointer;
+
         vertical-align: middle;
+    }
+    .heading .level-choose:hover{
+        color: #FF5432;
     }
     .heading .score {
         display: inline-block;
         width: 90px;
+        height: 36px;
         margin-right: 5px;
         background: #bbada0;
         font-weight: bold;
@@ -705,11 +738,6 @@
         border-radius: 3px 3px 3px 3px;
         color: white;
         text-align: center;
-        vertical-align: middle;
-    }
-    #level-choose{
-        display: inline-block;
-        margin-right: 5px;
         vertical-align: middle;
     }
     .heading .new-game-btn{
@@ -795,19 +823,31 @@
         color: #776e65;
     }
     .heading-sm {
+        margin: 18px 0 0 0;
         text-align: center;
         user-select: none;
     }
-    .heading-sm .title-sm {
+    .heading-sm .level-choose-sm-area{
         text-align: center;
+    }
+    .heading-sm .level-choose-sm{
+        display: inline-block;
+        text-align: center;
+        height: 36px;
         color: #776e65;
-        font-size: 48px;
+        font-size: 24px;
         font-weight: bold;
+        line-height: 36px;
+        cursor: pointer;
+    }
+    .heading-sm .level-choose-sm:hover{
+        color: #FF5432;
     }
     .heading-sm .score-sm {
         display: inline-block;
-        margin-top: 10px;
+        margin: 18px 0 0 0;
         width: 90px;
+        height: 36px;
         background: #bbada0;
         font-weight: bold;
         font-size: 12px;
@@ -815,12 +855,6 @@
         color: white;
         text-align: center;
         vertical-align: middle;
-    }
-    .level-choose-sm-area{
-        text-align: center;
-    }
-    #level-choose-sm{
-        display: inline-block;
     }
     .new-game-btn-sm-area{
         margin-top: 60px;

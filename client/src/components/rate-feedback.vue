@@ -95,8 +95,10 @@
         text-decoration: none;
     }
 
-    .modal {
+    .modal-content {
         margin-top: 30vh;
+        background: #faf8ef;
+        border: 0;
     }
 
     .modal-body{
@@ -115,8 +117,8 @@
         display: block;
         width: 100%;
         padding-left: 5px;
-        background-color: #f3f3f3;
-        border: 1px solid #f3f3f3;
+        background-color: #BBADA0;
+        border: 1px solid #BBADA0;
         border-radius: 3px;
     }
 
