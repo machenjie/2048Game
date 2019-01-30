@@ -1,7 +1,7 @@
 <template>
     <div @keyup.stop="" @keydown.stop="">
         <a id="choose-btn" data-toggle="modal" :data-target='"#choose-dialog"+dialogTag'>
-            LEVEL {{value}}
+            {{value}}
         </a>
         <div :id='"choose-dialog"+dialogTag' class="modal fade">
             <div class="modal-dialog">
@@ -126,6 +126,7 @@
                         numberStyleList[i][j] = {
                             backgroundColor: "#BBADA0",
                             color: "#8f7a66",
+                            boxShadow: "",
                         }
                     }
                 }
@@ -139,12 +140,14 @@
                             numberStyleList[i][j] = {
                                 backgroundColor: "#FFD700",
                                 color: "#F8F8F8",
+                                boxShadow: "0 0 2px 2px rgba(243, 215, 116, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.6)",
                             }
                         }
                         else {
                             numberStyleList[i][j] = {
                                 backgroundColor: "#EEE4DA",
                                 color: "#8f7a66",
+                                boxShadow: "",
                             }
                         }
                         numberStyleList[i][j].cursor = "normal";
@@ -286,6 +289,10 @@
 </script>
 
 <style scoped>
+    #choose-btn{
+        font-family: Georgia, Tahoma, Arial, serif;
+    }
+
     .modal {
         cursor: default;
     }

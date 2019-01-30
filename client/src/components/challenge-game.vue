@@ -11,6 +11,10 @@
                 SCORE
                 <tween-number :number="score" :duration="200"></tween-number>
             </div>
+            <div class="step">
+                STEPS
+                <tween-number :number="step" :duration="200"></tween-number>
+            </div>
             <a class="new-game-btn" title="new game" @click="newGame">
                 &#10227;
             </a>
@@ -54,6 +58,10 @@
                         <div class="score-sm">
                             SCORE
                             <tween-number :number="score" :duration="200"></tween-number>
+                        </div>
+                        <div class="step-sm">
+                            STEPS
+                            <tween-number :number="step" :duration="200"></tween-number>
                         </div>
                     </div>
                     <div class="new-game-btn-sm-area">
@@ -467,7 +475,7 @@
                 numbers: initTwoDimArray(GAME_DIM, GAME_DIM),
                 actions: initTwoDimArray(GAME_DIM, GAME_DIM, ""),
                 score: 0,
-                bestScore: 0,
+                step: 0,
                 gameOver: false,
                 viewWidth: document.body.clientWidth, //only just one element can receive resize event, so use viewWidth to notify others
                 chooseList,
@@ -514,7 +522,7 @@
                 let store = {
                     numbers: this.numbers,
                     score: this.score,
-                    bestScore: this.bestScore,
+                    step: this.step,
                     gameOver: this.gameOver,
                     currentGameDim: this.currentGameDim,
                 };
@@ -523,10 +531,10 @@
             restoreDataFromHistory: function () {
                 let data = localStorage.getItem("_2048_challenge_game_data");
                 if (data) {
-                    let {numbers, score, bestScore, gameOver, currentGameDim} = JSON.parse(data);
+                    let {numbers, score, step, gameOver, currentGameDim} = JSON.parse(data);
                     if (typeof(currentGameDim) !== "undefined") {
                         this.score = score;
-                        this.bestScore = bestScore;
+                        this.step = step;
                         this.gameOver = gameOver;
                         this.currentGameDim = currentGameDim;
                         GAME_DIM = currentGameDim;
@@ -707,9 +715,6 @@
             }
         },
         watch: {
-            score: function (val) {
-                this.bestScore = val>this.bestScore?val:this.bestScore;
-            },
             currentGameDim: function (val) {
                 if (GAME_DIM !== val) {
                     GAME_DIM = val;
@@ -756,22 +761,23 @@
     }
     .heading .level-choose{
         display: inline-block;
-        max-width: 120px;
         height: 36px;
+        padding: 0 10px 0 10px;
         text-align: right;
         margin-right: 5px;
-        color: #776e65;
-        font-size: 24px;
+        background: #bbada0;
+        font-size: 36px;
         font-weight: bold;
-        line-height: 36px;
+        line-height: 25px;
+        color: white;
         cursor: pointer;
-
         vertical-align: middle;
+        border-radius: 50%;
     }
     .heading .level-choose:hover{
         color: #FF5432;
     }
-    .heading .score {
+    .heading .score, .step {
         display: inline-block;
         width: 90px;
         height: 36px;
@@ -877,17 +883,20 @@
     .heading-sm .level-choose-sm{
         display: inline-block;
         text-align: center;
+        padding: 0 10px 0 10px;
         height: 36px;
-        color: #776e65;
-        font-size: 24px;
+        font-size: 36px;
         font-weight: bold;
-        line-height: 36px;
+        line-height: 25px;
         cursor: pointer;
+        background: #bbada0;
+        color: white;
+        border-radius: 50%;
     }
     .heading-sm .level-choose-sm:hover{
         color: #FF5432;
     }
-    .heading-sm .score-sm {
+    .heading-sm .score-sm, .step-sm {
         display: inline-block;
         margin: 18px 0 0 0;
         width: 90px;
