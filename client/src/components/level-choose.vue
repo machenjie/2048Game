@@ -1,7 +1,7 @@
 <template>
     <div @keyup.stop="" @keydown.stop="">
         <a id="choose-btn" data-toggle="modal" :data-target='"#choose-dialog"+dialogTag'>
-            LEVEL {{currentLevel}}
+            LEVEL {{value}}
         </a>
         <div :id='"choose-dialog"+dialogTag' class="modal fade">
             <div class="modal-dialog">
@@ -15,10 +15,15 @@
 
                     <!-- body -->
                     <div class="modal-body">
-                        <div class="left-move"></div>
-                        <div class="choose-list-show-box">
-                            <div class="choose-list-move-box">
-                                <ul v-for="boxItem in chooseBoxList" :key="boxItem.key">
+                        <div class="left-move" :style="leftMoveStyle"
+                             @mousedown="leftMoveMouseDown"
+                             @mouseup="leftMoveMouseUp"
+                             @mouseover="leftMoveMouseOver"
+                             @mouseout="leftMoveMouseOut">
+                        </div>
+                        <div class="choose-list-show-box" ref="showBox">
+                            <div class="choose-list-move-box" :style='{left: boxLeft+"px"}'>
+                                <ul ref="singleBox" v-for="boxItem in chooseBoxList" :key="boxItem.key">
                                     <li v-for="chooseItem in boxItem.list"
                                         :key="chooseItem.key"
                                         @mouseover="mouseOver(boxItem.key, chooseItem.key)"
@@ -31,7 +36,12 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="right-move"></div>
+                        <div class="right-move" :style="rightMoveStyle"
+                             @mousedown="rightMoveMouseDown"
+                             @mouseup="rightMoveMouseUp"
+                             @mouseover="rightMoveMouseOver"
+                             @mouseout="rightMoveMouseOut">
+                        </div>
                     </div>
 
                     <!-- footer -->
@@ -48,16 +58,32 @@
     export default {
         name: "level-choose",
         props: {
-            dialogTag: "",
+            dialogTag: {},
             chooseList: {},
+            value: {
+                type: Number,
+            },
         },
         data: function () {
             let chooseBoxList = this.initChooseBoxList();
             let numberStyleList = this.initNumberStyleList();
+            let boxLeft = 0;
+            let leftMoveStyle = {
+                opacity: 0.5,
+                borderRightColor: "#776e65",
+                cursor: "default",
+            };
+            let rightMoveStyle = {
+                opacity: 0.5,
+                borderLeftColor: "#776e65",
+                cursor: "default",
+            };
             return {
-                currentLevel: 1,
                 chooseBoxList,
                 numberStyleList,
+                boxLeft,
+                leftMoveStyle,
+                rightMoveStyle,
             }
         },
         watch: {
@@ -132,7 +158,7 @@
                 if (index >= this.chooseList.length) {
                     return false;
                 }
-                if (index !== 0 && !this.chooseList[index-1].done){
+                else if (index !== 0 && !this.chooseList[index-1].done){
                     return false;
                 }
                 return true;
@@ -151,10 +177,111 @@
             mouseClick: function (key1, key2) {
                 let index = (key1-1)*this.numberStyleList[key1-1].length+(key2-1);
                 if (this.checkIsItemValid(key1, key2)){
-                    this.currentLevel = index+1;
+                    this.$emit('input', index+1);
                 }
             },
-        }
+            moveBoxMaxLength: function () {
+                return this.numberStyleList.length*this.$refs.singleBox[0].clientWidth;
+            },
+            leftMoveMouseDown: function () {
+                let _this = this;
+                let moveInterval = (_this.boxLeft+_this.moveBoxMaxLength()-_this.$refs.showBox.clientWidth)/60;
+                moveInterval = Math.max(Math.floor(moveInterval), 10);
+                if (typeof(_this.leftMoveInterval) !== "undefined"){
+                    clearInterval(_this.leftMoveInterval);
+                    delete _this.leftMoveInterval;
+                }
+                if (typeof(_this.rightMoveInterval) !== "undefined") {
+                    clearInterval(_this.rightMoveInterval);
+                    delete _this.rightMoveInterval;
+                }
+                _this.leftMoveInterval = setInterval(function () {
+                    _this.boxLeft = _this.boxLeft-moveInterval;
+                    if (_this.boxLeft <= -_this.moveBoxMaxLength()+_this.$refs.showBox.clientWidth){
+                        _this.boxLeft = -_this.moveBoxMaxLength()+_this.$refs.showBox.clientWidth;
+                        clearInterval(_this.leftMoveInterval);
+                        delete _this.leftMoveInterval;
+                        _this.leftMoveStyle.opacity = 0.5;
+                        _this.leftMoveStyle.borderRightColor = "#776e65";
+                        _this.leftMoveStyle.cursor = "default";
+                    }
+                }, 50);
+            },
+            leftMoveMouseUp: function () {
+                if (typeof(this.leftMoveInterval) !== "undefined"){
+                    clearInterval(this.leftMoveInterval);
+                    delete this.leftMoveInterval;
+                    this.boxLeft = this.boxLeft - (75-Math.abs(this.boxLeft%this.$refs.singleBox[0].clientWidth%75));
+                    if (this.boxLeft <= -this.moveBoxMaxLength()+this.$refs.showBox.clientWidth){
+                        this.boxLeft = -this.moveBoxMaxLength()+this.$refs.showBox.clientWidth;
+                        this.leftMoveStyle.opacity = 0.5;
+                        this.leftMoveStyle.borderRightColor = "#776e65";
+                        this.leftMoveStyle.cursor = "default";
+                    }
+                }
+            },
+            rightMoveMouseDown: function () {
+                let _this = this;
+                let moveInterval = -_this.boxLeft/60;
+                moveInterval = Math.max(Math.floor(moveInterval), 10);
+                if (typeof(_this.leftMoveInterval) !== "undefined"){
+                    clearInterval(_this.leftMoveInterval);
+                    delete _this.leftMoveInterval;
+                }
+                if (typeof(_this.rightMoveInterval) !== "undefined") {
+                    clearInterval(_this.rightMoveInterval);
+                    delete _this.rightMoveInterval;
+                }
+                _this.rightMoveInterval = setInterval(function () {
+                    _this.boxLeft = _this.boxLeft+moveInterval;
+                    if (_this.boxLeft >= 0){
+                        _this.boxLeft = 0;
+                        clearInterval(_this.rightMoveInterval);
+                        delete _this.rightMoveInterval;
+                        _this.rightMoveStyle.opacity = 0.5;
+                        _this.rightMoveStyle.borderLeftColor = "#776e65";
+                        _this.rightMoveStyle.cursor = "default";
+                    }
+                }, 50);
+            },
+            rightMoveMouseUp: function () {
+                if (typeof(this.rightMoveInterval) !== "undefined"){
+                    clearInterval(this.rightMoveInterval);
+                    delete this.rightMoveInterval;
+                    this.boxLeft = this.boxLeft + Math.abs(this.boxLeft%this.$refs.singleBox[0].clientWidth%75);
+                    if (this.boxLeft >= 0){
+                        this.boxLeft = 0;
+                        this.rightMoveStyle.opacity = 0.5;
+                        this.rightMoveStyle.borderLeftColor = "#776e65";
+                        this.rightMoveStyle.cursor = "default";
+                    }
+                }
+            },
+            leftMoveMouseOver: function () {
+                if (this.boxLeft > -this.moveBoxMaxLength()+this.$refs.showBox.clientWidth){
+                    this.leftMoveStyle.opacity = 1;
+                    this.leftMoveStyle.borderRightColor = "#FF5432";
+                    this.leftMoveStyle.cursor = "pointer";
+                }
+            },
+            leftMoveMouseOut: function () {
+                this.leftMoveStyle.opacity = 0.5;
+                this.leftMoveStyle.borderRightColor = "#776e65";
+                this.leftMoveStyle.cursor = "default";
+            },
+            rightMoveMouseOver: function () {
+                if (this.boxLeft < 0){
+                    this.rightMoveStyle.opacity = 1;
+                    this.rightMoveStyle.borderLeftColor = "#FF5432";
+                    this.rightMoveStyle.cursor = "pointer";
+                }
+            },
+            rightMoveMouseOut: function () {
+                this.rightMoveStyle.opacity = 0.5;
+                this.rightMoveStyle.borderLeftColor = "#776e65";
+                this.rightMoveStyle.cursor = "default";
+            },
+        },
     }
 </script>
 
@@ -231,14 +358,8 @@
         border-right: 10px solid  #776e65;
         border-top: 152px solid transparent ;
         border-bottom: 152px solid transparent ;
-        cursor: pointer;
         vertical-align: middle;
         opacity: 0.5;
-    }
-
-    .left-move:hover{
-        opacity: 1;
-        border-right-color: #FF5432;
     }
 
     .right-move{
@@ -250,13 +371,7 @@
         border-left: 10px solid  #776e65;
         border-top: 152px solid transparent ;
         border-bottom: 152px solid transparent ;
-        cursor: pointer;
         vertical-align: middle;
         opacity: 0.5;
-    }
-
-    .right-move:hover{
-        opacity: 1;
-        border-left-color: #FF5432;
     }
 </style>

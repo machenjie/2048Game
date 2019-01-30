@@ -3,7 +3,10 @@
          @touchmove="touchAction"
          @touchend="touchAction">
         <div class="heading d-block d-sm-none d-md-block">
-            <level-choose class="level-choose" dialogTag="normal" :chooseList="chooseList"></level-choose>
+            <level-choose class="level-choose" dialogTag="normal"
+                          v-model="currentLevel"
+                          :chooseList="chooseList">
+            </level-choose>
             <div class="score">
                 SCORE
                 <tween-number :number="score" :duration="200"></tween-number>
@@ -42,7 +45,10 @@
             <div class="col-0 col-sm-4 col-md-2 col-lg-3 col-xl">
                 <div class="heading-sm d-none d-sm-block d-md-none">
                     <div class="level-choose-sm-area">
-                        <level-choose class="level-choose-sm" dialogTag="small" :chooseList="chooseList"></level-choose>
+                        <level-choose class="level-choose-sm" dialogTag="small"
+                                      v-model="currentLevel"
+                                      :chooseList="chooseList">
+                        </level-choose>
                     </div>
                     <div>
                         <div class="score-sm">
@@ -400,6 +406,42 @@
                 {done: true},
                 {done: true},
                 {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
+                {done: true},
                 {done: false},
                 {done: false},
                 {done: false},
@@ -417,6 +459,7 @@
                 {done: false},
                 {done: false},
             ];
+            let currentLevel = 43;
             return {
                 duration: 1,
                 currentGameDim: GAME_DIM,
@@ -428,6 +471,7 @@
                 gameOver: false,
                 viewWidth: document.body.clientWidth, //only just one element can receive resize event, so use viewWidth to notify others
                 chooseList,
+                currentLevel,
             }
         },
         methods: {
