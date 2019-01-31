@@ -538,9 +538,7 @@
                     let fillResult = randomFill(_this.numbers);
                     _this.numbers = fillResult.numbers;
                     _this.actions = fillResult.actions;
-                    _.delay(function () {
-                        resolve();
-                    }, duration);
+                    resolve();
                 }, 0);
             },
             playAddAudio: function(score) {

@@ -13,8 +13,28 @@
             </div>
             <div class="step">
                 STEPS
-                <tween-number :number="step" :duration="200"></tween-number>
+                <tween-number :number="step" :duration="200" :style='{color: step<10?"red":"white"}'></tween-number>
             </div>
+            <ul class="challenge-stat">
+                <li v-for="challengeStat in challengeStatList" :key="challengeStat.key" :style='{backgroundColor: challengeStat.done?"#BBD08F":""}'>
+                    <div v-if='challengeStat.type === "number"' >
+                        <div class="challenge-number">
+                            <number :number="challengeStat.data.number" :view-width="viewWidth"></number>
+                        </div>
+                        <div class="challenge-hit">
+                            {{challengeStat.data.hit}}/{{challengeStat.data.total}}
+                        </div>
+                    </div>
+                    <div v-else-if='challengeStat.type === "score"'>
+                        <div class="challenge-score">
+                            S
+                        </div>
+                        <div class="challenge-score-score">
+                            {{challengeStat.data.score}}
+                        </div>
+                    </div>
+                </li>
+            </ul>
             <a class="new-game-btn" title="new game" @click="newGame">
                 &#10227;
             </a>
@@ -61,9 +81,29 @@
                         </div>
                         <div class="step-sm">
                             STEPS
-                            <tween-number :number="step" :duration="200"></tween-number>
+                            <tween-number :number="step" :duration="200" :style='{color: step<10?"red":"white"}'></tween-number>
                         </div>
                     </div>
+                    <ul class="challenge-stat-sm">
+                        <li v-for="challengeStat in challengeStatList" :key="challengeStat.key" :style='{backgroundColor: challengeStat.done?"#BBD08F":""}'>
+                            <div v-if='challengeStat.type === "number"' >
+                                <div class="challenge-number-sm">
+                                    <number :number="challengeStat.data.number" :view-width="viewWidth"></number>
+                                </div>
+                                <div class="challenge-hit-sm">
+                                    {{challengeStat.data.hit}}/{{challengeStat.data.total}}
+                                </div>
+                            </div>
+                            <div v-else-if='challengeStat.type === "score"'>
+                                <div class="challenge-score-sm">
+                                    S
+                                </div>
+                                <div class="challenge-score-score-sm">
+                                    {{challengeStat.data.score}}
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
                     <div class="new-game-btn-sm-area">
                         <a class="new-game-btn-sm" title="new game" @click="newGame">
                             &#10227;
@@ -468,6 +508,11 @@
                 {done: false},
             ];
             let currentLevel = 43;
+            let challengeStatList = [
+                {key: 1, type: "number", done: true, data: {number: 8, hit: 0, total: 3}},
+                {key: 2, type: "number", done: false, data: {number: 16, hit: 0, total: 1}},
+                {key: 3, type: "score", done: false, data: {score: 1024}},
+            ];
             return {
                 duration: 1,
                 currentGameDim: GAME_DIM,
@@ -480,6 +525,7 @@
                 viewWidth: document.body.clientWidth, //only just one element can receive resize event, so use viewWidth to notify others
                 chooseList,
                 currentLevel,
+                challengeStatList,
             }
         },
         methods: {
@@ -600,9 +646,7 @@
                     let fillResult = randomFill(_this.numbers);
                     _this.numbers = fillResult.numbers;
                     _this.actions = fillResult.actions;
-                    _.delay(function () {
-                        resolve();
-                    }, duration);
+                    resolve();
                 }, 0);
             },
             playAddAudio: function(score) {
@@ -790,6 +834,64 @@
         text-align: center;
         vertical-align: middle;
     }
+    .heading .challenge-stat{
+        display: inline-block;
+        width: 90px;
+        margin: 0 5px 0 0;
+        padding: 0;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .heading .challenge-stat li{
+        list-style-type: none;
+        position: relative;
+        width: 90px;
+        height: 28px;
+        margin: 0 0 2px 0;
+        padding: 0;
+        background: #bbada0;
+        border-radius: 3px 3px 3px 3px;
+    }
+    .heading .challenge-stat .challenge-number{
+        position: absolute;
+        left: 2px;
+        top: 2px;
+        bottom: 2px;
+        width: 24px;
+    }
+    .heading .challenge-stat .challenge-hit {
+        position: absolute;
+        right: 3px;
+        top: 0;
+        bottom: 0;
+        font-weight: bold;
+        font-size: 14px;
+        color: white;
+        line-height: 28px;
+    }
+    .heading .challenge-stat .challenge-score{
+        position: absolute;
+        left: 3px;
+        top: 3px;
+        bottom: 3px;
+        width: 22px;
+        background-color: #bbada0;
+        font-weight: bold;
+        font-size: 14px;
+        color: white;
+        line-height: 22px;
+        border-radius: 2px;
+    }
+    .heading .challenge-stat .challenge-score-score {
+        position: absolute;
+        right: 3px;
+        top: 0;
+        bottom: 0;
+        font-weight: bold;
+        font-size: 14px;
+        color: white;
+        line-height: 28px;
+    }
     .heading .new-game-btn{
         display: inline-block;
         width: 30px;
@@ -909,8 +1011,66 @@
         text-align: center;
         vertical-align: middle;
     }
+    .heading-sm .challenge-stat-sm{
+        display: inline-block;
+        width: 90px;
+        margin: 18px 0 0 0;
+        padding: 0;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .heading-sm .challenge-stat-sm li{
+        list-style-type: none;
+        position: relative;
+        width: 90px;
+        height: 28px;
+        margin: 0 0 2px 0;
+        padding: 0;
+        background: #bbada0;
+        border-radius: 3px 3px 3px 3px;
+    }
+    .heading-sm .challenge-stat-sm .challenge-number-sm{
+        position: absolute;
+        left: 2px;
+        top: 2px;
+        bottom: 2px;
+        width: 24px;
+    }
+    .heading-sm .challenge-stat-sm .challenge-hit-sm {
+        position: absolute;
+        right: 3px;
+        top: 0;
+        bottom: 0;
+        font-weight: bold;
+        font-size: 14px;
+        color: white;
+        line-height: 28px;
+    }
+    .heading-sm .challenge-stat-sm .challenge-score-sm{
+        position: absolute;
+        left: 3px;
+        top: 3px;
+        bottom: 3px;
+        width: 22px;
+        background-color: #bbada0;
+        font-weight: bold;
+        font-size: 14px;
+        color: white;
+        line-height: 22px;
+        border-radius: 2px;
+    }
+    .heading-sm .challenge-stat-sm .challenge-score-score-sm {
+        position: absolute;
+        right: 3px;
+        top: 0;
+        bottom: 0;
+        font-weight: bold;
+        font-size: 14px;
+        color: white;
+        line-height: 28px;
+    }
     .new-game-btn-sm-area{
-        margin-top: 60px;
+        margin-top: 18px;
     }
     .heading-sm .new-game-btn-sm{
         height: 36px;
