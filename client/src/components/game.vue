@@ -22,8 +22,8 @@
             </a>
         </div>
         <div class="row  no-gutters">
-            <div class="col-0 col-sm-0 col-md-2 col-lg-3 col-xl"></div>
-            <div class="col-12 col-sm-8 col-md-8 col-lg-6 col-xl game">
+            <div class="col-0 col-sm-0 col-md-3 col-lg-3 col-xl"></div>
+            <div class="col-12 col-sm-8 col-md-6 col-lg-6 col-xl game">
                 <div class="game-over" v-if="gameOver">
                     Game over!<br>
                     <a class="restart" @click="newGame">Try again</a>
@@ -48,7 +48,7 @@
                     &#10152;
                 </div>
             </div>
-            <div class="col-0 col-sm-4 col-md-2 col-lg-3 col-xl">
+            <div class="col-0 col-sm-4 col-md-3 col-lg-3 col-xl">
                 <div class="heading-sm d-none d-sm-block d-md-none">
                     <div class="title-sm">2048</div>
                     <div class="score-area">
@@ -565,6 +565,9 @@
                 let _this = this;
                 let baseTime = 70;
                 let stone = initStone(direction);
+                if (_this.gameOver) {
+                    return;
+                }
                 if (typeof(_this.inMoveing) !== "undefined"){
                     return;
                 }
