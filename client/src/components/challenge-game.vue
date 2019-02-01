@@ -4,7 +4,8 @@
          @touchend="touchAction">
         <div class="heading d-block d-sm-none d-md-block">
             <level-choose class="level-choose" dialogTag="normal"
-                          v-model="currentLevel"
+                          :value="currentLevel"
+                          @input="changeLevel"
                           :chooseList="chooseList">
             </level-choose>
             <div class="score">
@@ -19,7 +20,7 @@
                 <li v-for="challengeStat in challengeStatList" :key="challengeStat.key" :style='{backgroundColor: challengeStat.done?"#BBD08F":""}'>
                     <div v-if='challengeStat.type === "number"' >
                         <div class="challenge-number">
-                            <number :number="challengeStat.data.number" :view-width="viewWidth"></number>
+                            <number :number="challengeStat.data.number" :view-width="viewWidth" action="static"></number>
                         </div>
                         <div class="challenge-hit">
                             {{challengeStat.data.hit}}/{{challengeStat.data.total}}
@@ -74,7 +75,8 @@
                 <div class="heading-sm d-none d-sm-block d-md-none">
                     <div class="level-choose-sm-area">
                         <level-choose class="level-choose-sm" dialogTag="small"
-                                      v-model="currentLevel"
+                                      :value="currentLevel"
+                                      @input="changeLevel"
                                       :chooseList="chooseList">
                         </level-choose>
                     </div>
@@ -92,7 +94,7 @@
                         <li v-for="challengeStat in challengeStatList" :key="challengeStat.key" :style='{backgroundColor: challengeStat.done?"#BBD08F":""}'>
                             <div v-if='challengeStat.type === "number"' >
                                 <div class="challenge-number-sm">
-                                    <number :number="challengeStat.data.number" :view-width="viewWidth"></number>
+                                    <number :number="challengeStat.data.number" :view-width="viewWidth" action="static"></number>
                                 </div>
                                 <div class="challenge-hit-sm">
                                     {{challengeStat.data.hit}}/{{challengeStat.data.total}}
@@ -146,6 +148,7 @@
     import arrowKeyboard from "./arrow-keyboard";
     import rateFeedback from "./rate-feedback";
     import levelChoose from "./level-choose";
+    import chooseList from "../store/choose-list";
     import _ from "lodash";
 
     let GAME_DIM = 4;
@@ -480,63 +483,6 @@
     export default {
         name: "challenge-game",
         data: function (){
-            let chooseList = [
-                {done: false, step: 100, gameDim: 4, challenge: [
-                        {type: "number", data: {number: 8, total: 1}},
-                    ]},
-                {done: false, step: 100, gameDim: 4,challenge: [
-                        {type: "score", data: {score: 10}},
-                    ]},
-                {done: false, step: 100, gameDim: 4, challenge: [
-                        {type: "number", data: {number: 8, total: 3}},
-                        {type: "number", data: {number: 16, total: 1}},
-                    ]},
-                {done: false, step: 100, gameDim: 4, challenge: [
-                        {type: "number", data: {number: 8, total: 5}},
-                        {type: "number", data: {number: 16, total: 3}},
-                        {type: "number", data: {number: 32, total: 1}},
-                    ]},
-                {done: false, step: 100, gameDim: 4, challenge: [
-                        {type: "number", data: {number: 16, total: 5}},
-                        {type: "number", data: {number: 32, total: 3}},
-                        {type: "number", data: {number: 64, total: 1}},
-                    ]},
-                {done: false, step: 100, gameDim: 4, challenge: [
-                        {type: "number", data: {number: 16, total: 11}},
-                        {type: "number", data: {number: 32, total: 5}},
-                        {type: "number", data: {number: 64, total: 1}},
-                    ]},
-                {done: false, step: 100, gameDim: 4, challenge: [
-                        {type: "number", data: {number: 32, total: 5}},
-                        {type: "number", data: {number: 64, total: 3}},
-                        {type: "number", data: {number: 128, total: 1}},
-                    ]},
-                {done: false, step: 100, gameDim: 4, challenge: [
-                        {type: "number", data: {number: 32, total: 9}},
-                        {type: "number", data: {number: 64, total: 4}},
-                        {type: "number", data: {number: 128, total: 1}},
-                    ]},
-                {done: false, step: 100, gameDim: 4, challenge: [
-                        {type: "number", data: {number: 32, total: 11}},
-                        {type: "number", data: {number: 64, total: 5}},
-                        {type: "number", data: {number: 128, total: 1}},
-                    ]},
-                {done: false, step: 100, gameDim: 4, challenge: [
-                        {type: "number", data: {number: 64, total: 5}},
-                        {type: "number", data: {number: 128, total: 3}},
-                        {type: "number", data: {number: 256, total: 1}},
-                    ]},
-                {done: false, step: 100, gameDim: 4, challenge: [
-                        {type: "number", data: {number: 64, total: 9}},
-                        {type: "number", data: {number: 128, total: 4}},
-                        {type: "number", data: {number: 256, total: 1}},
-                    ]},
-                {done: false, step: 100, gameDim: 4, challenge: [
-                        {type: "number", data: {number: 64, total: 11}},
-                        {type: "number", data: {number: 128, total: 5}},
-                        {type: "number", data: {number: 256, total: 1}},
-                    ]},
-            ];
             let currentLevel = 1;
             let step = chooseList[currentLevel-1].step;
             let challengeStatList = initChallengeStatList(chooseList, currentLevel);
@@ -560,6 +506,12 @@
             }
         },
         methods: {
+            changeLevel: function(val) {
+                if (val !== this.currentLevel) {
+                    this.currentLevel = val;
+                    this.newGame();
+                }
+            },
             classicModeNavMouseOver: function(){
                 $('.challenge-mode-navigate').tooltip("show");
             },
@@ -567,7 +519,7 @@
                 $('.challenge-mode-navigate').tooltip("hide");
             },
             classicModeNavMouseClick: function(){
-                this.$router.replace("/");
+                this.$router.replace("/classic-game");
                 $('.challenge-mode-navigate').tooltip("hide");
             },
             classicModeNavMouseOverSM: function(){
@@ -603,11 +555,11 @@
             nextChallenge: function() {
                 if (this.currentLevel >= this.chooseList.length){
                     this.currentLevel = this.chooseList.length;
-                    this.newGame();
                 }
                 else{
                     this.currentLevel = this.currentLevel+1;
                 }
+                this.newGame();
             },
             storeDataToHistory: function () {
                 let store = {
@@ -667,11 +619,20 @@
                 if (data) {
                     let chooseList = JSON.parse(data);
                     if (typeof(chooseList) !== "undefined") {
-                        if (this.chooseList.length > chooseList.length) {
-                            chooseList.concat(this.chooseList.slice(chooseList.length, this.chooseList.length));
+                        let doneLength = 0;
+                        for(let i=0; i<chooseList.length; i++){
+                            if (chooseList[i].done) {
+                                doneLength++;
+                            }
+                            else{
+                                break;
+                            }
                         }
+                        if (this.chooseList.length >= chooseList.length) {
+                            chooseList = chooseList.slice(0, doneLength).concat(this.chooseList.slice(doneLength, this.chooseList.length));
+                        }
+                        this.chooseList = chooseList;
                     }
-                    this.chooseList = chooseList;
                 }
             },
             orderMinus: function() {
@@ -849,6 +810,14 @@
             keyRight: function () {
                 this.keyboardOP(right, "right");
             },
+            keyEnter: function () {
+                if (this.gameOver) {
+                    this.newGame();
+                }
+                else if (this.gameWin) {
+                    this.nextChallenge();
+                }
+            },
             touchAction: (function () {
                 let touchStartX = 0;
                 let touchStartY = 0;
@@ -895,11 +864,9 @@
                 else if (keyCode === "ArrowDown"){
                     this.keyDown();
                 }
-            }
-        },
-        watch: {
-            currentLevel: function () {
-                this.newGame();
+                else if (keyCode === "Enter"){
+                    this.keyEnter();
+                }
             }
         },
         created: function(){
@@ -937,6 +904,7 @@
     .heading {
         margin: 18px 0 18px 0;
         text-align: center;
+        height: 90px;
         user-select: none;
         font-size: 0;
     }

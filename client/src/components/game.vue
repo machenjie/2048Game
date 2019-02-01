@@ -605,6 +605,11 @@
             keyRight: function () {
                 this.keyboardOP(right, "right");
             },
+            keyEnter: function() {
+                if (this.gameOver) {
+                    this.newGame();
+                }
+            },
             touchAction: (function () {
                 let touchStartX = 0;
                 let touchStartY = 0;
@@ -650,6 +655,9 @@
                 }
                 else if (keyCode === "ArrowDown"){
                     this.keyDown();
+                }
+                else if (keyCode === "Enter"){
+                    this.keyEnter();
                 }
             }
         },

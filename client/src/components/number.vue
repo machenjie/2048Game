@@ -117,6 +117,11 @@
             // }
         },
         watch: {
+            number: function (val) {
+                if (this.action === "static") {
+                    this.currentNumber = val;
+                }
+            },
             action: function (val) {
                 if (typeof(val) !== "string"){
                     return;
