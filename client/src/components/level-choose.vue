@@ -56,7 +56,7 @@
 
 <script>
     export default {
-        name: "level-choose",
+        inheritAttrs: false,
         props: {
             dialogTag: {},
             chooseList: {},
@@ -291,6 +291,8 @@
 <style scoped>
     #choose-btn{
         font-family: Georgia, Tahoma, Arial, serif;
+        display: block;
+        padding: 0 10px 0 10px;
     }
 
     .modal {

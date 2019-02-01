@@ -902,22 +902,24 @@
         padding-left: 0;
     }
     .heading {
-        margin: 18px 0 18px 0;
+        margin: 6px 0 6px 0;
         text-align: center;
         height: 90px;
+        line-height: 90px;
         user-select: none;
         font-size: 0;
     }
     .heading .level-choose{
         display: inline-block;
-        height: 36px;
-        padding: 0 10px 0 10px;
-        text-align: right;
+        height: 54px;
+        min-width: 90px;
+        padding: 0;
+        text-align: center;
         margin-right: 5px;
         background: #bbada0;
-        font-size: 36px;
+        font-size: 54px;
         font-weight: bold;
-        line-height: 25px;
+        line-height: 42px;
         color: white;
         cursor: pointer;
         vertical-align: middle;
@@ -926,14 +928,15 @@
     .heading .level-choose:hover{
         color: #FF5432;
     }
-    .heading .score, .step {
+    .heading .score, .heading .step {
         display: inline-block;
-        width: 90px;
-        height: 36px;
+        width: 120px;
+        height: 54px;
         margin-right: 5px;
         background: #bbada0;
         font-weight: bold;
-        font-size: 12px;
+        font-size: 18px;
+        line-height: 30px;
         border-radius: 3px 3px 3px 3px;
         color: white;
         text-align: center;
@@ -999,11 +1002,11 @@
     }
     .heading .new-game-btn{
         display: inline-block;
-        width: 30px;
-        height: 36px;
+        width: 35px;
+        height: 54px;
         font-weight: bold;
-        font-size: 30px;
-        line-height: 36px;
+        font-size: 35px;
+        line-height: 54px;
         color: #776e65;
         text-align: center;
         vertical-align: middle;
@@ -1090,7 +1093,7 @@
     .heading-sm .level-choose-sm{
         display: inline-block;
         text-align: center;
-        padding: 0 10px 0 10px;
+        padding: 0;
         height: 36px;
         font-size: 36px;
         font-weight: bold;
