@@ -3,6 +3,7 @@ let webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const LodashWebpackPlugin = require("lodash-webpack-plugin");
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     mode: "production",
@@ -73,7 +74,8 @@ module.exports = {
             filename: "./index.html"
         }),
         new LodashWebpackPlugin,
-        new VueLoaderPlugin
+        new VueLoaderPlugin,
+        new CopyWebpackPlugin([{from: "./src/img/", to: "./images/"},]),
     ],
     resolve: {
         extensions: ['.js', '.vue'],

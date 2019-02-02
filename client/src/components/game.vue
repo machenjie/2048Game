@@ -37,15 +37,17 @@
                     </div>
                 </div>
                 <rate-feedback id="rate-feedback" class="d-block d-sm-none d-md-block" dialogTag="normal"></rate-feedback>
-                <div class="d-block d-sm-none d-md-block challenge-mode-navigate"
-                     data-toggle="tooltip"
-                     data-placement="bottom"
-                     trigger="manual"
-                     title="Challenge Mode"
-                     @mouseover="challengeModeNavMouseOver"
-                     @mouseout="challengeModeNavMouseOut"
-                     @click="challengeModeNavMouseClick">
-                    &#10152;
+                <div class="d-block d-sm-none d-md-block challenge-mode-navigate">
+                    <div data-toggle="tooltip"
+                         data-placement="bottom"
+                         trigger="manual"
+                         title="Challenge Mode"
+                         @mouseover="challengeModeNavMouseOver"
+                         @mouseout="challengeModeNavMouseOut"
+                         @click="challengeModeNavMouseClick">
+                        &#10152;
+                    </div>
+                    <radio-toggle v-model="radioStat"></radio-toggle>
                 </div>
             </div>
             <div class="col-0 col-sm-4 col-md-3 col-lg-3 col-xl">
@@ -78,15 +80,17 @@
                 <div id="last-line-sm" class="d-none d-sm-block d-md-none">
                     <div id="last-line-container-sm">
                         <rate-feedback id="rate-feedback-sm"  dialogTag="small"></rate-feedback>
-                        <div class="challenge-mode-navigate-sm"
-                             data-toggle="tooltip"
-                             data-placement="bottom"
-                             trigger="manual"
-                             title="Challenge Mode"
-                             @mouseover="challengeModeNavMouseOverSM"
-                             @mouseout="challengeModeNavMouseOutSM"
-                             @click="challengeModeNavMouseClickSM">
-                            &#10152;
+                        <div class="challenge-mode-navigate-sm">
+                            <div data-toggle="tooltip"
+                                 data-placement="bottom"
+                                 trigger="manual"
+                                 title="Challenge Mode"
+                                 @mouseover="challengeModeNavMouseOverSM"
+                                 @mouseout="challengeModeNavMouseOutSM"
+                                 @click="challengeModeNavMouseClickSM">
+                                &#10152;
+                            </div>
+                            <radio-toggle v-model="radioStat"></radio-toggle>
                         </div>
                     </div>
                 </div>
@@ -103,6 +107,7 @@
     import tweenNumber from "../common/vuecomponet/tween-number";
     import arrowKeyboard from "./arrow-keyboard";
     import rateFeedback from "./rate-feedback";
+    import radioToggle from "./radio-toggle";
     import _ from "lodash";
 
     let GAME_DIM = 4;
@@ -418,28 +423,29 @@
                 bestScore: 0,
                 gameOver: false,
                 viewWidth: document.body.clientWidth, //only just one element can receive resize event, so use viewWidth to notify others
+                radioStat: true,
             }
         },
         methods: {
             challengeModeNavMouseOver: function(){
-                $('.challenge-mode-navigate').tooltip("show");
+                $('.challenge-mode-navigate div').tooltip("show");
             },
             challengeModeNavMouseOut: function(){
-                $('.challenge-mode-navigate').tooltip("hide");
+                $('.challenge-mode-navigate div').tooltip("hide");
             },
             challengeModeNavMouseClick: function(){
                 this.$router.replace("/challenge-game");
-                $('.challenge-mode-navigate').tooltip("hide");
+                $('.challenge-mode-navigate div').tooltip("hide");
             },
             challengeModeNavMouseOverSM: function(){
-                $('.challenge-mode-navigate-sm').tooltip("show");
+                $('.challenge-mode-navigate-sm div').tooltip("show");
             },
             challengeModeNavMouseOutSM: function(){
-                $('.challenge-mode-navigate-sm').tooltip("hide");
+                $('.challenge-mode-navigate-sm div').tooltip("hide");
             },
             challengeModeNavMouseClickSM: function(){
                 this.$router.replace("/challenge-game");
-                $('.challenge-mode-navigate-sm').tooltip("hide");
+                $('.challenge-mode-navigate-sm div').tooltip("hide");
             },
             newGame: function (){
                 let _this = this;
@@ -542,6 +548,9 @@
                 }, 0);
             },
             playAddAudio: function(score) {
+                if (!this.radioStat) {
+                    return;
+                }
                 if (typeof(this.audioCtx) === "undefined") {
                     window.AudioContext = window.AudioContext || window.webkitAudioContext;
                     if (typeof(window.AudioContext) === "undefined") {
@@ -674,12 +683,12 @@
             }
         },
         created: function(){
-            let _this = this;
-            $('body').on('keyup', function (e) {
-                e = window.event||e;
-                _this.keyboardAction(e);
-            });
-            // document.onkeyup = this.keyboardAction;
+            // let _this = this;
+            // $('body').on('keyup', function (e) {
+            //     e = window.event||e;
+            //     _this.keyboardAction(e);
+            // });
+            document.onkeyup = this.keyboardAction;
         },
         mounted: function(){
             let _this = this;
@@ -695,6 +704,7 @@
             number,
             arrowKeyboard,
             rateFeedback,
+            radioToggle,
         }
     }
 </script>
@@ -864,10 +874,18 @@
         font-size: 30px;
         color: #776e65;
         line-height: 30px;
+    }
+    .challenge-mode-navigate div{
+        float: right;
         cursor: pointer;
     }
-    .challenge-mode-navigate:hover{
+    .challenge-mode-navigate div:hover{
         color: #FF5432;
+    }
+    .challenge-mode-navigate radio-toggle{
+        float: right;
+        width: 30px;
+        height: 30px;
     }
     .game{
         background-color: #776e65;
@@ -1045,9 +1063,17 @@
         font-size: 30px;
         color: #776e65;
         line-height: 30px;
+    }
+    .challenge-mode-navigate-sm div{
+        float: right;
         cursor: pointer;
     }
-    .challenge-mode-navigate-sm:hover{
+    .challenge-mode-navigate-sm div:hover{
         color: #FF5432;
+    }
+    .challenge-mode-navigate-sm radio-toggle{
+        float: right;
+        width: 30px;
+        height: 30px;
     }
 </style>
