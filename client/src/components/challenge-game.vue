@@ -870,7 +870,12 @@
             }
         },
         created: function(){
-            document.onkeyup = this.keyboardAction;
+            let _this = this;
+            $('body').on('keyup', function (e) {
+                e = window.event||e;
+                _this.keyboardAction(e);
+            });
+            // document.onkeyup = this.keyboardAction;
         },
         mounted: function(){
             let _this = this;
