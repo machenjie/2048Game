@@ -5,7 +5,7 @@ const LodashWebpackPlugin = require("lodash-webpack-plugin");
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = {
-    mode: "development",
+    mode: "production",
     entry: ["./src/main.js",
         'bootstrap-loader'
     ],

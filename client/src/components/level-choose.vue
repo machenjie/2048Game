@@ -69,13 +69,11 @@
             let numberStyleList = this.initNumberStyleList();
             let boxLeft = 0;
             let leftMoveStyle = {
-                opacity: 0.5,
-                borderRightColor: "#776e65",
+                borderRightColor: "#8f7a66",
                 cursor: "default",
             };
             let rightMoveStyle = {
-                opacity: 0.5,
-                borderLeftColor: "#776e65",
+                borderLeftColor: "#b0a597",
                 cursor: "default",
             };
             return {
@@ -204,10 +202,11 @@
                         _this.boxLeft = -_this.moveBoxMaxLength()+_this.$refs.showBox.clientWidth;
                         clearInterval(_this.leftMoveInterval);
                         delete _this.leftMoveInterval;
-                        _this.leftMoveStyle.opacity = 0.5;
-                        _this.leftMoveStyle.borderRightColor = "#776e65";
+                        _this.leftMoveStyle.borderRightColor = "#b0a597";
                         _this.leftMoveStyle.cursor = "default";
                     }
+                    _this.rightMoveStyle.borderLeftColor = "#8f7a66";
+                    _this.rightMoveStyle.cursor = "pointer";
                 }, 50);
             },
             leftMoveMouseUp: function () {
@@ -217,10 +216,11 @@
                     this.boxLeft = this.boxLeft - (75-Math.abs(this.boxLeft%this.$refs.singleBox[0].clientWidth%75));
                     if (this.boxLeft <= -this.moveBoxMaxLength()+this.$refs.showBox.clientWidth){
                         this.boxLeft = -this.moveBoxMaxLength()+this.$refs.showBox.clientWidth;
-                        this.leftMoveStyle.opacity = 0.5;
-                        this.leftMoveStyle.borderRightColor = "#776e65";
+                        this.leftMoveStyle.borderRightColor = "#b0a597";
                         this.leftMoveStyle.cursor = "default";
                     }
+                    this.rightMoveStyle.borderLeftColor = "#8f7a66";
+                    this.rightMoveStyle.cursor = "pointer";
                 }
             },
             rightMoveMouseDown: function () {
@@ -241,10 +241,11 @@
                         _this.boxLeft = 0;
                         clearInterval(_this.rightMoveInterval);
                         delete _this.rightMoveInterval;
-                        _this.rightMoveStyle.opacity = 0.5;
-                        _this.rightMoveStyle.borderLeftColor = "#776e65";
+                        _this.rightMoveStyle.borderLeftColor = "#b0a597";
                         _this.rightMoveStyle.cursor = "default";
                     }
+                    _this.leftMoveStyle.borderRightColor = "#8f7a66";
+                    _this.leftMoveStyle.cursor = "pointer";
                 }, 50);
             },
             rightMoveMouseUp: function () {
@@ -254,35 +255,36 @@
                     this.boxLeft = this.boxLeft + Math.abs(this.boxLeft%this.$refs.singleBox[0].clientWidth%75);
                     if (this.boxLeft >= 0){
                         this.boxLeft = 0;
-                        this.rightMoveStyle.opacity = 0.5;
-                        this.rightMoveStyle.borderLeftColor = "#776e65";
+                        this.rightMoveStyle.borderLeftColor = "#b0a597";
                         this.rightMoveStyle.cursor = "default";
                     }
+                    this.leftMoveStyle.borderRightColor = "#8f7a66";
+                    this.leftMoveStyle.cursor = "pointer";
                 }
             },
             leftMoveMouseOver: function () {
                 if (this.boxLeft > -this.moveBoxMaxLength()+this.$refs.showBox.clientWidth){
-                    this.leftMoveStyle.opacity = 1;
                     this.leftMoveStyle.borderRightColor = "#FF5432";
                     this.leftMoveStyle.cursor = "pointer";
                 }
             },
             leftMoveMouseOut: function () {
-                this.leftMoveStyle.opacity = 0.5;
-                this.leftMoveStyle.borderRightColor = "#776e65";
-                this.leftMoveStyle.cursor = "default";
+                if (this.boxLeft > -this.moveBoxMaxLength()+this.$refs.showBox.clientWidth){
+                    this.leftMoveStyle.borderRightColor = "#8f7a66";
+                    this.leftMoveStyle.cursor = "pointer";
+                }
             },
             rightMoveMouseOver: function () {
                 if (this.boxLeft < 0){
-                    this.rightMoveStyle.opacity = 1;
                     this.rightMoveStyle.borderLeftColor = "#FF5432";
                     this.rightMoveStyle.cursor = "pointer";
                 }
             },
             rightMoveMouseOut: function () {
-                this.rightMoveStyle.opacity = 0.5;
-                this.rightMoveStyle.borderLeftColor = "#776e65";
-                this.rightMoveStyle.cursor = "default";
+                if (this.boxLeft < 0){
+                    this.rightMoveStyle.borderLeftColor = "#8f7a66";
+                    this.rightMoveStyle.cursor = "pointer";
+                }
             },
         },
     }
@@ -326,11 +328,12 @@
     .choose-list-move-box{
         display: inline-block;
         position: absolute;
+        text-align: left;
         left: 0;
         top: 0;
         margin: 0;
         padding: 0;
-        width: max-content;
+        width: 2048px;
         height: 100%;
     }
 
@@ -368,7 +371,6 @@
         border-top: 152px solid transparent ;
         border-bottom: 152px solid transparent ;
         vertical-align: middle;
-        opacity: 0.5;
     }
 
     .right-move{
@@ -381,6 +383,5 @@
         border-top: 152px solid transparent ;
         border-bottom: 152px solid transparent ;
         vertical-align: middle;
-        opacity: 0.5;
     }
 </style>
