@@ -851,20 +851,20 @@
                 }
             }()),
             keyboardAction: function (e) {
-                let keyCode = e.key;
-                if(keyCode === "ArrowLeft"){
+                let keyCode = e.keyCode || e.which;
+                if(keyCode === 37){
                     this.keyLeft();
                 }
-                else if (keyCode === "ArrowRight"){
+                else if (keyCode === 39){
                     this.keyRight();
                 }
-                else if (keyCode === "ArrowUp"){
+                else if (keyCode === 38){
                     this.keyUp();
                 }
-                else if (keyCode === "ArrowDown"){
+                else if (keyCode === 40){
                     this.keyDown();
                 }
-                else if (keyCode === "Enter"){
+                else if (keyCode === 13){
                     this.keyEnter();
                 }
             }
