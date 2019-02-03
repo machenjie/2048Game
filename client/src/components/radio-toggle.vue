@@ -1,8 +1,6 @@
 <template>
-    <img :src='radioStat?"/images/radio/radio-on.png":"/images/radio/radio-off.png"'
-         @click="changeRadioStat"
-         width="30px"
-         height="30px">
+    <img :src='radioStat?"/images/radio/radio-on.png":"/images/radio/radio-off.png"' alt=""
+         @click="changeRadioStat">
 </template>
 
 <script>

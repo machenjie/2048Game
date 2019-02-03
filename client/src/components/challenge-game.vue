@@ -70,7 +70,7 @@
                          @click="classicModeNavMouseClick">
                         &#10152;
                     </div>
-                    <radio-toggle v-model="radioStat"></radio-toggle>
+                    <radio-toggle class="radio-toggle" v-model="radioStat"></radio-toggle>
                 </div>
             </div>
             <div class="col-0 col-sm-4 col-md-3 col-lg-3 col-xl">
@@ -134,7 +134,7 @@
                                 @click="classicModeNavMouseClickSM">
                                 &#10152;
                             </div>
-                            <radio-toggle v-model="radioStat"></radio-toggle>
+                            <radio-toggle class="radio-toggle-sm" v-model="radioStat"></radio-toggle>
                         </div>
                     </div>
                 </div>
@@ -1073,14 +1073,17 @@
     .challenge-mode-navigate div{
         float: right;
         cursor: pointer;
+        vertical-align: middle;
     }
     .challenge-mode-navigate div:hover{
         color: #FF5432;
     }
-    .challenge-mode-navigate radio-toggle{
+    .challenge-mode-navigate .radio-toggle{
         float: right;
-        width: 30px;
-        height: 30px;
+        width: 26px;
+        height: 26px;
+        margin: 2px;
+        vertical-align: middle;
     }
     .game{
         background-color: #776e65;
@@ -1260,13 +1263,16 @@
     .challenge-mode-navigate-sm div{
         float: right;
         cursor: pointer;
+        vertical-align: middle;
     }
     .challenge-mode-navigate-sm div:hover{
         color: #FF5432;
     }
-    .challenge-mode-navigate-sm radio-toggle{
+    .challenge-mode-navigate-sm .radio-toggle-sm{
         float: right;
-        width: 30px;
-        height: 30px;
+        width: 26px;
+        height: 26px;
+        margin: 2px;
+        vertical-align: middle;
     }
 </style>
