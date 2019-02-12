@@ -428,22 +428,19 @@
             } else {
                 randomNumber = _.random(1, 2) * _.random(1, 2) === 1 ? 4 : 2;
             }
-            let randomIndex = _.random(0, GAME_DIM * GAME_DIM - 1);
-            let yIndex = randomIndex % GAME_DIM;
-            let xIndex = (randomIndex - yIndex) / GAME_DIM % GAME_DIM;
-            let count = 0;
-            for (; count < GAME_DIM * GAME_DIM;) {
-                if (numbers[xIndex][yIndex] === 0) {
-                    numbers[xIndex][yIndex] = randomNumber;
-                    actions[xIndex][yIndex] = "new";
-                    break;
-                } else {
-                    count++;
-                    yIndex += 1;
-                    let tmp_y = yIndex % GAME_DIM;
-                    xIndex += (yIndex - tmp_y) / GAME_DIM;
-                    xIndex = xIndex % GAME_DIM;
-                    yIndex = tmp_y;
+            let fillIndex = _.random(1, numbersZeroCount);
+            let currentIndex = 0;
+            let fillSuccess = false;
+            for(let xIndex=0; xIndex<GAME_DIM && !fillSuccess; xIndex++){
+                for(let yIndex=0; yIndex<GAME_DIM && !fillSuccess; yIndex++){
+                    if (numbers[xIndex][yIndex] === 0){
+                        currentIndex++;
+                    }
+                    if (fillIndex === currentIndex) {
+                        numbers[xIndex][yIndex] = randomNumber;
+                        actions[xIndex][yIndex] = "new";
+                        fillSuccess = true;
+                    }
                 }
             }
         }
