@@ -355,12 +355,7 @@
             if (numbersZeroCount === 0){
                 break;
             }
-            let randomNumber = 2;
-            if (numbersZeroCount > GAME_DIM * GAME_DIM) {
-                randomNumber = _.random(1, 2) === 1 ? 4 : 2;
-            } else {
-                randomNumber = _.random(1, 2) * _.random(1, 2) === 1 ? 4 : 2;
-            }
+            let randomNumber = _.random(1, 2) === 1 ? 4 : 2;
             let fillIndex = _.random(1, numbersZeroCount);
             let currentIndex = 0;
             let fillSuccess = false;
