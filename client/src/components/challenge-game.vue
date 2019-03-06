@@ -9,11 +9,11 @@
                           :chooseList="chooseList">
             </level-choose>
             <div class="score">
-                SCORE
+                {{$t('score')}}
                 <tween-number :number="score" :duration="200"></tween-number>
             </div>
             <div class="step">
-                STEPS
+                {{$t('step')}}
                 <tween-number :number="step" :duration="200" :style='{color: step<10?"red":"white"}'></tween-number>
             </div>
             <ul class="challenge-stat">
@@ -44,12 +44,12 @@
             <div class="col-0 col-sm-0 col-md-3 col-lg-3 col-xl"></div>
             <div class="col-12 col-sm-8 col-md-6 col-lg-6 col-xl game">
                 <div class="game-over" v-if="gameOver">
-                    Game Over!<br>
-                    <a class="restart" @click="newGame">Try Again</a>
+                    {{$t('over')}}<br>
+                    <a class="restart" @click="newGame">{{$t('again')}}</a>
                 </div>
                 <div class="game-win" v-else-if="gameWin">
-                    Game WIN!<br>
-                    <a class="next-challenge" @click="nextChallenge">Next Level</a>
+                    {{$t('win')}}<br>
+                    <a class="next-challenge" @click="nextChallenge">{{$t('next')}}</a>
                 </div>
                 <div class="row  no-gutters" v-for="row in rowCol">
                     <div class="col" v-for="rc in row">
@@ -64,7 +64,7 @@
                     <div data-toggle="tooltip"
                          data-placement="bottom"
                          trigger="manual"
-                         title="Classic Mode"
+                         :title='$t("mode")'
                          @mouseover="classicModeNavMouseOver"
                          @mouseout="classicModeNavMouseOut"
                          @click="classicModeNavMouseClick">
@@ -84,11 +84,11 @@
                     </div>
                     <div>
                         <div class="score-sm">
-                            SCORE
+                            {{$t('score')}}
                             <tween-number :number="score" :duration="200"></tween-number>
                         </div>
                         <div class="step-sm">
-                            STEPS
+                            {{$t('step')}}
                             <tween-number :number="step" :duration="200" :style='{color: step<10?"red":"white"}'></tween-number>
                         </div>
                     </div>
@@ -119,7 +119,7 @@
                     </div>
                 </div>
                 <div class="tip-sm d-none d-sm-block d-md-none">
-                    Tips: use &larr; &uarr; &rarr; &darr; to play!
+                    {{$t('left')}} &larr; &uarr; &rarr; &darr; {{$t('right')}}
                 </div>
                 <div id="last-line-sm" class="d-none d-sm-block d-md-none">
                     <div id="last-line-container-sm">
@@ -128,7 +128,7 @@
                             <div data-toggle="tooltip"
                                 data-placement="bottom"
                                 trigger="manual"
-                                title="Classic Mode"
+                                :title='$t("mode")'
                                 @mouseover="classicModeNavMouseOverSM"
                                 @mouseout="classicModeNavMouseOutSM"
                                 @click="classicModeNavMouseClickSM">
@@ -141,10 +141,29 @@
             </div>
         </div>
         <div class="tip d-block d-sm-none d-md-block">
-            Tips: use &larr; &uarr; &rarr; &darr; to play!
+            {{$t('left')}} &larr; &uarr; &rarr; &darr; {{$t('right')}}
         </div>
     </div>
 </template>
+
+<i18n>
+    {
+    "ar":  {"left":"نصائح: الاستخدام","right":"للعب!","score":"أحرز هدفا","best":"الأفضل","over":"انتهت اللعبة!","again":"حاول مرة أخري","win":"لعبة الفوز!","next":"المرحلة التالية","step":"خطوات","mode":"الوضع الكلاسيكي"} ,
+    "ko":  {"left":"팁 : 사용","right":"놀아라!","score":"점수","best":"베스트","over":"게임 끝!","again":"다시 시도하십시오.","win":"게임 승리!","next":"다음 레벨","step":"걸음", "mode":"클래식 모드"} ,
+    "de":  {"left":"Tipps: verwenden","right":"spielen!","score":"ERGEBNIS","best":"BESTE","over":"Spiel ist aus!","again":"Versuchen Sie es nochmal","win":"Spiel GEWINNEN!","next":"Nächste Ebene","step":"Schritte","mode":"Klassischer Modus"} ,
+    "ru":  {"left":"Советы: используйте","right":"играть!","score":"ГОЛ","best":"ЛУЧШИЙ","over":"Игра окончена!","again":"Попробуйте снова","win":"Игра WIN!","next":"Следующий уровень","step":"меры","mode":"Классический режим"} ,
+    "fr":  {"left":"Astuces: utiliser","right":"jouer!","score":"BUT","best":"MEILLEUR","over":"Jeu terminé!","again":"Réessayer","win":"Jeu GAGNER!","next":"Niveau suivant","step":"pas","mode":"Mode classique"} ,
+    "bn":  {"left":"টিপস: ব্যবহার","right":"খেলতে!","score":"স্কোর","best":"সর্বোত্তম","over":"খেলা শেষ!","again":"আবার চেষ্টা কর","win":"খেলা জয়!","next":"পরবর্তী ধাপ","step":"ধাপ","mode":"ক্লাসিক মোড"} ,
+    "pt-br":  {"left":"Dicas: use","right":"jogar!","score":"PONTO","best":"MELHOR","over":"Fim de jogo!","again":"Tente novamente","win":"Jogo WIN!","next":"Próximo nível","step":"passos","mode":"Modo Clássico"} ,
+    "ja":  {"left":"ヒント：使用","right":"遊ぶ！","score":"スコア","best":"ベスト","over":"ゲームオーバー！","again":"再試行する","win":"ゲーム勝ち！","next":"次のレベル","step":"ステップ","mode":"クラシックモード"} ,
+    "es":  {"left":"Consejos: uso","right":"¡jugar!","score":"PUNTUACIÓN","best":"MEJOR","over":"¡Juego terminado!","again":"Inténtalo de nuevo","win":"Juego GANAR!","next":"Siguiente nivel","step":"pasos","mode":"Modo clásico"} ,
+    "hi":  {"left":"सुझाव: उपयोग करें","right":"खेलने के लिए!","score":"स्कोर","best":"श्रेष्ठ","over":"खेल खत्म!","again":"पुनः प्रयास करें","win":"खेल जीत!","next":"अगला स्तर","step":"कदम","mode":"क्लासिक मोड"} ,
+    "zh-cn":  {"left":"提示：使用","right":"进行操作！","score":"得分","best":"最高","over":"游戏结束！","again":"再试一次","win":"游戏获胜！","next":"下一级","step":"步数","mode":"经典模式"} ,
+    "zh-tw":  {"left":"提示：使用","right":"进行操作！","score":"得分","best":"最高","over":"遊戲結束！","again":"再試一次","win":"遊戲獲勝！","next":"下一級","step":"步數","mode":"經典模式"} ,
+    "zh-hk":  {"left":"提示：使用","right":"进行操作！","score":"得分","best":"最高","over":"遊戲結束！","again":"再試一次","win":"遊戲獲勝！","next":"下一級","step":"步數","mode":"經典模式"} ,
+    "en":  { "left": "Tips: use", "right": "to play!", "score": "SCORE", "best": "BEST", "over": "Game over!", "again": "Try again", "win": "Game WIN!", "next": "Next Level", "step": "steps", "mode": "Classic Mode"}
+    }
+</i18n>
 
 <script>
     import number from "./number";
@@ -541,7 +560,7 @@
                 _this.score = 0;
                 _this.numbers = initTwoDimArray(GAME_DIM, GAME_DIM);
                 _this.rowCol = initRowCol(GAME_DIM, GAME_DIM);
-                _this.actions = initTwoDimArray(GAME_DIM, GAME_DIM, "hidden");
+                _this.actions = initTwoDimArray(GAME_DIM, GAME_DIM, "change");
                 _.delay(function () {
                     let fillResult = randomFill(_this.numbers, 2);
                     _this.numbers = fillResult.numbers;

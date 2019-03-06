@@ -45,7 +45,12 @@ module.exports = {
                 test: /\.css$/,
                 loader: 'vue-style-loader!css-loader',
                 exclude: /node_modules/
-            }
+            },
+            {
+                resourceQuery: /blockType=i18n/,
+                type: 'javascript/auto',
+                loader: '@kazupon/vue-i18n-loader'
+            },
         ]
     },
     plugins: [

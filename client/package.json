@@ -45,15 +45,17 @@
     "url-loader": "^1.1.2",
     "webpack": "^4.25.1",
     "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.1.10"
+    "webpack-dev-server": "^3.2.1"
   },
   "dependencies": {
+    "@kazupon/vue-i18n-loader": "^0.3.0",
     "@tweenjs/tween.js": "^17.2.0",
     "file-loader": "^2.0.0",
     "lodash": "^4.17.11",
     "popper": "^1.0.1",
     "popper.js": "^1.14.5",
     "vue": "^2.5.17",
+    "vue-i18n": "^8.8.2",
     "vue-loader": "^15.4.2",
     "vue-router": "^3.0.2",
     "vue-template-compiler": "^2.5.17"

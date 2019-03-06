@@ -1,9 +1,9 @@
 <template>
     <div id="rate-feedback" @keyup.stop="" @keydown.stop="">
-        <div id="rate-area" data-toggle="tooltip" data-placement="bottom" title="Good Job!">
+        <div id="rate-area" data-toggle="tooltip" data-placement="bottom" :title='$t("rate")'>
             <a href="ms-windows-store://review/?ProductId=9NN76P3B5D8G">&#10084;</a>
         </div>
-        <div id="feedback-area" data-toggle="tooltip" data-placement="bottom" title="I Want Say!">
+        <div id="feedback-area" data-toggle="tooltip" data-placement="bottom" :title='$t("feedback")'>
             <a data-toggle="modal" :data-target='"#feedback-dialog"+dialogTag'>&#9993;</a>
         </div>
         <div :id='"feedback-dialog"+dialogTag' class="modal fade">
@@ -18,22 +18,41 @@
 
                     <!-- body -->
                     <div class="modal-body">
-                        <label for="comment">Please input your feedback and suggestions:</label>
+                        <label for="comment">{{$t('content')}}</label>
                         <textarea id="comment" v-model="comment"></textarea>
-                        <label for="email">Please input your e-mail address:</label>
+                        <label for="email">{{$t('email')}}</label>
                         <input id="email" type="email" v-model="email">
                     </div>
 
                     <!-- footer -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">cancel</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" @click="feedback">submit</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{$t('cancel')}}</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" @click="feedback">{{$t('submit')}}</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </template>
+
+<i18n>
+    {
+    "ar": {"rate":"عمل جيد!","feedback":"اريد ان اقول!","content":"يرجى إدخال ملاحظاتك واقتراحاتك:","email":"يرجى إدخال عنوان البريد الإلكتروني الخاص بك:","cancel":"إلغاء","submit":"خضع"} ,
+    "ko": {"rate":"잘 했어!","feedback":"나는 말해봐!","content":"의견 및 제안 사항을 입력하십시오.","email":"귀하의 전자 메일 주소를 입력하십시오 :","cancel":"취소","submit":"제출하다"} ,
+    "de": {"rate":"Gut gemacht!","feedback":"Ich will sagen!","content":"Bitte geben Sie Ihr Feedback und Ihre Vorschläge ein:","email":"Bitte geben Sie Ihre E-Mail-Adresse ein:","cancel":"stornieren","submit":"einreichen"} ,
+    "ru": {"rate":"Хорошая работа!","feedback":"Я хочу сказать!","content":"Пожалуйста, введите ваши отзывы и предложения:","email":"Пожалуйста, введите свой адрес электронной почты:","cancel":"отменить","submit":"Отправить"} ,
+    "fr": {"rate":"Bon travail!","feedback":"Je veux dire!","content":"S'il vous plaît entrer vos commentaires et suggestions:","email":"Veuillez saisir votre adresse e-mail:","cancel":"Annuler","submit":"soumettre"} ,
+    "bn": {"rate":"সাবাশ!","feedback":"আমি বলতে চাইছি!","content":"আপনার প্রতিক্রিয়া এবং পরামর্শ ইনপুট করুন:","email":"আপনার ইমেইল ঠিকানা ইনপুট করুন:","cancel":"বাতিল","submit":"জমা দিন"} ,
+    "pt-br": {"rate":"Bom trabalho!","feedback":"Eu quero dizer!","content":"Por favor insira seus comentários e sugestões:","email":"Por favor insira o seu endereço de e-mail:","cancel":"cancelar","submit":"enviar"} ,
+    "ja": {"rate":"よくやった！","feedback":"私は言いたい！","content":"あなたのフィードバックや提案を入力してください：","email":"あなたのEメールアドレスを入力してください：","cancel":"キャンセル","submit":"提出する"} ,
+    "es": {"rate":"¡Buen trabajo!","feedback":"¡Yo quiero decir!","content":"Por favor ingrese sus comentarios y sugerencias:","email":"Por favor ingrese su dirección de correo electrónico:","cancel":"cancelar","submit":"enviar"} ,
+    "hi": {"rate":"बहुत बढ़िया!","feedback":"मैं कहना चाहता हूॅं!","content":"कृपया अपनी प्रतिक्रिया और सुझाव दें:","email":"कृपया अपना ई-मेल पता डालें:","cancel":"रद्द करना","submit":"जमा करें"} ,
+    "zh-cn": {"rate":"五星好评！","feedback":"我要吐槽！","content":"请输入您的反馈和建议：","email":"请输入您的电子邮件地址：","cancel":"取消","submit":"提交"} ,
+    "zh-tw": {"rate":"五星好評！","feedback":"我要吐槽！","content":"請輸入您的反饋和建議：","email":"請輸入您的電子郵件地址：","cancel":"取消","submit":"提交"} ,
+    "zh-hk": {"rate":"五星好評！","feedback":"我要吐槽！","content":"請輸入您的反饋和建議：","email":"請輸入您的電子郵件地址：","cancel":"取消","submit":"提交"} ,
+    "en": { "rate": "Good Job!", "feedback": "I Want Say!", "content": "Please input your feedback and suggestions:", "email": "Please input your e-mail address:", "cancel": "cancel", "submit": "submit"}
+    }
+</i18n>
 
 <script>
     export default {

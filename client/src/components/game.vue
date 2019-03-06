@@ -5,11 +5,11 @@
         <div class="heading d-block d-sm-none d-md-block">
             <div class="title">2048</div>
             <div class="score">
-                SCORE
+                {{$t('score')}}
                 <tween-number :number="score" :duration="200"></tween-number>
             </div>
             <div class="best-score">
-                BEST
+                {{$t('best')}}
                 <tween-number :number="bestScore" :duration="200"></tween-number>
             </div>
             <div class="order-action">
@@ -25,8 +25,8 @@
             <div class="col-0 col-sm-0 col-md-3 col-lg-3 col-xl"></div>
             <div class="col-12 col-sm-8 col-md-6 col-lg-6 col-xl game">
                 <div class="game-over" v-if="gameOver">
-                    Game over!<br>
-                    <a class="restart" @click="newGame">Try again</a>
+                    {{$t('over')}}<br>
+                    <a class="restart" @click="newGame">{{$t('again')}}</a>
                 </div>
                 <div class="row  no-gutters" v-for="row in rowCol">
                     <div class="col" v-for="rc in row">
@@ -41,7 +41,7 @@
                     <div data-toggle="tooltip"
                          data-placement="bottom"
                          trigger="manual"
-                         title="Challenge Mode"
+                         :title='$t("mode")'
                          @mouseover="challengeModeNavMouseOver"
                          @mouseout="challengeModeNavMouseOut"
                          @click="challengeModeNavMouseClick">
@@ -55,11 +55,11 @@
                     <div class="title-sm">2048</div>
                     <div class="score-area">
                         <div class="score-sm">
-                            SCORE
+                            {{$t('score')}}
                             <tween-number :number="score" :duration="200"></tween-number>
                         </div>
                         <div class="best-score-sm">
-                            BEST
+                            {{$t('best')}}
                             <tween-number :number="bestScore" :duration="200"></tween-number>
                         </div>
                     </div>
@@ -75,7 +75,7 @@
                     </div>
                 </div>
                 <div class="tip-sm d-none d-sm-block d-md-none">
-                    Tips: use &larr; &uarr; &rarr; &darr; to play!
+                    {{$t('left')}} &larr; &uarr; &rarr; &darr; {{$t('right')}}!
                 </div>
                 <div id="last-line-sm" class="d-none d-sm-block d-md-none">
                     <div id="last-line-container-sm">
@@ -84,7 +84,7 @@
                             <div data-toggle="tooltip"
                                  data-placement="bottom"
                                  trigger="manual"
-                                 title="Challenge Mode"
+                                 :title='$t("mode")'
                                  @mouseover="challengeModeNavMouseOverSM"
                                  @mouseout="challengeModeNavMouseOutSM"
                                  @click="challengeModeNavMouseClickSM">
@@ -97,10 +97,29 @@
             </div>
         </div>
         <div class="tip d-block d-sm-none d-md-block">
-            Tips: use &larr; &uarr; &rarr; &darr; to play!
+            {{$t('left')}} &larr; &uarr; &rarr; &darr; {{$t('right')}}
         </div>
     </div>
 </template>
+
+<i18n>
+{
+    "ar" :  {"left":"نصائح: الاستخدام","right":"للعب!","score":"أحرز هدفا","best":"الأفضل","over":"انتهت اللعبة!","again":"حاول مرة أخري","mode":"وضع التحدي"} ,
+    "ko" :  {"left":"팁 : 사용","right":"놀아라!","score":"점수","best":"베스트","over":"게임 끝!","again":"다시 시도하십시오.", "mode":"챌린지 모드"} ,
+    "de" :  {"left":"Tipps: verwenden","right":"spielen!","score":"ERGEBNIS","best":"BESTE","over":"Spiel ist aus!","again":"Versuchen Sie es nochmal", "mode":"Herausforderungsmodus"} ,
+    "ru" :  {"left":"Советы: используйте","right":"играть!","score":"ГОЛ","best":"ЛУЧШИЙ","over":"Игра окончена!","again":"Попробуйте снова", "mode":"Режим соревнования"} ,
+    "fr" :  {"left":"Astuces: utiliser","right":"jouer!","score":"BUT","best":"MEILLEUR","over":"Jeu terminé!","again":"Réessayer", "mode":"Mode Défi"} ,
+    "bn" :  {"left":"টিপস: ব্যবহার","right":"খেলতে!","score":"স্কোর","best":"সর্বোত্তম","over":"খেলা শেষ!","again":"আবার চেষ্টা কর","mode":"চ্যালেঞ্জ মোড"} ,
+    "pt-br" :  {"left":"Dicas: use","right":"jogar!","score":"PONTO","best":"MELHOR","over":"Fim de jogo!","again":"Tente novamente","mode":"Modo desafio"} ,
+    "ja" :  {"left":"ヒント：使用","right":"遊ぶ！","score":"スコア","best":"ベスト","over":"ゲームオーバー！","again":"再試行する","mode":"チャレンジモード"} ,
+    "es" :  {"left":"Consejos: uso","right":"¡jugar!","score":"PUNTUACIÓN","best":"MEJOR","over":"¡Juego terminado!","again":"Inténtalo de nuevo","mode":"Modo Desafío"} ,
+    "hi" :  {"left":"सुझाव: उपयोग करें","right":"खेलने के लिए!","score":"स्कोर","best":"श्रेष्ठ","over":"खेल खत्म!","again":"पुनः प्रयास करें","mode":"चुनौती मोड"} ,
+    "zh-cn" :  {"left":"提示：使用","right":"进行操作！","score":"得分","best":"最高","over":"游戏结束！","again":"再试一次","mode":"挑战模式"} ,
+    "zh-tw" :  {"left":"提示：使用","right":"进行操作！","score":"得分","best":"最好","over":"遊戲結束！","again":"再試一次","mode":"挑戰模式"} ,
+    "zh-hk" :  {"left":"提示：使用","right":"进行操作！","score":"得分","best":"最好","over":"遊戲結束！","again":"再試一次","mode":"挑戰模式"} ,
+    "en" :  { "left": "Tips: use", "right": "to play!", "score": "SCORE", "best": "BEST", "over": "Game over!", "again": "Try again", "mode": "Challenge Mode"}
+}
+</i18n>
 
 <script>
     import number from "./number";
