@@ -37,7 +37,7 @@ const i18n = new VueI18n({
     locale: (function () {
         let defaultLang = "en";
         let supportLangList = ["en", "ar", "ko", "de", "ru", "fr", "bn", "pt-br", "ja", "es", "hi", "zh-cn", "zh-tw", "zh-hk"];
-        if ( Windows.System.UserProfile.GlobalizationPreferences === "undefined") {
+        if (typeof(Windows) === "undefined") {
             return defaultLang;
         }
         let systemLangLow = Windows.System.UserProfile.GlobalizationPreferences.languages[0].toLowerCase();
