@@ -114,9 +114,9 @@
     "ja": {"left":"ヒント：使用","right":"遊ぶ！","score":"スコア","best":"ベスト","over":"ゲームオーバー！","again":"再試行する","mode":"チャレンジモード","decrease":"降順","increase":"注文を増やす"} ,
     "es": {"left":"Consejos: uso","right":"¡jugar!","score":"PUNTUACIÓN","best":"MEJOR","over":"¡Juego terminado!","again":"Inténtalo de nuevo","mode":"Modo Desafío","decrease":"disminuir orden","increase":"aumentar orden"} ,
     "hi": {"left":"सुझाव: उपयोग करें","right":"खेलने के लिए!","score":"स्कोर","best":"श्रेष्ठ","over":"खेल खत्म!","again":"पुनः प्रयास करें","mode":"चुनौती मोड","decrease":"आदेश में कमी","increase":"आदेश बढ़ाएं"} ,
-    "zh-cn": {"left":"提示：使用","right":"玩！","score":"得分了","best":"最好","over":"游戏结束！","again":"再试一次","mode":"挑战模式","decrease":"减少阶数","increase":"增加阶数"} ,
-    "zh-tw": {"left":"提示：使用","right":"玩！","score":"得分了","best":"最好","over":"遊戲結束！","again":"再試一次","mode":"挑戰模式","decrease":"減少階數","increase":"增加階數"} ,
-    "zh-hk": {"left":"提示：使用","right":"玩！","score":"得分了","best":"最好","over":"遊戲結束！","again":"再試一次","mode":"挑戰模式","decrease":"減少階數","increase":"增加階數"} ,
+    "zh-cn": {"left":"提示：使用","right":"来玩！","score":"得分","best":"最高","over":"游戏结束！","again":"再试一次","mode":"挑战模式","decrease":"减少阶数","increase":"增加阶数"} ,
+    "zh-tw": {"left":"提示：使用","right":"来玩！","score":"得分","best":"最高","over":"遊戲結束！","again":"再試一次","mode":"挑戰模式","decrease":"減少階數","increase":"增加階數"} ,
+    "zh-hk": {"left":"提示：使用","right":"来玩！","score":"得分","best":"最高","over":"遊戲結束！","again":"再試一次","mode":"挑戰模式","decrease":"減少階數","increase":"增加階數"} ,
     "en": { "left": "Tips: use", "right": "to play!", "score": "SCORE", "best": "BEST", "over": "Game over!", "again": "Try again", "mode": "Challenge Mode", "decrease": "decrease order", "increase": "increase order"}
 }
 </i18n>
