@@ -34,6 +34,7 @@ const CategoryActions = {
         name: "GA_CHALLENGE_GAME",
         actions: {
             OPERATION_START: "OPERATION_START",
+            OPERATION_LEVEL_CHOOSE: "OPERATION_LEVEL_CHOOSE",
         }
     },
     GA_RATE: {

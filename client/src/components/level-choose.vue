@@ -1,6 +1,6 @@
 <template>
     <div @keyup.stop="" @keydown.stop="">
-        <a id="choose-btn" data-toggle="modal" :data-target='"#choose-dialog"+dialogTag'>
+        <a id="choose-btn" data-toggle="modal" :data-target='"#choose-dialog"+dialogTag' @mousedown="chooseClick">
             {{value}}
         </a>
         <div :id='"choose-dialog"+dialogTag' class="modal fade">
@@ -55,6 +55,8 @@
 </template>
 
 <script>
+    import GaReport, {CategoryActions} from '../api/ga-report';
+
     export default {
         inheritAttrs: false,
         props: {
@@ -91,6 +93,9 @@
             },
         },
         methods: {
+            chooseClick: function() {
+                GaReport(this.$store.state.config.uuid, this.$store.state.config.versionNO, CategoryActions.GA_CHALLENGE_GAME.name, CategoryActions.GA_CHALLENGE_GAME.actions.OPERATION_LEVEL_CHOOSE);
+            },
             initChooseBoxList: function () {
                 let boxCount = Math.floor(this.chooseList.length/16)+(this.chooseList.length%16===0?0:1);
                 let chooseBoxList = new Array(boxCount);
