@@ -88,7 +88,7 @@ new Vue({
         _this.$nextTick(function () {
             _this.$store.commit("setUUID", _this.$store.state.config.uuid);
             _this.$store.commit("setVersionNO", Config.state.config.versionNO);
-            GaReport(_this.$store.state.config.uuid, _this.$store.state.config.versionNO, CategoryActions.GA_APP_OPERATION.name, CategoryActions.GA_APP_OPERATION.actions.OPERATION_START);
-        })
-    }
+            GaReport(_this.$store.state.config.uuid, _this.$store.state.config.versionNO, CategoryActions.GA_APP.name, CategoryActions.GA_APP.actions.OPERATION_START);
+        });
+    },
 });

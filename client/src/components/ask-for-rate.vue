@@ -16,7 +16,7 @@
 
                 <!-- footer -->
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{$t('no')}}</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="rateNo">{{$t('no')}}</button>
                     <a class="btn btn-primary" href="ms-windows-store://review/?ProductId=9NN76P3B5D8G" @click="modalHide">{{$t('yes')}}</a>
                 </div>
             </div>
@@ -44,13 +44,19 @@
 </i18n>
 
 <script>
+    import GaReport, {CategoryActions} from '../api/ga-report';
+
     export default {
         name: "ask-for-rate",
         methods: {
             modalHide: function () {
                 localStorage.setItem("_2048_game_ask_rate", JSON.stringify({num: 100}));
                 $("#rate-feedback-modal").modal('hide');
+                GaReport(this.$store.state.config.uuid, this.$store.state.config.versionNO, CategoryActions.GA_RATE.name, CategoryActions.GA_RATE.actions.OPERATION_YES);
             },
+            rateNo: function () {
+                GaReport(this.$store.state.config.uuid, this.$store.state.config.versionNO, CategoryActions.GA_RATE.name, CategoryActions.GA_RATE.actions.OPERATION_NO);
+            }
         },
         mounted() {
             this.$nextTick(function () {

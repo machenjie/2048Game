@@ -1,9 +1,11 @@
 <template>
     <img :src='radioStat?"/images/radio/radio-on.png":"/images/radio/radio-off.png"' alt=""
-         @click="changeRadioStat">
+         @click="changeRadio">
 </template>
 
 <script>
+    import GaReport, {CategoryActions} from '../api/ga-report';
+
     export default {
         name: "radio-toggle",
         props: {
@@ -20,6 +22,15 @@
             }
         },
         methods: {
+            changeRadio: function(){
+                this.changeRadioStat();
+                if (this.radioStat) {
+                    GaReport(this.$store.state.config.uuid, this.$store.state.config.versionNO, CategoryActions.GA_RADIO.name, CategoryActions.GA_RADIO.actions.OPERATION_ON);
+                }
+                else{
+                    GaReport(this.$store.state.config.uuid, this.$store.state.config.versionNO, CategoryActions.GA_RADIO.name, CategoryActions.GA_RADIO.actions.OPERATION_OFF);
+                }
+            },
             changeRadioStat: function () {
                 let store = {
                     radioStat: !this.radioStat,

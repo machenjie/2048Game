@@ -13,9 +13,9 @@
                 <tween-number :number="bestScore" :duration="200"></tween-number>
             </div>
             <div class="order-action">
-                <div class="order-minus" :class="{disabled: currentGameDim===4}" @click="orderMinus" title="decrease order"></div>
+                <div class="order-minus" :class="{disabled: currentGameDim===4}" @click="orderMinus" :title="$t('decrease')"></div>
                 <div class="order-text">{{currentGameDim}}&#215;{{currentGameDim}}</div>
-                <div class="order-add" :class="{disabled: currentGameDim===9}" @click="orderAdd" title="increase order"></div>
+                <div class="order-add" :class="{disabled: currentGameDim===9}" @click="orderAdd" :title="$t('increase')"></div>
             </div>
             <a class="new-game-btn" title="new game" @click="newGame">
                 &#10227;
@@ -64,9 +64,9 @@
                         </div>
                     </div>
                     <div class="order-action-sm">
-                        <div class="order-minus-sm" :class="{disabled: currentGameDim===4}" @click="orderMinus" title="decrease order"></div>
+                        <div class="order-minus-sm" :class="{disabled: currentGameDim===4}" @click="orderMinus" :title="$t('decrease')"></div>
                         <div class="order-text-sm">{{currentGameDim}}&#215;{{currentGameDim}}</div>
-                        <div class="order-add-sm" :class="{disabled: currentGameDim===9}" @click="orderAdd" title="increase order"></div>
+                        <div class="order-add-sm" :class="{disabled: currentGameDim===9}" @click="orderAdd" :title="$t('increase')"></div>
                     </div>
                     <div class="new-game-btn-sm-area">
                         <a class="new-game-btn-sm" title="new game" @click="newGame">
@@ -104,20 +104,20 @@
 
 <i18n>
 {
-    "ar" :  {"left":"نصائح: الاستخدام","right":"للعب!","score":"أحرز هدفا","best":"الأفضل","over":"انتهت اللعبة!","again":"حاول مرة أخري","mode":"وضع التحدي"} ,
-    "ko" :  {"left":"팁 : 사용","right":"놀아라!","score":"점수","best":"베스트","over":"게임 끝!","again":"다시 시도하십시오.", "mode":"챌린지 모드"} ,
-    "de" :  {"left":"Tipps: verwenden","right":"spielen!","score":"ERGEBNIS","best":"BESTE","over":"Spiel ist aus!","again":"Versuchen Sie es nochmal", "mode":"Herausforderungsmodus"} ,
-    "ru" :  {"left":"Советы: используйте","right":"играть!","score":"ГОЛ","best":"ЛУЧШИЙ","over":"Игра окончена!","again":"Попробуйте снова", "mode":"Режим соревнования"} ,
-    "fr" :  {"left":"Astuces: utiliser","right":"jouer!","score":"BUT","best":"MEILLEUR","over":"Jeu terminé!","again":"Réessayer", "mode":"Mode Défi"} ,
-    "bn" :  {"left":"টিপস: ব্যবহার","right":"খেলতে!","score":"স্কোর","best":"সর্বোত্তম","over":"খেলা শেষ!","again":"আবার চেষ্টা কর","mode":"চ্যালেঞ্জ মোড"} ,
-    "pt-br" :  {"left":"Dicas: use","right":"jogar!","score":"PONTO","best":"MELHOR","over":"Fim de jogo!","again":"Tente novamente","mode":"Modo desafio"} ,
-    "ja" :  {"left":"ヒント：使用","right":"遊ぶ！","score":"スコア","best":"ベスト","over":"ゲームオーバー！","again":"再試行する","mode":"チャレンジモード"} ,
-    "es" :  {"left":"Consejos: uso","right":"¡jugar!","score":"PUNTUACIÓN","best":"MEJOR","over":"¡Juego terminado!","again":"Inténtalo de nuevo","mode":"Modo Desafío"} ,
-    "hi" :  {"left":"सुझाव: उपयोग करें","right":"खेलने के लिए!","score":"स्कोर","best":"श्रेष्ठ","over":"खेल खत्म!","again":"पुनः प्रयास करें","mode":"चुनौती मोड"} ,
-    "zh-cn" :  {"left":"提示：使用","right":"进行操作！","score":"得分","best":"最高","over":"游戏结束！","again":"再试一次","mode":"挑战模式"} ,
-    "zh-tw" :  {"left":"提示：使用","right":"进行操作！","score":"得分","best":"最好","over":"遊戲結束！","again":"再試一次","mode":"挑戰模式"} ,
-    "zh-hk" :  {"left":"提示：使用","right":"进行操作！","score":"得分","best":"最好","over":"遊戲結束！","again":"再試一次","mode":"挑戰模式"} ,
-    "en" :  { "left": "Tips: use", "right": "to play!", "score": "SCORE", "best": "BEST", "over": "Game over!", "again": "Try again", "mode": "Challenge Mode"}
+    "ar": {"left":"نصائح: استخدام","right":"للعب!","score":"أحرز هدفا","best":"الأفضل","over":"انتهت اللعبة!","again":"حاول مرة أخري","mode":"وضع التحدي","decrease":"انخفاض الطلب","increase":"زيادة الطلب"} ,
+    "ko": {"left":"팁 : 사용","right":"놀아라!","score":"점수","best":"베스트","over":"게임 끝!","again":"다시 시도하십시오.","mode":"챌린지 모드","decrease":"질서를 낮추다","increase":"주문을 늘리다"} ,
+    "de": {"left":"Tipps: verwenden","right":"spielen!","score":"ERGEBNIS","best":"BESTE","over":"Spiel ist aus!","again":"Versuchen Sie es nochmal","mode":"Herausforderungsmodus","decrease":"Reihenfolge verringern","increase":"Reihenfolge erhöhen"} ,
+    "ru": {"left":"Советы: используйте","right":"играть!","score":"ГОЛ","best":"ЛУЧШИЙ","over":"Игра окончена!","again":"Попробуйте снова","mode":"Режим соревнования","decrease":"уменьшить порядок","increase":"увеличить заказ"} ,
+    "fr": {"left":"Astuces: utiliser","right":"jouer!","score":"BUT","best":"MEILLEUR","over":"Jeu terminé!","again":"Réessayer","mode":"Mode Défi","decrease":"ordre décroissant","increase":"augmenter l'ordre"} ,
+    "bn": {"left":"টিপস: ব্যবহার","right":"খেলতে!","score":"স্কোর","best":"সর্বোত্তম","over":"খেলা শেষ!","again":"আবার চেষ্টা কর","mode":"চ্যালেঞ্জ মোড","decrease":"ক্রম কমানো","increase":"ক্রম বৃদ্ধি"} ,
+    "pt-br": {"left":"Dicas: use","right":"jogar!","score":"PONTO","best":"MELHOR","over":"Fim de jogo!","again":"Tente novamente","mode":"Modo desafio","decrease":"diminuir a ordem","increase":"aumentar a ordem"} ,
+    "ja": {"left":"ヒント：使用","right":"遊ぶ！","score":"スコア","best":"ベスト","over":"ゲームオーバー！","again":"再試行する","mode":"チャレンジモード","decrease":"降順","increase":"注文を増やす"} ,
+    "es": {"left":"Consejos: uso","right":"¡jugar!","score":"PUNTUACIÓN","best":"MEJOR","over":"¡Juego terminado!","again":"Inténtalo de nuevo","mode":"Modo Desafío","decrease":"disminuir orden","increase":"aumentar orden"} ,
+    "hi": {"left":"सुझाव: उपयोग करें","right":"खेलने के लिए!","score":"स्कोर","best":"श्रेष्ठ","over":"खेल खत्म!","again":"पुनः प्रयास करें","mode":"चुनौती मोड","decrease":"आदेश में कमी","increase":"आदेश बढ़ाएं"} ,
+    "zh-cn": {"left":"提示：使用","right":"玩！","score":"得分了","best":"最好","over":"游戏结束！","again":"再试一次","mode":"挑战模式","decrease":"减少阶数","increase":"增加阶数"} ,
+    "zh-tw": {"left":"提示：使用","right":"玩！","score":"得分了","best":"最好","over":"遊戲結束！","again":"再試一次","mode":"挑戰模式","decrease":"減少階數","increase":"增加階數"} ,
+    "zh-hk": {"left":"提示：使用","right":"玩！","score":"得分了","best":"最好","over":"遊戲結束！","again":"再試一次","mode":"挑戰模式","decrease":"減少階數","increase":"增加階數"} ,
+    "en": { "left": "Tips: use", "right": "to play!", "score": "SCORE", "best": "BEST", "over": "Game over!", "again": "Try again", "mode": "Challenge Mode", "decrease": "decrease order", "increase": "increase order"}
 }
 </i18n>
 
@@ -127,6 +127,7 @@
     import arrowKeyboard from "./arrow-keyboard";
     import rateFeedback from "./rate-feedback";
     import radioToggle from "./radio-toggle";
+    import GaReport, {CategoryActions} from '../api/ga-report';
     import _ from "lodash";
 
     let GAME_DIM = 4;
@@ -521,11 +522,14 @@
                 if (this.currentGameDim > 4){
                     this.currentGameDim = this.currentGameDim - 1;
                 }
+                GaReport(this.$store.state.config.uuid, this.$store.state.config.versionNO, CategoryActions.GA_NORMAL_GAME.name, CategoryActions.GA_NORMAL_GAME.actions.OPERATION_CHANGE_ORDER_MINUS);
+
             },
             orderAdd: function() {
                 if (this.currentGameDim < 9){
                     this.currentGameDim = this.currentGameDim + 1;
                 }
+                GaReport(this.$store.state.config.uuid, this.$store.state.config.versionNO, CategoryActions.GA_NORMAL_GAME.name, CategoryActions.GA_NORMAL_GAME.actions.OPERATION_CHANGE_ORDER_ADD);
             },
             startAction: function(calOP, duration, haveChanged, haveAdd, score, stone, resolve){
                 let _this = this;
@@ -708,6 +712,7 @@
             }, 50);
             _this.$nextTick(function () {
                 _this.restoreDataFromHistory();
+                GaReport(this.$store.state.config.uuid, this.$store.state.config.versionNO, CategoryActions.GA_NORMAL_GAME.name, CategoryActions.GA_NORMAL_GAME.actions.OPERATION_START);
             });
         },
         components: {

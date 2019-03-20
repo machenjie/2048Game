@@ -173,6 +173,7 @@
     import levelChoose from "./level-choose";
     import chooseList from "../store/choose-list";
     import radioToggle from "./radio-toggle";
+    import GaReport, {CategoryActions} from '../api/ga-report';
     import _ from "lodash";
 
     let GAME_DIM = 4;
@@ -905,6 +906,7 @@
             _this.$nextTick(function () {
                 _this.restoreChallengeChooseToHistory();
                 _this.restoreDataFromHistory();
+                GaReport(this.$store.state.config.uuid, this.$store.state.config.versionNO, CategoryActions.GA_CHALLENGE_GAME.name, CategoryActions.GA_CHALLENGE_GAME.actions.OPERATION_START);
             });
         },
         components: {

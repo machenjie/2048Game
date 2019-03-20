@@ -1,10 +1,10 @@
 <template>
     <div id="rate-feedback" @keyup.stop="" @keydown.stop="">
         <div id="rate-area" data-toggle="tooltip" data-placement="bottom" :title='$t("rate")'>
-            <a href="ms-windows-store://review/?ProductId=9NN76P3B5D8G">&#10084;</a>
+            <a href="ms-windows-store://review/?ProductId=9NN76P3B5D8G" @mousedown="rateDown">&#10084;</a>
         </div>
         <div id="feedback-area" data-toggle="tooltip" data-placement="bottom" :title='$t("feedback")'>
-            <a data-toggle="modal" :data-target='"#feedback-dialog"+dialogTag'>&#9993;</a>
+            <a data-toggle="modal" :data-target='"#feedback-dialog"+dialogTag' @mousedown="feedbackShow">&#9993;</a>
         </div>
         <div :id='"feedback-dialog"+dialogTag' class="modal fade">
             <div class="modal-dialog">
@@ -26,7 +26,7 @@
 
                     <!-- footer -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{$t('cancel')}}</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="cancel">{{$t('cancel')}}</button>
                         <button type="button" class="btn btn-primary" data-dismiss="modal" @click="feedback">{{$t('submit')}}</button>
                     </div>
                 </div>
@@ -55,6 +55,8 @@
 </i18n>
 
 <script>
+    import GaReport, {CategoryActions} from '../api/ga-report';
+
     export default {
         name: "rate-feedback",
         props: {
@@ -79,6 +81,16 @@
                 });
                 this.comment = "";
                 this.email = "";
+                GaReport(this.$store.state.config.uuid, this.$store.state.config.versionNO, CategoryActions.GA_FEEDBACK.name, CategoryActions.GA_FEEDBACK.actions.OPERATION_SUBMIT);
+            },
+            rateDown: function () {
+                GaReport(this.$store.state.config.uuid, this.$store.state.config.versionNO, CategoryActions.GA_RATE.name, CategoryActions.GA_RATE.actions.OPERATION_YES);
+            },
+            feedbackShow: function () {
+                GaReport(this.$store.state.config.uuid, this.$store.state.config.versionNO, CategoryActions.GA_FEEDBACK.name, CategoryActions.GA_FEEDBACK.actions.OPERATION_SHOW);
+            },
+            cancel: function () {
+                GaReport(this.$store.state.config.uuid, this.$store.state.config.versionNO, CategoryActions.GA_FEEDBACK.name, CategoryActions.GA_FEEDBACK.actions.OPERATION_CANCEL);
             }
         },
         mounted: function () {
