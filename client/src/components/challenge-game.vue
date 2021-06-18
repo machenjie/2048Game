@@ -161,7 +161,7 @@
     "zh-cn":  {"left":"提示：使用","right":"进行操作！","score":"得分","best":"最高","over":"游戏结束！","again":"再试一次","win":"游戏获胜！","next":"下一级","step":"步数","mode":"经典模式"} ,
     "zh-tw":  {"left":"提示：使用","right":"进行操作！","score":"得分","best":"最高","over":"遊戲結束！","again":"再試一次","win":"遊戲獲勝！","next":"下一級","step":"步數","mode":"經典模式"} ,
     "zh-hk":  {"left":"提示：使用","right":"进行操作！","score":"得分","best":"最高","over":"遊戲結束！","again":"再試一次","win":"遊戲獲勝！","next":"下一級","step":"步數","mode":"經典模式"} ,
-    "en":  { "left": "Tips: use", "right": "to play!", "score": "SCORE", "best": "BEST", "over": "Game over!", "again": "Try again", "win": "Game WIN!", "next": "Next Level", "step": "steps", "mode": "Classic Mode"}
+    "en":  { "left": "Tips: use", "right": "to play!", "score": "SCORE", "best": "BEST", "over": "Game over!", "again": "Try again", "win": "Game WIN!", "next": "Next Level", "step": "STEPS", "mode": "Classic Mode"}
     }
 </i18n>
 
@@ -932,22 +932,22 @@
     .heading {
         margin: 6px 0 6px 0;
         text-align: center;
-        height: 90px;
-        line-height: 90px;
+        height: 54px;
+        line-height: 54px;
         user-select: none;
         font-size: 0;
     }
     .heading .level-choose{
         display: inline-block;
-        height: 54px;
+        height: 36px;
         min-width: 90px;
         padding: 0;
         text-align: center;
         margin-right: 5px;
         background: #bbada0;
-        font-size: 54px;
+        font-size: 36px;
         font-weight: bold;
-        line-height: 42px;
+        line-height: 24px;
         color: white;
         cursor: pointer;
         vertical-align: middle;
@@ -958,13 +958,13 @@
     }
     .heading .score, .heading .step {
         display: inline-block;
-        width: 120px;
-        height: 54px;
+        width: 84px;
+        height: 36px;
         margin-right: 5px;
         background: #bbada0;
         font-weight: bold;
-        font-size: 18px;
-        line-height: 30px;
+        font-size: 12px;
+        line-height: 20px;
         border-radius: 3px 3px 3px 3px;
         color: white;
         text-align: center;
@@ -972,7 +972,7 @@
     }
     .heading .challenge-stat{
         display: inline-block;
-        width: 90px;
+        width: 60px;
         margin: 0 5px 0 0;
         padding: 0;
         text-align: center;
@@ -981,8 +981,8 @@
     .heading .challenge-stat li{
         list-style-type: none;
         position: relative;
-        width: 90px;
-        height: 28px;
+        width: 60px;
+        height: 16px;
         margin: 0 0 2px 0;
         padding: 0;
         background: #bbada0;
@@ -990,10 +990,10 @@
     }
     .heading .challenge-stat .challenge-number{
         position: absolute;
-        left: 2px;
-        top: 2px;
-        bottom: 2px;
-        width: 24px;
+        left: 1px;
+        top: 1px;
+        bottom: 1px;
+        width: 14px;
     }
     .heading .challenge-stat .challenge-hit {
         position: absolute;
@@ -1001,9 +1001,9 @@
         top: 0;
         bottom: 0;
         font-weight: bold;
-        font-size: 14px;
+        font-size: 10px;
         color: white;
-        line-height: 28px;
+        line-height: 16px;
     }
     .heading .challenge-stat .challenge-score{
         position: absolute;
@@ -1013,9 +1013,9 @@
         width: 22px;
         background-color: #bbada0;
         font-weight: bold;
-        font-size: 14px;
+        font-size: 10px;
         color: white;
-        line-height: 22px;
+        line-height: 16px;
         border-radius: 2px;
     }
     .heading .challenge-stat .challenge-score-score {
@@ -1024,17 +1024,17 @@
         top: 0;
         bottom: 0;
         font-weight: bold;
-        font-size: 14px;
+        font-size: 10px;
         color: white;
-        line-height: 28px;
+        line-height: 16px;
     }
     .heading .new-game-btn{
         display: inline-block;
         width: 35px;
-        height: 54px;
+        height: 36px;
         font-weight: bold;
-        font-size: 35px;
-        line-height: 54px;
+        font-size: 28px;
+        line-height: 36px;
         color: #776e65;
         text-align: center;
         vertical-align: middle;

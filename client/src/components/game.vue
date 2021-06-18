@@ -736,7 +736,7 @@
     }
     .heading {
         text-align: center;
-        margin: 24px 0 24px 0;
+        margin: 6px 0 6px 0;
         height: 54px;
         line-height: 54px;
         user-select: none;
@@ -744,25 +744,25 @@
     }
     .heading .title {
         display: inline-block;
-        width: 120px;
-        height: 54px;
+        width: 84px;
+        height: 36px;
         text-align: left;
         margin-right: 5px;
         color: #776e65;
-        font-size: 54px;
+        font-size: 36px;
         font-weight: bold;
-        line-height: 54px;
+        line-height: 36px;
         vertical-align: middle;
     }
     .heading .score {
         display: inline-block;
-        width: 120px;
-        height: 54px;
+        width: 84px;
+        height: 36px;
         margin-right: 5px;
         background: #bbada0;
         font-weight: bold;
-        font-size: 18px;
-        line-height: 30px;
+        font-size: 12px;
+        line-height: 20px;
         border-radius: 3px 3px 3px 3px;
         color: white;
         text-align: center;
@@ -770,13 +770,13 @@
     }
     .heading .best-score {
         display: inline-block;
-        width: 120px;
-        height: 54px;
+        width: 84px;
+        height: 36px;
         margin-right: 5px;
         background: #bbada0;
         font-weight: bold;
-        font-size: 18px;
-        line-height: 30px;
+        font-size: 12px;
+        line-height: 20px;
         border-radius: 3px 3px 3px 3px;
         color: white;
         text-align: center;
@@ -784,20 +784,20 @@
     }
     .heading .order-action{
         display: inline-block;
-        width: 80px;
-        height: 54px;
+        width: 52px;
+        height: 36px;
         margin-right: 5px;
         font-weight: bold;
-        line-height: 54px;
+        line-height: 36px;
         color: #776e65;
         text-align: center;
         vertical-align: middle;
     }
     .heading .order-text{
         display: block;
-        font-size: 28px;
-        height: 34px;
-        line-height: 34px;
+        font-size: 24px;
+        height: 24px;
+        line-height: 24px;
     }
     .heading .order-minus{
         display: block;
@@ -805,9 +805,9 @@
         padding: 0;
         width: 0;
         height: 0;
-        border-bottom: 10px solid  #776e65;
-        border-left: 40px solid transparent ;
-        border-right: 40px solid transparent ;
+        border-bottom: 6px solid  #776e65;
+        border-left: 24px solid transparent ;
+        border-right: 24px solid transparent ;
         cursor: pointer;
     }
     .heading .order-add{
@@ -816,9 +816,9 @@
         padding: 0;
         width: 0;
         height: 0;
-        border-top: 10px solid  #776e65;
-        border-left: 40px solid transparent ;
-        border-right: 40px solid transparent ;
+        border-top: 6px solid  #776e65;
+        border-left: 24px solid transparent ;
+        border-right: 24px solid transparent ;
         cursor: pointer;
     }
     .heading .order-action .disabled{
@@ -839,10 +839,10 @@
     .heading .new-game-btn{
         display: inline-block;
         width: 35px;
-        height: 54px;
+        height: 36px;
         font-weight: bold;
         font-size: 35px;
-        line-height: 54px;
+        line-height: 36px;
         color: #776e65;
         text-align: center;
         vertical-align: middle;
