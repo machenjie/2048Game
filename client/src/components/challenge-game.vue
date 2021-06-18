@@ -947,7 +947,7 @@
         background: #bbada0;
         font-size: 36px;
         font-weight: bold;
-        line-height: 24px;
+        line-height: 28px;
         color: white;
         cursor: pointer;
         vertical-align: middle;
@@ -963,7 +963,7 @@
         margin-right: 5px;
         background: #bbada0;
         font-weight: bold;
-        font-size: 12px;
+        font-size: 14px;
         line-height: 20px;
         border-radius: 3px 3px 3px 3px;
         color: white;

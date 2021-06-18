@@ -761,7 +761,7 @@
         margin-right: 5px;
         background: #bbada0;
         font-weight: bold;
-        font-size: 12px;
+        font-size: 14px;
         line-height: 20px;
         border-radius: 3px 3px 3px 3px;
         color: white;
@@ -775,7 +775,7 @@
         margin-right: 5px;
         background: #bbada0;
         font-weight: bold;
-        font-size: 12px;
+        font-size: 14px;
         line-height: 20px;
         border-radius: 3px 3px 3px 3px;
         color: white;
