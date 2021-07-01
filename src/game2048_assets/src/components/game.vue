@@ -3,7 +3,9 @@
          @touchmove="touchAction"
          @touchend="touchAction">
         <div class="heading d-block d-sm-none d-md-block">
-            <div class="title">2048</div>
+            <div class="title">
+              <img src="/img/dfinity.png">
+            </div>
             <div class="score">
                 {{$t('score')}}
                 <tween-number :number="score" :duration="200"></tween-number>
@@ -52,7 +54,9 @@
             </div>
             <div class="col-0 col-sm-4 col-md-3 col-lg-3 col-xl">
                 <div class="heading-sm d-none d-sm-block d-md-none">
-                    <div class="title-sm">2048</div>
+                    <div class="title-sm">
+                      <img src="/img/dfinity.png">
+                    </div>
                     <div class="score-area">
                         <div class="score-sm">
                             {{$t('score')}}
@@ -754,6 +758,12 @@
         line-height: 36px;
         vertical-align: middle;
     }
+    .heading .title img  {
+      max-width: 100%;
+      max-height: 100%;
+      display: block;
+      margin: auto;
+    }
     .heading .score {
         display: inline-block;
         width: 84px;
@@ -941,6 +951,12 @@
         font-size: 45px;
         font-weight: bold;
         line-height: 36px;
+    }
+    .heading-sm .title-sm img  {
+      max-width: 100%;
+      max-height: 100%;
+      display: block;
+      margin: auto;
     }
     .heading-sm .score-area{
         padding: 0;
