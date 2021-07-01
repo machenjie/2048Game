@@ -92,7 +92,6 @@ function generateWebpackConfigForCanister(name, info) {
         template: path.join(__dirname, info.frontend.entrypoint),
         filename: 'index.html',
         //chunks: ['index', 'bootstrap'],
-        chunks: ['index'],
       }),
       new webpack.ProvidePlugin({
         Buffer: [require.resolve('buffer/'), 'Buffer'],
