@@ -71,14 +71,14 @@
         methods: {
             feedback: function () {
                 //console.log("feedback", this.email, this.comment);
-                $.post('http://www.laoyoutiao.xin:7890/feedback', {
-                    email: this.email,
-                    comment: this.comment,
-                }).done(function () {
-                    //console.log("success");
-                }).fail(function (xhr, status) {
-                    //console.log('失败: ' + xhr.status + ', 原因: ' + status)
-                });
+                // $.post('http://xxx/feedback', {
+                //     email: this.email,
+                //     comment: this.comment,
+                // }).done(function () {
+                //     //console.log("success");
+                // }).fail(function (xhr, status) {
+                //     //console.log('失败: ' + xhr.status + ', 原因: ' + status)
+                // });
                 this.comment = "";
                 this.email = "";
                 GaReport(this.$store.state.config.uuid, this.$store.state.config.versionNO, CategoryActions.GA_FEEDBACK.name, CategoryActions.GA_FEEDBACK.actions.OPERATION_SUBMIT);

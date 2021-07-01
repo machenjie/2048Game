@@ -1,5 +1,5 @@
 <template>
-    <img :src='radioStat?"/images/radio/radio-on.png":"/images/radio/radio-off.png"' alt=""
+    <img :src='radioStat?"/img/radio/radio-on.png":"/img/radio/radio-off.png"' alt=""
          @click="changeRadio">
 </template>
 
