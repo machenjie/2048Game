@@ -40,12 +40,18 @@ function generateWebpackConfigForCanister(name, info) {
 
   return {
     mode: "production",
-    entry: {
-      // The frontend.entrypoint points to the HTML file for this build, so we need
-      // to replace the extension to `.js`.
-      index: path.join(__dirname, info.frontend.entrypoint).replace(/\.html$/, ".js"),
-      bootstrap: 'bootstrap-loader',
-    },
+    // entry: {
+    //   // The frontend.entrypoint points to the HTML file for this build, so we need
+    //   // to replace the extension to `.js`.
+    //   index: path.join(__dirname, info.frontend.entrypoint).replace(/\.html$/, ".js"),
+    //   bootstrap: 'bootstrap-loader',
+    // },
+    entry: [
+        // The frontend.entrypoint points to the HTML file for this build, so we need
+        // to replace the extension to `.js`.
+        path.join(__dirname, info.frontend.entrypoint).replace(/\.html$/, ".js"),
+        'bootstrap-loader',
+    ],
     devtool: "source-map",
     optimization: {
       minimize: true,
@@ -63,7 +69,8 @@ function generateWebpackConfigForCanister(name, info) {
       },
     },
     output: {
-      filename: "[name].js",
+      //filename: "[name].js",
+      filename: "index.js",
       path: path.join(__dirname, "dist", name),
     },
 
@@ -84,7 +91,8 @@ function generateWebpackConfigForCanister(name, info) {
       new HtmlWebpackPlugin({
         template: path.join(__dirname, info.frontend.entrypoint),
         filename: 'index.html',
-        chunks: ['index', 'bootstrap'],
+        //chunks: ['index', 'bootstrap'],
+        chunks: ['index'],
       }),
       new webpack.ProvidePlugin({
         Buffer: [require.resolve('buffer/'), 'Buffer'],
