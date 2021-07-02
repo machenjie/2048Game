@@ -100,6 +100,12 @@
 
 <script>
 import {AuthClient} from "@dfinity/auth-client";
+import {Actor, HttpAgent} from "@dfinity/agent";
+import {idlFactory as customGame2048IDL, canisterId as customGame2048ID} from "dfx-generated/game2048";
+
+const agent = new HttpAgent();
+let agentRootKeyGot = false;
+const customGame2048 = Actor.createActor(customGame2048IDL, {agent, canisterId: customGame2048ID});
 
 export default {
   name: "identity",
@@ -124,9 +130,25 @@ export default {
   },
   methods: {
     userNameOkClick: function () {
-      this.$store.commit("setUserName", this.inputUserName);
-      this.$store.commit("setLastLoginAt", Date.now());
-      this.userNameModalVisible = false
+      (async () => {
+        if (!agentRootKeyGot) {
+          await agent.fetchRootKey()
+        }
+        let result = await customGame2048.register(this.$store.state.user.principal, this.inputUserName)
+        // TUPLE => ARRAY
+        if (result instanceof Array && result.length === 3) {
+          if (typeof result[0] === "boolean" && typeof result[1] === "boolean") {
+            if (result[0]) {
+              this.$store.commit("setUserName", this.inputUserName);
+              this.$store.commit("setLastLoginAt", Date.now());
+              this.userNameModalVisible = false
+            }
+          }
+        }
+      })().catch((e) => {
+        console.log(e)
+        this.userNameModalVisible = false
+      })
     },
     userNameCancelClick: function () {
       this.userNameModalVisible = false
@@ -142,11 +164,26 @@ export default {
               let identity = await authClient.getIdentity();
               this.$store.commit("setPrincipal", identity.getPrincipal().toString());
               this.inIdentity = false
-              this.userNameModalVisible = true
               isDone = true
               if (doneTimer) {
                 clearTimeout(doneTimer)
               }
+              let userInfo = await customGame2048.userInfo(identity.getPrincipal().toString())
+              // TUPLE => ARRAY
+              if (userInfo instanceof Array && userInfo.length === 2) {
+                // OPTION => ARRAY
+                if (userInfo[1] instanceof Array && userInfo[1].length === 1) {
+                  // OBJECT => OBJECT
+                  if (typeof userInfo[1][0] === "object") {
+                    if (userInfo[1][0].name) {
+                      this.$store.commit("setUserName", userInfo[1][0].name);
+                      this.$store.commit("setLastLoginAt", Date.now());
+                      return
+                    }
+                  }
+                }
+              }
+              this.userNameModalVisible = true
             },
             onError: () => {
               this.inIdentity = false
@@ -168,6 +205,13 @@ export default {
         })
       }
     },
+  },
+  mounted: function () {
+    agent.fetchRootKey().then(() => {
+      agentRootKeyGot = true
+    }).catch((e) => {
+      console.log(e)
+    })
   }
 }
 </script>

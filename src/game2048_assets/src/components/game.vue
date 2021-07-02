@@ -881,7 +881,7 @@ export default {
   text-align: left;
   margin-right: 5px;
   color: #776e65;
-  font-size: 14px;
+  font-size: 20px;
   font-weight: bold;
   line-height: 36px;
   vertical-align: middle;
@@ -1099,7 +1099,7 @@ export default {
   height: 36px;
   width: 90px;
   color: #776e65;
-  font-size: 14px;
+  font-size: 20px;
   font-weight: bold;
   line-height: 36px;
   margin: auto;
