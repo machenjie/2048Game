@@ -90,9 +90,15 @@ new Vue({
         _this.$nextTick(function () {
             _this.$store.commit("setUUID", _this.$store.state.config.uuid);
             _this.$store.commit("setVersionNO", Config.state.config.versionNO);
-            _this.$store.commit("setPrincipal", _this.$store.state.user.principal);
-            _this.$store.commit("setUserName", _this.$store.state.user.userName);
-            _this.$store.commit("setLastLoginAt", _this.$store.state.user.lastLoginAt);
+            if (Date.now() - _this.$store.state.user.lastLoginAt >= 24 * 60 * 60 * 1000) {
+                _this.$store.commit("setPrincipal", "");
+                _this.$store.commit("setUserName", "");
+                _this.$store.commit("setLastLoginAt", Date.now());
+            } else {
+                _this.$store.commit("setPrincipal", _this.$store.state.user.principal);
+                _this.$store.commit("setUserName", _this.$store.state.user.userName);
+                _this.$store.commit("setLastLoginAt", Date.now());
+            }
             GaReport(_this.$store.state.config.uuid, _this.$store.state.config.versionNO, CategoryActions.GA_APP.name, CategoryActions.GA_APP.actions.OPERATION_START);
         });
     },

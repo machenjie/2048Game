@@ -38,6 +38,7 @@ export default {
             onSuccess: async () => {
               let identity = await authClient.getIdentity();
               this.$store.commit("setPrincipal", identity.getPrincipal().toString());
+              this.$store.commit("setLastLoginAt", Date.now());
               this.inIdentity = false
               isDone = true
               if (doneTimer) {
@@ -57,7 +58,7 @@ export default {
               isDone = true
               doneTimer = null
               this.inIdentity = false
-            }, 60 * 1000)
+            }, 30 * 1000)
           }
         }).catch(() => {
           this.inIdentity = false
