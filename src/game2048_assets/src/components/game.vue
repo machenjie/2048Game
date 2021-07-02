@@ -1099,7 +1099,7 @@ export default {
   height: 36px;
   width: 90px;
   color: #776e65;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: bold;
   line-height: 36px;
   margin: auto;
