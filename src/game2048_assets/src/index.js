@@ -1,5 +1,5 @@
 import Vue from "vue";
-import VueRouter from  "vue-router";
+import VueRouter from "vue-router";
 import game from "./components/game";
 import ChallengeGame from "./components/challenge-game";
 import AskForRate from "./components/ask-for-rate";
@@ -41,7 +41,7 @@ const i18n = new VueI18n({
     locale: (function () {
         let defaultLang = "en";
         let supportLangList = ["en", "ar", "ko", "de", "ru", "fr", "bn", "pt-br", "ja", "es", "hi", "zh-cn", "zh-tw", "zh-hk"];
-        if (typeof(Windows) === "undefined") {
+        if (typeof (Windows) === "undefined") {
             return defaultLang;
         }
         let systemLangLow = Windows.System.UserProfile.GlobalizationPreferences.languages[0].toLowerCase();
@@ -50,7 +50,7 @@ const i18n = new VueI18n({
             return supportLangList[langIndex];
         }
         let barIndex = systemLangLow.indexOf('-');
-        if (barIndex === -1){
+        if (barIndex === -1) {
             return defaultLang;
         }
         let simpleSystemLangLow = systemLangLow.slice(0, barIndex);
@@ -59,7 +59,7 @@ const i18n = new VueI18n({
             return supportLangList[langIndex];
         }
         let selectLang = supportLangList.find(function (e) {
-            return e.indexOf(simpleSystemLangLow) ===0;
+            return e.indexOf(simpleSystemLangLow) === 0;
         });
         if (selectLang !== "undefined") {
             return selectLang;
@@ -70,13 +70,15 @@ const i18n = new VueI18n({
 });
 
 Vue.use(Vuex);
-const store = new Vuex.Store(Object.assign(Config, {plugins: [(new VuexPersistence({
-        modules: ['config'],
+const store = new Vuex.Store(Object.assign(Config, {
+    plugins: [(new VuexPersistence({
+        modules: ['config', 'user'],
         key: "_2048_global_state"
-    })).plugin]}));
+    })).plugin]
+}));
 
 new Vue({
-    el:"#app",
+    el: "#app",
     i18n,
     router,
     store,
@@ -88,6 +90,9 @@ new Vue({
         _this.$nextTick(function () {
             _this.$store.commit("setUUID", _this.$store.state.config.uuid);
             _this.$store.commit("setVersionNO", Config.state.config.versionNO);
+            _this.$store.commit("setPrincipal", _this.$store.state.user.principal);
+            _this.$store.commit("setUserName", _this.$store.state.user.userName);
+            _this.$store.commit("setLastLoginAt", _this.$store.state.user.lastLoginAt);
             GaReport(_this.$store.state.config.uuid, _this.$store.state.config.versionNO, CategoryActions.GA_APP.name, CategoryActions.GA_APP.actions.OPERATION_START);
         });
     },

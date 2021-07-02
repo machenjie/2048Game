@@ -632,7 +632,7 @@
             storeChallengeChooseToHistory: function() {
                 localStorage.setItem("_2048_challenge_game_choose_data", JSON.stringify(this.chooseList));
             },
-            restoreChallengeChooseToHistory: function() {
+            restoreChallengeChooseFromHistory: function() {
                 let data = localStorage.getItem("_2048_challenge_game_choose_data");
                 if (data) {
                     let chooseList = JSON.parse(data);
@@ -904,7 +904,7 @@
                 _this.viewWidth = document.body.clientWidth;
             }, 50);
             _this.$nextTick(function () {
-                _this.restoreChallengeChooseToHistory();
+                _this.restoreChallengeChooseFromHistory();
                 _this.restoreDataFromHistory();
                 GaReport(this.$store.state.config.uuid, this.$store.state.config.versionNO, CategoryActions.GA_CHALLENGE_GAME.name, CategoryActions.GA_CHALLENGE_GAME.actions.OPERATION_START);
             });

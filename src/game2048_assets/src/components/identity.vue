@@ -1,49 +1,64 @@
 <template>
-  <div>
-    <div v-if="identity">
+  <div class="identity">
+    <div v-if="identity" class="user" :title="idText">
       {{ idText }}
     </div>
-    <div v-else>
+    <div v-else class="dfinity">
       <img src="/img/dfinity.png" v-on:click="doIdentity">
     </div>
   </div>
 </template>
 
 <script>
-import {identity} from "../global";
 import {AuthClient} from "@dfinity/auth-client";
 
 export default {
   name: "identity",
   data: function () {
     return {
-      identity: identity,
       inIdentity: false
     }
   },
   computed: {
     idText: function () {
-      if (this.identity) {
-        return this.identity.getPrincipal().toString()
-      }
-      return "unknown"
-    }
+      return this.$store.state.user.principal
+    },
+    identity: function () {
+      return this.$store.state.user.principal
+    },
   },
   methods: {
     doIdentity: function () {
       if (!this.inIdentity) {
         this.inIdentity = true
         AuthClient.create().then((authClient) => {
+          let isDone = false
+          let doneTimer
           authClient.login({
             onSuccess: async () => {
-              identity = this.identity
-              this.identity = await authClient.getIdentity();
+              let identity = await authClient.getIdentity();
+              this.$store.commit("setPrincipal", identity.getPrincipal().toString());
               this.inIdentity = false
+              isDone = true
+              if (doneTimer) {
+                clearTimeout(doneTimer)
+              }
             },
             onError: () => {
               this.inIdentity = false
+              isDone = true
+              if (doneTimer) {
+                clearTimeout(doneTimer)
+              }
             }
           });
+          if (!isDone) {
+            doneTimer = setTimeout(() => {
+              isDone = true
+              doneTimer = null
+              this.inIdentity = false
+            }, 60 * 1000)
+          }
         }).catch(() => {
           this.inIdentity = false
         })
@@ -54,7 +69,21 @@ export default {
 </script>
 
 <style scoped>
-img {
+.identity {
+  display: block;
+}
+
+.user {
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+  margin: auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dfinity img {
   max-width: 100%;
   max-height: 100%;
   display: block;

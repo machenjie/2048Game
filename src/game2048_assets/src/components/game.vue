@@ -881,15 +881,13 @@ export default {
   text-align: left;
   margin-right: 5px;
   color: #776e65;
-  font-size: 36px;
+  font-size: 14px;
   font-weight: bold;
   line-height: 36px;
   vertical-align: middle;
 }
 
 .heading .title .identity {
-  max-width: 100%;
-  max-height: 100%;
   display: block;
   margin: auto;
 }
@@ -1099,15 +1097,15 @@ export default {
 .heading-sm .title-sm {
   text-align: center;
   height: 36px;
+  width: 90px;
   color: #776e65;
-  font-size: 45px;
+  font-size: 12px;
   font-weight: bold;
   line-height: 36px;
+  margin: auto;
 }
 
 .heading-sm .title-sm .identity-sm {
-  max-width: 100%;
-  max-height: 100%;
   display: block;
   margin: auto;
 }

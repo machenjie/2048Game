@@ -6,6 +6,11 @@ export default {
             uuid: uuidv1(),
             versionNO: "1.0.1",
         },
+        user: {
+            principal: "",
+            userName: "",
+            lastLoginAt: Date.now(),
+        }
     },
     mutations: {
         setUUID(state, u){
@@ -13,6 +18,15 @@ export default {
         },
         setVersionNO(state, v){
             state.config.versionNO = v;
+        },
+        setPrincipal(state, v) {
+            state.user.principal = v;
+        },
+        setUserName(state, v) {
+            state.user.userName = v;
+        },
+        setLastLoginAt(state, v) {
+            state.user.lastLoginAt = v;
         },
     }
 }
