@@ -8,6 +8,7 @@ import Vuex from 'vuex';
 import Config from "./store/config";
 import VuexPersistence from 'vuex-persist';
 import GaReport, {CategoryActions} from './api/ga-report';
+import {Input, Modal} from "ant-design-vue";
 
 function restoreHomeUrl() {
     let data = localStorage.getItem("_2048_game_latest_path");
@@ -77,6 +78,9 @@ const store = new Vuex.Store(Object.assign(Config, {
     })).plugin]
 }));
 
+Vue.use(Modal)
+Vue.use(Input)
+
 new Vue({
     el: "#app",
     i18n,
@@ -90,7 +94,7 @@ new Vue({
         _this.$nextTick(function () {
             _this.$store.commit("setUUID", _this.$store.state.config.uuid);
             _this.$store.commit("setVersionNO", Config.state.config.versionNO);
-            if (Date.now() - _this.$store.state.user.lastLoginAt >= 24 * 60 * 60 * 1000) {
+            if (!_this.$store.state.user.principal || !_this.$store.state.user.userName || Date.now() - _this.$store.state.user.lastLoginAt >= 24 * 60 * 60 * 1000) {
                 _this.$store.commit("setPrincipal", "");
                 _this.$store.commit("setUserName", "");
                 _this.$store.commit("setLastLoginAt", Date.now());

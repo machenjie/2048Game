@@ -1,11 +1,21 @@
 <template>
   <div class="identity">
-    <div v-if="identity" class="user" :title="idText">
-      {{ idText }}
+    <div v-if="userName" class="user" :title="userName">
+      {{ userName }}
     </div>
     <div v-else class="dfinity">
       <img src="/img/dfinity.png" v-on:click="doIdentity">
     </div>
+    <a-modal
+        v-if="identity&&!userName"
+        :visible="userNameModalVisible"
+        title="input you name"
+        centered
+        @ok="userNameOkClick"
+        @cancel="userNameCancelClick"
+    >
+      <a-input v-model="inputUserName"/>
+    </a-modal>
   </div>
 </template>
 
@@ -16,18 +26,28 @@ export default {
   name: "identity",
   data: function () {
     return {
-      inIdentity: false
+      inIdentity: false,
+      inputUserName: "",
+      userNameModalVisible: false
     }
   },
   computed: {
-    idText: function () {
-      return this.$store.state.user.principal
+    userName: function () {
+      return this.$store.state.user.userName
     },
     identity: function () {
       return this.$store.state.user.principal
     },
   },
   methods: {
+    userNameOkClick: function () {
+      this.$store.commit("setUserName", this.inputUserName);
+      this.$store.commit("setLastLoginAt", Date.now());
+      this.userNameModalVisible = false
+    },
+    userNameCancelClick: function () {
+      this.userNameModalVisible = false
+    },
     doIdentity: function () {
       if (!this.inIdentity) {
         this.inIdentity = true
@@ -38,8 +58,8 @@ export default {
             onSuccess: async () => {
               let identity = await authClient.getIdentity();
               this.$store.commit("setPrincipal", identity.getPrincipal().toString());
-              this.$store.commit("setLastLoginAt", Date.now());
               this.inIdentity = false
+              this.userNameModalVisible = true
               isDone = true
               if (doneTimer) {
                 clearTimeout(doneTimer)
