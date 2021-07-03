@@ -8,7 +8,7 @@ import Vuex from 'vuex';
 import Config from "./store/config";
 import VuexPersistence from 'vuex-persist';
 import GaReport, {CategoryActions} from './api/ga-report';
-import {Input, Modal} from "ant-design-vue";
+import {Input, Modal, message} from "ant-design-vue";
 
 function restoreHomeUrl() {
     let data = localStorage.getItem("_2048_game_latest_path");
@@ -91,6 +91,11 @@ new Vue({
     },
     mounted: function () {
         let _this = this;
+        message.config({
+            top: `30vh`,
+            duration: 3,
+            maxCount: 3,
+        });
         _this.$nextTick(function () {
             _this.$store.commit("setUUID", _this.$store.state.config.uuid);
             _this.$store.commit("setVersionNO", Config.state.config.versionNO);
