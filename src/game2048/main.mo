@@ -40,6 +40,7 @@ actor {
     let users = TrieMap.fromEntries<Text,User>(userEntries.vals(), Text.equal, Text.hash);
     stable var userScoreEntries : [(Text,UserScore)] = [];
     let userScores = TrieMap.fromEntries<Text,UserScore>(userScoreEntries.vals(), Text.equal, Text.hash);
+    stable var topUserScoreEntries : [(UserScore,())] = [];
     let topUserScoreMaxCount = 20;
     let topUserScores = RBTree.RBTree<UserScore,()>(userScoreCompare);
 
@@ -139,10 +140,14 @@ actor {
     system func preupgrade() {
         userEntries := Iter.toArray(users.entries());
         userScoreEntries := Iter.toArray(userScores.entries());
+        topUserScoreEntries := Iter.toArray(topUserScores.entries());
     };
 
     system func postupgrade() {
         userEntries := [];
         userScoreEntries := [];
+        for ( (uScore,_) in topUserScoreEntries.vals() ) {
+            topUserScores.put(uScore, ());
+        };
     };
 };
