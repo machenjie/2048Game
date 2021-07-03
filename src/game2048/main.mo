@@ -3,6 +3,7 @@ import Time = "mo:base/Time";
 import TrieMap = "mo:base/TrieMap";
 import RBTree = "mo:base/RBTree";
 import Order = "mo:base/Order";
+import Iter = "mo:base/Iter";
 
 actor {
     type User = object {
@@ -28,7 +29,8 @@ actor {
         return #equal;
     };
 
-    let users = TrieMap.TrieMap<Text,User>(Text.equal, Text.hash);
+    stable var userEntries : [(Text,User)] = [];
+    let users = TrieMap.fromEntries<Text,User>(userEntries.vals(), Text.equal, Text.hash);
     let userScores = RBTree.RBTree<UserScore,User>(userScoreOrder);
 
     public func register(principal :Text, name : Text) : async (Bool, Bool, Nat) {
@@ -60,5 +62,13 @@ actor {
                 case (?user)  {(true, ?user)};
                 case null { (false, null)};
         };
-    }
+    };
+
+    system func preupgrade() {
+        userEntries := Iter.toArray(users.entries());
+    };
+
+    system func postupgrade() {
+        userEntries := [];
+    };
 };

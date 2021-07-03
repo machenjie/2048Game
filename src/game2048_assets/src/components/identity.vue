@@ -25,76 +25,20 @@
 
 <i18n>
     {
-    "ko": {
-    "title": "이름을 입력하십시오",
-    "cancelText": "취소",
-    "okText": "확인"
-    },
-    "bn": {
-    "cancelText": "বাতিল করুন",
-    "title": "ইনপুট আপনি নাম",
-    "okText": "নিশ্চিত করুন"
-    },
-    "ja": {
-    "okText": "確認",
-    "title": "入力します",
-    "cancelText": "キャンセル"
-    },
-    "ru": {
-    "title": "Введите вас имя",
-    "cancelText": "Отмена",
-    "okText": "Подтверждать"
-    },
-    "pt-br": {
-    "cancelText": "Cancelar",
-    "title": "Entrar seu nome",
-    "okText": "confirme"
-    },
-    "fr": {
-    "title": "Entrez votre nom",
-    "cancelText": "Annuler",
-    "okText": "Confirmer"
-    },
-    "hi": {
-    "cancelText": "रद्द करना",
-    "title": "इनपुट आप नाम",
-    "okText": "पुष्टि करें"
-    },
-    "es": {
-    "cancelText": "Cancelar",
-    "title": "Ingrese su nombre",
-    "okText": "Confirmar"
-    },
-    "zh-hk": {
-    "okText": "確認",
-    "title": "輸入你的名字",
-    "cancelText": "取消"
-    },
-    "ar": {
-    "title": "إدخال اسمك",
-    "cancelText": "يلغي",
-    "okText": "يتأكد"
-    },
-    "de": {
-    "cancelText": "Stornieren",
-    "title": "Geben Sie den Namen ein",
-    "okText": "Bestätigen"
-    },
-    "zh-cn": {
-    "title": "输入你的名字",
-    "okText": "确认",
-    "cancelText": "取消"
-    },
-    "zh-tw": {
-    "okText": "確認",
-    "title": "輸入你的名字",
-    "cancelText": "取消"
-    },
-    "en": {
-    "title": "Input You Name",
-    "okText": "Confirm",
-    "cancelText": "Cancel"
-    }
+    "ko": {"cancelText":"취소","okText":"확인","title":"이름을 입력하십시오","registering":"등록 ..."} ,
+    "fr": {"cancelText":"Annuler","okText":"Confirmer","title":"Entrez votre nom","registering":"Enregistrement..."} ,
+    "ru": {"title":"Введите вас имя","cancelText":"Отмена","okText":"Подтверждать","registering":"Регистрация ..."} ,
+    "de": {"registering":"Registrieren...","title":"Geben Sie den Namen ein","okText":"Bestätigen","cancelText":"Stornieren"} ,
+    "ar": {"cancelText":"يلغي","okText":"يتأكد","title":"إدخال اسمك","registering":"تسجيل ..."} ,
+    "bn": {"title":"ইনপুট আপনি নাম","cancelText":"বাতিল করুন","registering":"নিবন্ধন ...","okText":"নিশ্চিত করুন"} ,
+    "pt-br": {"cancelText":"Cancelar","title":"Entrar seu nome","registering":"Registrando ...","okText":"confirme"} ,
+    "es": {"okText":"Confirmar","title":"Ingrese su nombre","registering":"Registrando ...","cancelText":"Cancelar"} ,
+    "ja": {"okText":"確認","registering":"登録...","title":"入力します","cancelText":"キャンセル"} ,
+    "hi": {"okText":"पुष्टि करें","cancelText":"रद्द करना","title":"इनपुट आप नाम","registering":"पंजीकरण ..."} ,
+    "zh-tw": {"okText":"確認","title":"輸入你的名字","registering":"註冊...","cancelText":"取消"} ,
+    "zh-cn": {"title":"输入你的名字","registering":"注册...","okText":"确认","cancelText":"取消"} ,
+    "zh-hk": {"cancelText":"取消","title":"輸入你的名字","okText":"確認","registering":"註冊..."} ,
+    "en": {"title": "Input You Name", "okText": "Confirm", "cancelText": "Cancel", "registering": "Registering..."}
     }
 </i18n>
 
@@ -109,6 +53,8 @@
     let agentRootKeyGot = false;
     const customGame2048 = Actor.createActor(customGame2048IDL, {agent, canisterId: customGame2048ID});
     const userNameRegisterKey = 'register';
+    const userNameMinLength = 2;
+    const userNameMaxLength = 16;
 
     export default {
         name: "identity",
@@ -129,14 +75,21 @@
             },
             inputUserNameOkClose: function () {
                 let uName = this.inputUserName
-                return !this.userNameInRegistering && uName.length < 2
+                return this.userNameInRegistering || uName.length < userNameMinLength || uName.length > userNameMaxLength
             }
         },
         methods: {
             userNameOkClick: function () {
                 (async () => {
                     let registerUserName = this.inputUserName
-                    message.loading({content: 'Registering...', key: userNameRegisterKey, duration: 4});
+                    if (registerUserName.length < userNameMinLength || registerUserName.length > userNameMaxLength) {
+                        message.error({
+                            content: 'User Name invalid!',
+                            key: userNameRegisterKey,
+                            duration: 3
+                        });
+                    }
+                    message.loading({content: this.$t("registering"), key: userNameRegisterKey, duration: 4});
                     this.userNameInRegistering = true
                     if (!agentRootKeyGot) {
                         await agent.fetchRootKey()
@@ -210,7 +163,7 @@
                                         this.$store.commit("setUserName", userInfo[1][0].name);
                                         this.$store.commit("setLastLoginAt", Date.now());
                                         message.success({
-                                            content: 'Welcome ' + userInfo[1][0].name + ', the No.' + (new BigNumber(result[2])).toNumber() + ' user!',
+                                            content: 'Welcome ' + userInfo[1][0].name + ', the No.' + (new BigNumber(userInfo[1][0].id)).toNumber() + ' user!',
                                             key: userNameRegisterKey,
                                             duration: 3
                                         });
@@ -245,12 +198,12 @@
                 try {
                     await agent.fetchRootKey()
                     agentRootKeyGot = true
-                    if (this.identity() && this.userName()) {
-                        let userInfo = await customGame2048.userInfo(this.identity())
+                    if (this.identity && this.userName) {
+                        let userInfo = await customGame2048.userInfo(this.identity)
                         if (userInfo instanceof Array && userInfo.length === 2
                             && userInfo[1] instanceof Array && userInfo[1].length === 1
                             && typeof userInfo[1][0] === "object") {
-                            if (userInfo[1][0].name !== this.userName()) {
+                            if (userInfo[1][0].name !== this.userName) {
                                 this.$store.commit("setUserName", "");
                                 this.$store.commit("setPrincipal", "");
                                 this.$store.commit("setLastLoginAt", Date.now());
