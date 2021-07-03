@@ -213,6 +213,11 @@
                                             if (userInfo[1][0].name) {
                                                 this.$store.commit("setUserName", userInfo[1][0].name);
                                                 this.$store.commit("setLastLoginAt", Date.now());
+                                                message.success({
+                                                    content: 'Welcome ' + userInfo[1][0].name + ', the No.' + (new BigNumber(result[2])).toNumber() + ' user!',
+                                                    key: userNameRegisterKey,
+                                                    duration: 3
+                                                });
                                                 return
                                             }
                                         }
