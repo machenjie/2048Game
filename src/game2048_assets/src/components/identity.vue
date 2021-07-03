@@ -140,43 +140,42 @@
                     this.userNameInRegistering = true
                     if (!agentRootKeyGot) {
                         await agent.fetchRootKey()
+                        agentRootKeyGot = true
                     }
                     let result = await customGame2048.register(this.$store.state.user.principal, registerUserName)
                     // TUPLE => ARRAY
-                    if (result instanceof Array && result.length === 3) {
-                        if (typeof result[0] === "boolean" && typeof result[1] === "boolean") {
-                            if (result[0]) {
-                                if (result[1]) {
-                                    this.$store.commit("setUserName", registerUserName);
-                                    this.$store.commit("setLastLoginAt", Date.now());
-                                    this.userNameModalVisible = false
-                                    message.success({
-                                        content: 'Register success! Welcome ' + registerUserName + '! You are the No.' + (new BigNumber(result[2])).toNumber() + ' user!',
-                                        key: userNameRegisterKey,
-                                        duration: 3
-                                    });
-                                } else {
-                                    message.error({
-                                        content: 'Register failed! User Name ' + registerUserName + ' already existed!',
-                                        key: userNameRegisterKey,
-                                        duration: 3
-                                    });
-                                }
+                    if (result instanceof Array && result.length === 3 && typeof result[0] === "boolean" && typeof result[1] === "boolean") {
+                        if (result[0]) {
+                            if (result[1]) {
+                                this.$store.commit("setUserName", registerUserName);
+                                this.$store.commit("setLastLoginAt", Date.now());
+                                this.userNameModalVisible = false
+                                message.success({
+                                    content: 'Register success! Welcome ' + registerUserName + '! You are the No.' + (new BigNumber(result[2])).toNumber() + ' user!',
+                                    key: userNameRegisterKey,
+                                    duration: 3
+                                });
                             } else {
                                 message.error({
-                                    content: 'Register error! User Name invalid!',
+                                    content: 'Register failed! User Name ' + registerUserName + ' already existed!',
                                     key: userNameRegisterKey,
                                     duration: 3
                                 });
                             }
                         } else {
                             message.error({
-                                content: 'Register error! Internal error!',
+                                content: 'Register error! User Name invalid!',
                                 key: userNameRegisterKey,
                                 duration: 3
                             });
-                            this.userNameModalVisible = false
                         }
+                    } else {
+                        message.error({
+                            content: 'Register error! Internal error!',
+                            key: userNameRegisterKey,
+                            duration: 3
+                        });
+                        this.userNameModalVisible = false
                     }
                     this.userNameInRegistering = false
                 })().catch((e) => {
@@ -204,23 +203,18 @@
                                     clearTimeout(doneTimer)
                                 }
                                 let userInfo = await customGame2048.userInfo(identity.getPrincipal().toString())
-                                // TUPLE => ARRAY
-                                if (userInfo instanceof Array && userInfo.length === 2) {
-                                    // OPTION => ARRAY
-                                    if (userInfo[1] instanceof Array && userInfo[1].length === 1) {
-                                        // OBJECT => OBJECT
-                                        if (typeof userInfo[1][0] === "object") {
-                                            if (userInfo[1][0].name) {
-                                                this.$store.commit("setUserName", userInfo[1][0].name);
-                                                this.$store.commit("setLastLoginAt", Date.now());
-                                                message.success({
-                                                    content: 'Welcome ' + userInfo[1][0].name + ', the No.' + (new BigNumber(result[2])).toNumber() + ' user!',
-                                                    key: userNameRegisterKey,
-                                                    duration: 3
-                                                });
-                                                return
-                                            }
-                                        }
+                                if (userInfo instanceof Array && userInfo.length === 2
+                                    && userInfo[1] instanceof Array && userInfo[1].length === 1
+                                    && typeof userInfo[1][0] === "object") {
+                                    if (userInfo[1][0].name) {
+                                        this.$store.commit("setUserName", userInfo[1][0].name);
+                                        this.$store.commit("setLastLoginAt", Date.now());
+                                        message.success({
+                                            content: 'Welcome ' + userInfo[1][0].name + ', the No.' + (new BigNumber(result[2])).toNumber() + ' user!',
+                                            key: userNameRegisterKey,
+                                            duration: 3
+                                        });
+                                        return
                                     }
                                 }
                                 this.userNameModalVisible = true
@@ -247,11 +241,28 @@
             },
         },
         mounted: function () {
-            agent.fetchRootKey().then(() => {
-                agentRootKeyGot = true
-            }).catch((e) => {
-                console.log(e)
-            })
+            (async () => {
+                try {
+                    await agent.fetchRootKey()
+                    agentRootKeyGot = true
+                    if (this.identity() && this.userName()) {
+                        let userInfo = await customGame2048.userInfo(this.identity())
+                        if (userInfo instanceof Array && userInfo.length === 2
+                            && userInfo[1] instanceof Array && userInfo[1].length === 1
+                            && typeof userInfo[1][0] === "object") {
+                            if (userInfo[1][0].name !== this.userName()) {
+                                this.$store.commit("setUserName", "");
+                                this.$store.commit("setPrincipal", "");
+                                this.$store.commit("setLastLoginAt", Date.now());
+                            }
+                        } else {
+                            console.log("customGame2048 request error!")
+                        }
+                    }
+                } catch (e) {
+                    console.log(e)
+                }
+            })()
         }
     }
 </script>
@@ -278,5 +289,6 @@
         max-height: 100%;
         display: block;
         margin: auto;
+        cursor: pointer;
     }
 </style>
