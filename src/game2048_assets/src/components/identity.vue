@@ -136,7 +136,7 @@
             userNameOkClick: function () {
                 (async () => {
                     let registerUserName = this.inputUserName
-                    message.loading({content: 'Registering...', key: userNameRegisterKey, duration: 5});
+                    message.loading({content: 'Registering...', key: userNameRegisterKey, duration: 4});
                     this.userNameInRegistering = true
                     if (!agentRootKeyGot) {
                         await agent.fetchRootKey()
@@ -151,7 +151,7 @@
                                     this.$store.commit("setLastLoginAt", Date.now());
                                     this.userNameModalVisible = false
                                     message.success({
-                                        content: 'Register success! Welcome ' + registerUserName + '! You are the No.' + result[2].toNumber() + '!',
+                                        content: 'Register success! Welcome ' + registerUserName + '! You are the No.' + (new BigNumber(result[2])).toNumber() + ' user!',
                                         key: userNameRegisterKey,
                                         duration: 3
                                     });
