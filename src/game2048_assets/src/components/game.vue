@@ -942,15 +942,15 @@ export default {
           let scoresInfo = await customGame2048.topScores()
           if (scoresInfo instanceof Array) {
             if (scoresInfo instanceof Array && scoresInfo.length === 1 && scoresInfo[0] instanceof Array && scoresInfo.length > 0) {
-              if (scoresInfo[0][0] && scoresInfo[0][0] instanceof Array && scoresInfo[0][0].length === 2) {
+              if (scoresInfo[0][0] && scoresInfo[0][0] instanceof Array && scoresInfo[0][0].length === 2 && scoresInfo[0][0][0]) {
                 this.scoreFirstUserName = scoresInfo[0][0][0]
                 this.scoreFirstScore = (new BigNumber(scoresInfo[0][0][1])).toNumber()
               }
-              if (scoresInfo[0][1] && scoresInfo[0][1] instanceof Array && scoresInfo[0][1].length === 2) {
+              if (scoresInfo[0][1] && scoresInfo[0][1] instanceof Array && scoresInfo[0][1].length === 2 && scoresInfo[0][1][0]) {
                 this.scoreSecondUserName = scoresInfo[0][1][0]
                 this.scoreSecondScore = (new BigNumber(scoresInfo[0][1][1])).toNumber()
               }
-              if (scoresInfo[0][2] && scoresInfo[0][2] instanceof Array && scoresInfo[0][2].length === 2) {
+              if (scoresInfo[0][2] && scoresInfo[0][2] instanceof Array && scoresInfo[0][2].length === 2 && scoresInfo[0][2][0]) {
                 this.scoreThirdUserName = scoresInfo[0][2][0]
                 this.scoreThirdScore = (new BigNumber(scoresInfo[0][2][1])).toNumber()
               }

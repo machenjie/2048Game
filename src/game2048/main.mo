@@ -5,7 +5,6 @@ import TrieMap = "mo:base/TrieMap";
 import Order = "mo:base/Order";
 import Iter = "mo:base/Iter";
 import Array = "mo:base/Array";
-import RBTree = "mo:base/RBTree";
 
 actor {
     type User = object {
@@ -40,9 +39,8 @@ actor {
     let users = TrieMap.fromEntries<Text,User>(userEntries.vals(), Text.equal, Text.hash);
     stable var userScoreEntries : [(Text,UserScore)] = [];
     let userScores = TrieMap.fromEntries<Text,UserScore>(userScoreEntries.vals(), Text.equal, Text.hash);
-    stable var topUserScoreEntries : [(UserScore,())] = [];
-    let topUserScoreMaxCount = 20;
-    let topUserScores = RBTree.RBTree<UserScore,()>(userScoreCompare);
+    let topUserScoreMaxCount = 10;
+    stable let topUserScores = Array.init<?UserScore>(topUserScoreMaxCount, null);
 
     public func register(principal :Text, name : Text) : async (Bool, Bool, Nat) {
         if (principal == "" or name == "") {
@@ -91,14 +89,14 @@ actor {
             case (?userScore)  {
                 if (userScore.name == name) {
                     if (userScore.score < score) {
-                        needUpdateScore := true
+                        needUpdateScore := true;
                     };
                 } else {
-                    needUpdateScore := true
+                    needUpdateScore := true;
                 };
             };
             case null {
-                needUpdateScore := true
+                needUpdateScore := true;
             };
         };
         if (needUpdateScore) {
@@ -109,30 +107,49 @@ actor {
                  date= Time.now();
             };
             userScores.put(principal, uScore);
-            topUserScores.put(uScore, ());
-            label checkSize loop {
-                if (RBTree.size<UserScore, ()>(topUserScores.share()) > topUserScoreMaxCount) {
-                   ignore do ? {
-                      let uScore = topUserScores.entriesRev().next() !;
-                      topUserScores.delete(uScore.0);
-                   }
-                } else {
-                    break checkSize
-                }
-            }
+            var index = 0;
+            label doInsert while (index < topUserScoreMaxCount) {
+                let opCurUScore = topUserScores[index];
+                switch opCurUScore {
+                    case (?curUScore) {
+                        let cmpResult = userScoreCompare(curUScore, uScore);
+                         switch cmpResult {
+                            case (#equal) {
+                               topUserScores[index] := ?uScore;
+                               break doInsert;
+                            };
+                            case (#less) {index+=1;};
+                            case (#greater) {
+                               var indexRev = topUserScoreMaxCount-1;
+                               while (indexRev > index) {
+                                 topUserScores[indexRev] := topUserScores[indexRev-1];
+                                 indexRev-=1;
+                               };
+                               topUserScores[index] := ?uScore;
+                               break doInsert;
+                            };
+                         };
+                    };
+                    case null {
+                        topUserScores[index] := ?uScore;
+                        break doInsert;
+                    };
+                };
+            };
         };
     };
 
     public query func topScores() : async ?[(Text, Nat)] {
-        let size = RBTree.size<UserScore, ()>(topUserScores.share());
-        if (size <= 0) {
-            return null
-        };
-        let topUScores = Array.init<(Text, Nat)>(size, ("", 0));
+        let topUScores = Array.init<(Text, Nat)>(topUserScoreMaxCount, ("", 0));
         var index = 0;
-        for ( (uScore,_) in topUserScores.entries() ) {
-            topUScores[index]:=(uScore.name, uScore.score);
-            index+=1;
+        for ( opUScore in topUserScores.vals() ) {
+            switch opUScore {
+                case (?uScore) {
+                    topUScores[index]:=(uScore.name, uScore.score);
+                    index+=1;
+                };
+                case null {()};
+            }
         };
         ?Array.freeze(topUScores)
     };
@@ -140,15 +157,10 @@ actor {
     system func preupgrade() {
         userEntries := Iter.toArray(users.entries());
         userScoreEntries := Iter.toArray(userScores.entries());
-        topUserScoreEntries := Iter.toArray(topUserScores.entries());
     };
 
     system func postupgrade() {
         userEntries := [];
         userScoreEntries := [];
-        for ( (uScore,_) in topUserScoreEntries.vals() ) {
-            topUserScores.put(uScore, ());
-        };
-        topUserScoreEntries := [];
     };
 };
