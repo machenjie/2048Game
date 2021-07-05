@@ -28,11 +28,11 @@ actor {
       };
 
       if (left.score > right.score) {
-         #greater
-      } else if (left.score < right.score) {
          #less
-      } else {
+      } else if (left.score < right.score) {
          #greater
+      } else {
+         #less
       };
     };
 
