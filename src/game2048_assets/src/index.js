@@ -8,7 +8,7 @@ import Vuex from 'vuex';
 import Config from "./store/config";
 import VuexPersistence from 'vuex-persist';
 import GaReport, {CategoryActions} from './api/ga-report';
-import {Input, Modal, message} from "ant-design-vue";
+import {Input, Modal, Icon, Row, Col, Statistic, message} from "ant-design-vue";
 
 function restoreHomeUrl() {
     let data = localStorage.getItem("_2048_game_latest_path");
@@ -80,6 +80,10 @@ const store = new Vuex.Store(Object.assign(Config, {
 
 Vue.use(Modal)
 Vue.use(Input)
+Vue.use(Icon)
+Vue.use(Row)
+Vue.use(Col)
+Vue.use(Statistic)
 
 new Vue({
     el: "#app",

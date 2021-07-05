@@ -81,6 +81,32 @@
             </a>
           </div>
         </div>
+        <a-row :gutter="8" class="rate-sm d-none d-sm-block d-md-none">
+          <a-col :span="8">
+            <a-statistic :title="scoreFirstUserName" :value="scoreFirstScore" class="score-rate-first"
+                         valueStyle="font-size:16px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+              <template #suffix>
+                <icon-font type="icon-guanjun"/>
+              </template>
+            </a-statistic>
+          </a-col>
+          <a-col :span="8">
+            <a-statistic :title="scoreSecondUserName" :value="scoreSecondScore" class="score-rate-second"
+                         valueStyle="font-size:14px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+              <template #suffix>
+                <icon-font type="icon-yajun"/>
+              </template>
+            </a-statistic>
+          </a-col>
+          <a-col :span="8">
+            <a-statistic :title="scoreThirdUserName" :value="scoreThirdScore" class="score-rate-third"
+                         valueStyle="font-size:12px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+              <template #suffix>
+                <icon-font type="icon-jijun"/>
+              </template>
+            </a-statistic>
+          </a-col>
+        </a-row>
         <div class="tip-sm d-none d-sm-block d-md-none">
           {{ $t('left') }} &larr; &uarr; &rarr; &darr; {{ $t('right') }}!
         </div>
@@ -106,6 +132,32 @@
     <div class="tip d-block d-sm-none d-md-block">
       {{ $t('left') }} &larr; &uarr; &rarr; &darr; {{ $t('right') }}
     </div>
+    <a-row :gutter="8" class="rate d-block d-sm-none d-md-block">
+      <a-col :span="8">
+        <a-statistic :title="scoreFirstUserName" :value="scoreFirstScore" class="score-rate-first"
+                     valueStyle="font-size:16px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+          <template #suffix>
+            <icon-font type="icon-guanjun"/>
+          </template>
+        </a-statistic>
+      </a-col>
+      <a-col :span="8">
+        <a-statistic :title="scoreSecondUserName" :value="scoreSecondScore" class="score-rate-second"
+                     valueStyle="font-size:14px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+          <template #suffix>
+            <icon-font type="icon-yajun"/>
+          </template>
+        </a-statistic>
+      </a-col>
+      <a-col :span="8">
+        <a-statistic :title="scoreThirdUserName" :value="scoreThirdScore" class="score-rate-third"
+                     valueStyle="font-size:12px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+          <template #suffix>
+            <icon-font type="icon-jijun"/>
+          </template>
+        </a-statistic>
+      </a-col>
+    </a-row>
   </div>
 </template>
 
@@ -275,11 +327,21 @@ import arrowKeyboard from "./arrow-keyboard";
 import rateFeedback from "./rate-feedback";
 import radioToggle from "./radio-toggle";
 import identity from "./identity";
+import {Icon} from "ant-design-vue";
+import {Actor, HttpAgent} from "@dfinity/agent";
+import {idlFactory as customGame2048IDL, canisterId as customGame2048ID} from "dfx-generated/game2048";
 import GaReport, {CategoryActions} from '../api/ga-report';
 import _ from "lodash";
+import {BigNumber} from "bignumber.js";
 
+const agent = new HttpAgent();
+let agentRootKeyGot = false;
+const customGame2048 = Actor.createActor(customGame2048IDL, {agent, canisterId: customGame2048ID});
 let GAME_DIM = 4;
 const NEW_DURATION = 200;
+const IconFont = Icon.createFromIconfontCN({
+  scriptUrl: '//at.alicdn.com/t/font_1189627_yk2b2svr529.js',
+});
 
 function initTwoDimArray(x, y, init = 0) {
   let a = new Array(x);
@@ -572,6 +634,12 @@ export default {
       gameOver: false,
       viewWidth: document.body.clientWidth, //only just one element can receive resize event, so use viewWidth to notify others
       radioStat: true,
+      scoreFirstUserName: "None",
+      scoreFirstScore: 0,
+      scoreSecondUserName: "None",
+      scoreSecondScore: 0,
+      scoreThirdUserName: "None",
+      scoreThirdScore: 0,
     }
   },
   methods: {
@@ -818,6 +886,11 @@ export default {
     score: function (val) {
       this.bestScore = val > this.bestScore ? val : this.bestScore;
     },
+    bestScore: function (val) {
+      if (this.score === this.bestScore) {
+        this.uploadBestScore()
+      }
+    },
     currentGameDim: function (val) {
       if (GAME_DIM !== val) {
         GAME_DIM = val;
@@ -842,6 +915,56 @@ export default {
       _this.restoreDataFromHistory();
       GaReport(this.$store.state.config.uuid, this.$store.state.config.versionNO, CategoryActions.GA_NORMAL_GAME.name, CategoryActions.GA_NORMAL_GAME.actions.OPERATION_START);
     });
+
+    this.uploadBestScore = _.debounce(() => {
+      (async () => {
+        try {
+          if (!agentRootKeyGot) {
+            await agent.fetchRootKey()
+            agentRootKeyGot = true
+          }
+          if (this.$store.state.user.principal && this.$store.state.user.userName) {
+            await customGame2048.newScore(this.$store.state.user.principal, this.$store.state.user.userName, this.bestScore)
+          }
+        } catch (e) {
+          console.log(e)
+        }
+      })()
+    }, 3 * 1000);
+
+    setInterval(() => {
+      (async () => {
+        try {
+          if (!agentRootKeyGot) {
+            await agent.fetchRootKey()
+            agentRootKeyGot = true
+          }
+          if (this.$store.state.user.principal && this.$store.state.user.userName) {
+            let scoresInfo = await customGame2048.topScores()
+            if (scoresInfo instanceof Array) {
+              if (scoresInfo instanceof Array && scoresInfo.length === 1 && scoresInfo[0] instanceof Array && scoresInfo.length > 0) {
+                if (scoresInfo[0][0] && scoresInfo[0][0] instanceof Array && scoresInfo[0][0].length === 2) {
+                  this.scoreFirstUserName = scoresInfo[0][0][0]
+                  this.scoreFirstScore = (new BigNumber(scoresInfo[0][0][1])).toNumber()
+                }
+                if (scoresInfo[0][1] && scoresInfo[0][1] instanceof Array && scoresInfo[0][1].length === 2) {
+                  this.scoreSecondUserName = scoresInfo[0][1][0]
+                  this.scoreSecondScore = (new BigNumber(scoresInfo[0][1][1])).toNumber()
+                }
+                if (scoresInfo[0][2] && scoresInfo[0][2] instanceof Array && scoresInfo[0][2].length === 2) {
+                  this.scoreThirdUserName = scoresInfo[0][2][0]
+                  this.scoreThirdScore = (new BigNumber(scoresInfo[0][2][1])).toNumber()
+                }
+              }
+            } else {
+              console.log("customGame2048 request error!")
+            }
+          }
+        } catch (e) {
+          console.log(e)
+        }
+      })()
+    }, 3 * 1000)
   },
   components: {
     tweenNumber,
@@ -850,6 +973,7 @@ export default {
     rateFeedback,
     radioToggle,
     identity,
+    IconFont,
   }
 }
 </script>
@@ -1286,5 +1410,24 @@ export default {
   height: 26px;
   margin: 2px;
   vertical-align: middle;
+}
+
+.score-rate-first {
+  text-align: center;
+}
+
+.score-rate-second {
+  text-align: center;
+}
+
+.score-rate-third {
+  text-align: center;
+}
+
+</style>
+
+<style>
+.ant-statistic-title {
+  margin-bottom: 0px;
 }
 </style>

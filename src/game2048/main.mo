@@ -149,5 +149,6 @@ actor {
         for ( (uScore,_) in topUserScoreEntries.vals() ) {
             topUserScores.put(uScore, ());
         };
+        topUserScoreEntries := [];
     };
 };
