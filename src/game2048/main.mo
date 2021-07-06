@@ -120,10 +120,31 @@ actor {
                             };
                             case (#less) {index+=1;};
                             case (#greater) {
-                               var indexRev = topUserScoreMaxCount-1;
-                               while (indexRev > index) {
-                                 topUserScores[indexRev] := topUserScores[indexRev-1];
-                                 indexRev-=1;
+                               var setToNextUserScore = ?curUScore;
+                               var setToNextIndex = index+1;
+                               label setToNext while (setToNextIndex < topUserScoreMaxCount) {
+                                   let opNextUScore = topUserScores[setToNextIndex];
+                                   switch opNextUScore {
+                                     case (?nextUScore) {
+                                        let cmpResult = userScoreCompare(nextUScore, uScore);
+                                        switch cmpResult {
+                                            case (#equal) {
+                                               topUserScores[setToNextIndex] := setToNextUserScore;
+                                               break  setToNext;
+                                            };
+                                            case _ {
+                                              let tmp =  topUserScores[setToNextIndex];
+                                              topUserScores[setToNextIndex] := setToNextUserScore;
+                                              setToNextUserScore := tmp;
+                                              setToNextIndex += 1;
+                                            };
+                                        };
+                                     };
+                                     case null {
+                                         topUserScores[setToNextIndex] := setToNextUserScore;
+                                         break  setToNext;
+                                     };
+                                   };
                                };
                                topUserScores[index] := ?uScore;
                                break doInsert;
