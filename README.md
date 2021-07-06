@@ -1,7 +1,7 @@
 # 2048Game
 A simple demo to deploy app on Internet Computer.
 
-##Usage:    
+## Usage:    
 `npm install;`  
 `npm rebuild node-sass;`  
 `dfx start --background;`  
