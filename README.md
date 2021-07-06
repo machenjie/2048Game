@@ -1,5 +1,5 @@
 # 2048Game
-A simple demo to use deploy app on Internet Computer.
+A simple demo to deploy app on Internet Computer.
 
 ##Usage:    
 `npm install;`  
