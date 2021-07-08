@@ -329,14 +329,12 @@ import radioToggle from "./radio-toggle";
 import identity from "./identity";
 import {Icon} from "ant-design-vue";
 import {Actor, HttpAgent} from "@dfinity/agent";
+import {getAuthClient, localhostProvider} from "../api/identity";
 import {idlFactory as customGame2048IDL, canisterId as customGame2048ID} from "dfx-generated/game2048";
 import GaReport, {CategoryActions} from '../api/ga-report';
 import _ from "lodash";
 import {BigNumber} from "bignumber.js";
 
-const agent = new HttpAgent();
-let agentRootKeyGot = false;
-const customGame2048 = Actor.createActor(customGame2048IDL, {agent, canisterId: customGame2048ID});
 let GAME_DIM = 4;
 const NEW_DURATION = 200;
 const IconFont = Icon.createFromIconfontCN({
@@ -919,11 +917,13 @@ export default {
     this.uploadBestScore = _.debounce(() => {
       (async () => {
         try {
-          if (!agentRootKeyGot) {
-            await agent.fetchRootKey()
-            agentRootKeyGot = true
-          }
-          if (this.$store.state.user.principal && this.$store.state.user.userName) {
+          const authClient = await getAuthClient();
+          if (await authClient.isAuthenticated() && this.$store.state.user.principal && this.$store.state.user.userName) {
+            const agent = new HttpAgent({identity: authClient.getIdentity()})
+            if (localhostProvider) {
+              await agent.fetchRootKey();
+            }
+            const customGame2048 = Actor.createActor(customGame2048IDL, {agent, canisterId: customGame2048ID});
             await customGame2048.newScore(this.$store.state.user.principal, this.$store.state.user.userName, this.bestScore)
           }
         } catch (e) {
@@ -935,10 +935,11 @@ export default {
     setInterval(() => {
       (async () => {
         try {
-          if (!agentRootKeyGot) {
-            await agent.fetchRootKey()
-            agentRootKeyGot = true
+          const agent = new HttpAgent()
+          if (localhostProvider) {
+            await agent.fetchRootKey();
           }
+          const customGame2048 = Actor.createActor(customGame2048IDL, {agent, canisterId: customGame2048ID});
           let scoresInfo = await customGame2048.topScores()
           if (scoresInfo instanceof Array) {
             if (scoresInfo instanceof Array && scoresInfo.length === 1 && scoresInfo[0] instanceof Array && scoresInfo.length > 0) {

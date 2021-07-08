@@ -5,6 +5,7 @@ import TrieMap = "mo:base/TrieMap";
 import Order = "mo:base/Order";
 import Iter = "mo:base/Iter";
 import Array = "mo:base/Array";
+import Principal = "mo:base/Principal";
 
 actor {
     type User = object {
@@ -42,8 +43,8 @@ actor {
     let topUserScoreMaxCount = 10;
     stable var topUserScores = Array.init<?UserScore>(topUserScoreMaxCount, null);
 
-    public func register(principal :Text, name : Text) : async (Bool, Bool, Nat) {
-        if (principal == "" or name == "") {
+    public shared ({caller:Principal}) func register(principal :Text, name : Text) : async (Bool, Bool, Nat) {
+        if (principal == "" or name == "" or Principal.toText(caller) != principal) {
             return (false, false, 0);
         };
         switch (users.get(principal)) {
@@ -66,14 +67,20 @@ actor {
         };
     };
 
-    public query func userInfo(principal :Text) : async (Bool, ?User) {
+    public query ({caller:Principal}) func userInfo(principal :Text) : async (Bool, ?User) {
+        if (Principal.toText(caller) != principal) {
+            return (false, null);
+        };
         switch (users.get(principal)) {
                 case (?user)  {(true, ?user)};
                 case null { (false, null)};
         };
     };
 
-    public func newScore(principal :Text, name : Text, score : Nat) {
+    public shared ({caller:Principal}) func newScore(principal :Text, name : Text, score : Nat) {
+        if (Principal.toText(caller) != principal) {
+            return ();
+        };
         switch (users.get(principal)) {
             case (?user)  {
                 if (user.name == name) {
@@ -181,58 +188,6 @@ actor {
     };
 
     system func postupgrade() {
-        for ( (_,uScore) in userScoreEntries.vals() ) {
-            var index = 0;
-            label doInsert while (index < topUserScoreMaxCount) {
-                let opCurUScore = topUserScores[index];
-                switch opCurUScore {
-                    case (?curUScore) {
-                        let cmpResult = userScoreCompare(curUScore, uScore);
-                         switch cmpResult {
-                            case (#equal) {
-                               topUserScores[index] := ?uScore;
-                               break doInsert;
-                            };
-                            case (#less) {index+=1;};
-                            case (#greater) {
-                               var setToNextUserScore = ?curUScore;
-                               var setToNextIndex = index+1;
-                               label setToNext while (setToNextIndex < topUserScoreMaxCount) {
-                                   let opNextUScore = topUserScores[setToNextIndex];
-                                   switch opNextUScore {
-                                     case (?nextUScore) {
-                                        let cmpResult = userScoreCompare(nextUScore, uScore);
-                                        switch cmpResult {
-                                            case (#equal) {
-                                               topUserScores[setToNextIndex] := setToNextUserScore;
-                                               break  setToNext;
-                                            };
-                                            case _ {
-                                              let tmp =  topUserScores[setToNextIndex];
-                                              topUserScores[setToNextIndex] := setToNextUserScore;
-                                              setToNextUserScore := tmp;
-                                              setToNextIndex += 1;
-                                            };
-                                        };
-                                     };
-                                     case null {
-                                         topUserScores[setToNextIndex] := setToNextUserScore;
-                                         break  setToNext;
-                                     };
-                                   };
-                               };
-                               topUserScores[index] := ?uScore;
-                               break doInsert;
-                            };
-                         };
-                    };
-                    case null {
-                        topUserScores[index] := ?uScore;
-                        break doInsert;
-                    };
-                };
-            };
-        };
         userEntries := [];
         userScoreEntries := [];
     };

@@ -155,14 +155,11 @@
 
 <script>
 import {BigNumber} from "bignumber.js";
-import {AuthClient} from "@dfinity/auth-client";
 import {Actor, HttpAgent} from "@dfinity/agent";
 import {message} from "ant-design-vue";
 import {idlFactory as customGame2048IDL, canisterId as customGame2048ID} from "dfx-generated/game2048";
+import {getAuthClient, identityProvider, localhostProvider} from "../api/identity";
 
-const agent = new HttpAgent();
-let agentRootKeyGot = false;
-const customGame2048 = Actor.createActor(customGame2048IDL, {agent, canisterId: customGame2048ID});
 const userNameRegisterKey = 'register';
 const userNameMinLength = 2;
 const userNameMaxLength = 16;
@@ -203,10 +200,12 @@ export default {
         }
         message.loading({content: this.$t("registering"), key: userNameRegisterKey, duration: 4});
         this.userNameInRegistering = true
-        if (!agentRootKeyGot) {
-          await agent.fetchRootKey()
-          agentRootKeyGot = true
+        const authClient = await getAuthClient();
+        const agent = new HttpAgent({identity: authClient.getIdentity()})
+        if (localhostProvider) {
+          await agent.fetchRootKey();
         }
+        const customGame2048 = Actor.createActor(customGame2048IDL, {agent, canisterId: customGame2048ID});
         let result = await customGame2048.register(this.$store.state.user.principal, registerUserName)
         // TUPLE => ARRAY
         if (result instanceof Array && result.length === 3 && typeof result[0] === "boolean" && typeof result[1] === "boolean") {
@@ -262,74 +261,97 @@ export default {
     },
     doIdentity: function () {
       if (!this.inIdentity) {
-        this.inIdentity = true
-        AuthClient.create().then((authClient) => {
-          let isDone = false
-          let doneTimer
-          authClient.login({
-            onSuccess: async () => {
-              let identity = await authClient.getIdentity();
-              this.$store.commit("setPrincipal", identity.getPrincipal().toString());
-              this.inIdentity = false
-              isDone = true
-              if (doneTimer) {
-                clearTimeout(doneTimer)
-              }
-              let userInfo = await customGame2048.userInfo(identity.getPrincipal().toString())
-              if (userInfo instanceof Array && userInfo.length === 2
-                  && userInfo[1] instanceof Array && userInfo[1].length === 1
-                  && typeof userInfo[1][0] === "object") {
-                if (userInfo[1][0].name) {
-                  this.$store.commit("setUserName", userInfo[1][0].name);
-                  this.$store.commit("setLastLoginAt", Date.now());
-                  message.success({
-                    content: 'Welcome ' + userInfo[1][0].name + ', the No.' + (new BigNumber(userInfo[1][0].id)).toNumber() + ' user!',
-                    key: userNameRegisterKey,
-                    duration: 3
-                  });
-                  return
+        this.inIdentity = true;
+        (async () => {
+          try {
+            const authClient = await getAuthClient();
+            if (authClient) {
+              let isDone = false
+              let doneTimer
+              await authClient.login({
+                identityProvider,
+                onSuccess: async () => {
+                  let identity = authClient.getIdentity();
+                  this.$store.commit("setPrincipal", identity.getPrincipal().toString());
+                  this.inIdentity = false
+                  isDone = true
+                  if (doneTimer) {
+                    clearTimeout(doneTimer)
+                  }
+                  const agent = new HttpAgent({identity: authClient.getIdentity()})
+                  if (localhostProvider) {
+                    await agent.fetchRootKey();
+                  }
+                  const customGame2048 = Actor.createActor(customGame2048IDL, {agent, canisterId: customGame2048ID});
+                  let userInfo = await customGame2048.userInfo(identity.getPrincipal().toString())
+                  if (userInfo instanceof Array && userInfo.length === 2
+                      && userInfo[1] instanceof Array && userInfo[1].length === 1
+                      && typeof userInfo[1][0] === "object") {
+                    if (userInfo[1][0].name) {
+                      this.$store.commit("setUserName", userInfo[1][0].name);
+                      this.$store.commit("setLastLoginAt", Date.now());
+                      message.success({
+                        content: 'Welcome ' + userInfo[1][0].name + ', the No.' + (new BigNumber(userInfo[1][0].id)).toNumber() + ' user!',
+                        key: userNameRegisterKey,
+                        duration: 3
+                      });
+                      return
+                    }
+                  }
+                  this.userNameModalVisible = true
+                },
+                onError: () => {
+                  this.inIdentity = false
+                  isDone = true
+                  if (doneTimer) {
+                    clearTimeout(doneTimer)
+                  }
                 }
+              });
+              if (!isDone) {
+                doneTimer = setTimeout(() => {
+                  isDone = true
+                  doneTimer = null
+                  this.inIdentity = false
+                }, 30 * 1000)
               }
-              this.userNameModalVisible = true
-            },
-            onError: () => {
-              this.inIdentity = false
-              isDone = true
-              if (doneTimer) {
-                clearTimeout(doneTimer)
-              }
+            } else {
+              this.inIdentity = false;
             }
-          });
-          if (!isDone) {
-            doneTimer = setTimeout(() => {
-              isDone = true
-              doneTimer = null
-              this.inIdentity = false
-            }, 30 * 1000)
+          } catch (e) {
+            this.inIdentity = false;
           }
-        }).catch(() => {
-          this.inIdentity = false
-        })
+        })()
       }
     },
   },
   mounted: function () {
     (async () => {
       try {
-        await agent.fetchRootKey()
-        agentRootKeyGot = true
-        if (this.identity && this.userName) {
-          let userInfo = await customGame2048.userInfo(this.identity)
-          if (userInfo instanceof Array && userInfo.length === 2
-              && userInfo[1] instanceof Array && userInfo[1].length === 1
-              && typeof userInfo[1][0] === "object") {
-            if (userInfo[1][0].name !== this.userName) {
-              this.$store.commit("setUserName", "");
-              this.$store.commit("setPrincipal", "");
-              this.$store.commit("setLastLoginAt", Date.now());
-            }
+        const authClient = await getAuthClient();
+        if (authClient && this.identity && this.userName) {
+          if (!(await authClient.isAuthenticated())) {
+            this.$store.commit("setUserName", "");
+            this.$store.commit("setPrincipal", "");
+            this.$store.commit("setLastLoginAt", Date.now());
           } else {
-            console.log("customGame2048 request error!")
+            const agent = new HttpAgent({identity: authClient.getIdentity()})
+            if (localhostProvider) {
+              await agent.fetchRootKey();
+            }
+            const customGame2048 = Actor.createActor(customGame2048IDL, {agent, canisterId: customGame2048ID});
+            let userInfo = await customGame2048.userInfo(this.identity)
+            if (userInfo instanceof Array && userInfo.length === 2
+                && userInfo[1] instanceof Array && userInfo[1].length === 1
+                && typeof userInfo[1][0] === "object") {
+              if (userInfo[1][0].name !== this.userName) {
+                this.$store.commit("setUserName", "");
+                this.$store.commit("setPrincipal", "");
+                this.$store.commit("setLastLoginAt", Date.now());
+              }
+            } else {
+              console.log("customGame2048 request error!")
+            }
           }
         }
       } catch (e) {
