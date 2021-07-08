@@ -188,6 +188,58 @@ actor {
     };
 
     system func postupgrade() {
+        for ( (_,uScore) in userScoreEntries.vals() ) {
+            var index = 0;
+            label doInsert while (index < topUserScoreMaxCount) {
+                let opCurUScore = topUserScores[index];
+                switch opCurUScore {
+                    case (?curUScore) {
+                        let cmpResult = userScoreCompare(curUScore, uScore);
+                         switch cmpResult {
+                            case (#equal) {
+                               topUserScores[index] := ?uScore;
+                               break doInsert;
+                            };
+                            case (#less) {index+=1;};
+                            case (#greater) {
+                               var setToNextUserScore = ?curUScore;
+                               var setToNextIndex = index+1;
+                               label setToNext while (setToNextIndex < topUserScoreMaxCount) {
+                                   let opNextUScore = topUserScores[setToNextIndex];
+                                   switch opNextUScore {
+                                     case (?nextUScore) {
+                                        let cmpResult = userScoreCompare(nextUScore, uScore);
+                                        switch cmpResult {
+                                            case (#equal) {
+                                               topUserScores[setToNextIndex] := setToNextUserScore;
+                                               break  setToNext;
+                                            };
+                                            case _ {
+                                              let tmp =  topUserScores[setToNextIndex];
+                                              topUserScores[setToNextIndex] := setToNextUserScore;
+                                              setToNextUserScore := tmp;
+                                              setToNextIndex += 1;
+                                            };
+                                        };
+                                     };
+                                     case null {
+                                         topUserScores[setToNextIndex] := setToNextUserScore;
+                                         break  setToNext;
+                                     };
+                                   };
+                               };
+                               topUserScores[index] := ?uScore;
+                               break doInsert;
+                            };
+                         };
+                    };
+                    case null {
+                        topUserScores[index] := ?uScore;
+                        break doInsert;
+                    };
+                };
+            };
+        };
         userEntries := [];
         userScoreEntries := [];
     };
